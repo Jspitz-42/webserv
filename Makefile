@@ -1,12 +1,12 @@
 NAME = webserv
 
-SRC = ./src/main.cpp
+SRC = ./src/main.cpp \
+	  ./src/tcpServer.cpp
 
 ROOT = ./
 
-SRCS = ${addprefix ${ROOT}, ${SRC}}
-
-OBJS = ${SRCS:.c=.o}
+SRCS = $(ROOT)$(SRC)
+OBJS = $(SRCS:.cpp=.o)
 
 CC = c++
 
@@ -16,14 +16,16 @@ CFLAGS = -Wall -Wextra -Werror -I./includes -I/usr/includes -std=c++98
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS)
-		$(CC) $(CFLAGS) $(HEAD) $(SRC) -o $(NAME)
+		$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+
+all: $(NAME)
 
 clean:
-		rm -rf $(OBJS)
+		rm -f $(OBJS)
 
 fclean: clean
-		rm -rf $(NAME)
+		rm -f $(NAME)
 
 re:	fclean all
 
-.PHONY: all clean re webserv
+.PHONY: all clean re

@@ -1,31 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.hpp                                           :+:      :+:    :+:   */
+/*   request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/28 11:46:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/07/29 08:52:10 by jspitz           ###   ########.fr       */
+/*   Created: 2025/07/29 07:38:22 by jspitz            #+#    #+#             */
+/*   Updated: 2025/07/29 07:39:15 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-#ifndef MAIN_HPP
 
-# define MAIN_HPP
+class request
+{
+	public:
+	
+	protected:
 
-#include <string>
-#include <cstring>
-#include <iostream>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <cstdio>
-#include <cstdlib>
-#include <unistd.h>
-#include <csignal>
+	private:
 
-void sig_handle(int signal);
-
-#endif
+};

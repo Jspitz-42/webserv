@@ -6,20 +6,23 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:37:10 by jspitz            #+#    #+#             */
-/*   Updated: 2025/07/28 14:05:03 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/07/29 10:10:37 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <cstdlib>
-#include <string>
-#include <cstring>
-#include <sstream>
-#include <unistd.h>
-#include <iostream>
+# include <sys/socket.h>
+# include <arpa/inet.h>
+# include <cstdlib>
+# include <string>
+# include <cstring>
+# include <sstream>
+# include <unistd.h>
+# include <sys/epoll.h>
+# include <iostream>
+
+# define MAX 1024
 
 class TcpServer
 {
@@ -27,6 +30,7 @@ class TcpServer
 								TcpServer(std::string ip_address, int port);		
 								~TcpServer();
 		void					startListen( void );
+
 	protected:
 
 	private:
@@ -37,8 +41,16 @@ class TcpServer
 		int						m_new_socket;
 	//	long					m_incomingMessage;
 		struct	sockaddr_in 	m_socketAddress;
+//		struct	sockaddr_in		csin;
 		unsigned int			m_socketAddress_len;
 		std::string				m_serverMessage;
+		int						_efd; // epoll fd
+		int						_ret;
+		int						_nfds;
+		int						_cfd;
+
+		struct epoll_event		_ev;
+		struct epoll_event		_evlist[MAX];
 
 		int						startServer();
 		void					closeServer();
@@ -46,3 +58,5 @@ class TcpServer
 		std::string				buildResponse();
 		void					sendResponse();
 };
+
+extern int g_signal;

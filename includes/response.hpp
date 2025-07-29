@@ -1,31 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.hpp                                           :+:      :+:    :+:   */
+/*   response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/28 11:46:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/07/29 08:52:10 by jspitz           ###   ########.fr       */
+/*   Created: 2025/07/29 07:38:31 by jspitz            #+#    #+#             */
+/*   Updated: 2025/07/29 07:39:42 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-#ifndef MAIN_HPP
 
-# define MAIN_HPP
+class response
+{
+	public:
 
-#include <string>
-#include <cstring>
-#include <iostream>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <cstdio>
-#include <cstdlib>
-#include <unistd.h>
-#include <csignal>
+	protected:
 
-void sig_handle(int signal);
+	private:
 
-#endif
+};

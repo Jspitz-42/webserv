@@ -6,12 +6,21 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 07:44:24 by jspitz            #+#    #+#             */
-/*   Updated: 2025/07/28 14:08:22 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/07/29 08:58:59 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.hpp"
 #include "tcpServer.hpp"
+
+int g_signal = 0;
+
+void sig_handle(int signal)
+{
+	if (signal == SIGINT)
+		g_signal = 1;
+	std::cerr << g_signal << std::endl;
+}
 
 int main(void)
 {

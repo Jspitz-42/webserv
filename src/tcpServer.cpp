@@ -6,11 +6,12 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:41:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/07/28 14:05:47 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/07/29 10:10:10 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tcpServer.hpp"
+#include "main.hpp"
 
 const int BUFFER_SIZE = 30720;
 
@@ -23,6 +24,26 @@ void exitWithError(const std::string & errorMessage)
 {
 	log("ERROR: " + errorMessage);
 	exit(1);
+}
+
+int TcpServer::startServer()
+{
+//	std::memset(&m_socketAddress, 0, sizeof(m_socketAddress));
+//	std::memset(&csin, 0, sizeof(csin));
+	m_socket = socket(AF_INET, SOCK_STREAM, 0);
+	if (m_socket < 0)
+	{
+		exitWithError("Cannot create socket");
+		return 1;
+	}
+
+	if (bind(m_socket, (sockaddr*)&m_socketAddress, m_socketAddress_len) < 0)
+	{
+		exitWithError("Cannot connect socket to address");
+		return 1;
+	}
+
+	return 0;
 }
 
 TcpServer::TcpServer(std::string ip_address, int port) : m_ip_addr(ip_address), m_port(port), m_socket(), m_new_socket(), m_socketAddress(), m_socketAddress_len(sizeof(m_socketAddress)), m_serverMessage(buildResponse())
@@ -46,29 +67,10 @@ TcpServer::~TcpServer()
 	closeServer();
 }
 
-int TcpServer::startServer()
-{
-	m_socket = socket(AF_INET, SOCK_STREAM, 0);
-	if (m_socket < 0)
-	{
-		exitWithError("Cannot create socket");
-		return 1;
-	}
-
-	if (bind(m_socket, (sockaddr*)&m_socketAddress, m_socketAddress_len) < 0)
-	{
-		exitWithError("Cannot connect socket to address");
-		return 1;
-	}
-
-	return 0;
-}
-
 void TcpServer::closeServer( void )
 {
 	close(m_socket);
 	close(m_new_socket);
-	exit(0);
 }
 
 void TcpServer::startListen()
@@ -82,27 +84,105 @@ void TcpServer::startListen()
 	ss << std::endl <<  "*** Listening on ADDRESS: " << inet_ntoa(m_socketAddress.sin_addr) << " PORT: "  << ntohs(m_socketAddress.sin_port) << " ***" << std::endl << std::endl;
 	log(ss.str());
 
-	int bytesReceveid;
+//	int bytesReceveid;
 
+	_efd = epoll_create1(0);
+	if (_efd < 0) {
+		perror("epoll_create1");
+		return ;
+	}
+	
+	_ev.events = EPOLLIN;
+	_ev.data.fd = STDIN_FILENO;
+	_ret = epoll_ctl(_efd, EPOLL_CTL_ADD, STDIN_FILENO, &_ev);
+	if (_ret < 0) {
+		perror("eppoll_ctl");
+		return ;
+	}
+
+	int i, buflen;
+	char	buf[BUFFER_SIZE];
+	
 	while (1)
 	{
-		log("=== wait for new connection ===\n\n\n");
-		AcceptConnection(m_new_socket);
-
-		char buffer[BUFFER_SIZE] = {0};
-		bytesReceveid = read(m_new_socket, buffer, BUFFER_SIZE);
-		if (bytesReceveid < 0)
-		{
-			exitWithError("Failed to read byte from client socket connection");
+		_nfds = epoll_wait(_efd, _evlist, MAX, -1);
+		if (_ret == -1) {
+			perror("epoll_wait");
+			break ;
 		}
 
-		std::ostringstream ss;
-		ss << "----- Receveid Request from clent -----" << std::endl << std::endl;
-		log(ss.str());
+		for (i = 0 ; i < _nfds ; i++) {
+			if (_evlist[i].data.fd == STDIN_FILENO) {
+				std::fgets(buf, BUFFER_SIZE - 1, stdin);
+				std::string input(buf);
+				
+				if (!strcmp(buf, "quit\n") ||!strcmp(buf, "exit\n")){
+					close(m_socket);
+					return ;
+				} else if (_evlist[i].data.fd == m_socket) {
+					AcceptConnection(_cfd);
+					if (_cfd == -1) {
+						perror("accept");
+						return ;
+					}
+					std::cout << "\x1b[0;32m[*] accept\x1b[0m" << std::endl;
+					_ev.events = EPOLLIN;
+					_ev.data.fd = _cfd;
+					_ret = epoll_ctl(_efd, EPOLL_CTL_ADD, _cfd, &_ev);
+					if (_ret == -1) {
+						perror("epoll_ctl");
+						return ;
+					}
+				} else {
+					_cfd = _evlist[i].data.fd;
 
-		sendResponse();
+					buflen = read(_cfd, buf, BUFSIZ-1);
+					if (buflen ==  0) {
+						if (close(_cfd) == -1) {
+							perror("close");
+							return ;
+						}
+						std::cout << "\x1b[0;31m[*] close \x1b[0m" << std::endl;
+						epoll_ctl(_efd, EPOLL_CTL_DEL, _cfd, &_evlist[i]);
+						if (_ret == -1) {
+							perror("epoll_ctl");
+							return ;
+						}
+					} else {
+						buf[buflen] = '\0';
+						std::string msgPrefix = "prevent-arbitrary-connection";
+						std::string msg = buf;
 
-		close(m_new_socket);
+						if (msgPrefix.length() > msg.length()) continue ;
+
+						if (msgPrefix == msg.substr(0, msgPrefix.length()).c_str()) {
+							msg = msg.substr(msgPrefix.length(), msg.length());
+							std::cout << msg << std::endl;
+						}
+					}
+				}
+			}
+		}
+	//	std::cerr << g_signal << std::endl;
+	//	log("=== wait for new connection ===\n\n\n");
+	//	AcceptConnection(m_new_socket);
+	//	
+	//	char buffer[BUFFER_SIZE] = {0};
+	//	bytesReceveid = read(m_new_socket, buffer, BUFFER_SIZE);
+//
+	//	if (bytesReceveid < 0)
+	//	{
+	//		exitWithError("Failed to read byte from client socket connection");
+	//		break ;
+	//	}
+	//	
+	//	std::ostringstream ss;
+	//	ss << "----- Receveid Request from clent -----" << std::endl << std::endl;
+	//	log(ss.str());
+	//	
+	//	sendResponse();
+//
+	//	close(m_new_socket);
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:41:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/07/29 11:10:44 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/07/29 11:52:22 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,6 @@ void TcpServer::startListen()
 	std::ostringstream ss;
 	ss << std::endl <<  "*** Listening on ADDRESS: " << inet_ntoa(m_socketAddress.sin_addr) << " PORT: "  << ntohs(m_socketAddress.sin_port) << " ***" << std::endl << std::endl;
 	log(ss.str());
-
-//	int bytesReceveid;
 
 	_efd = epoll_create1(0);
 	

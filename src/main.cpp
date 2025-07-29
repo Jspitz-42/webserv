@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 07:44:24 by jspitz            #+#    #+#             */
-/*   Updated: 2025/07/29 08:58:59 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/07/29 11:47:01 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,14 @@ void sig_handle(int signal)
 	std::cerr << g_signal << std::endl;
 }
 
-int main(void)
+int main(int ac , char **av)
 {
-	TcpServer server = TcpServer("127.0.0.1", 8080);
+	int port;
+
+	if (ac == 1) port = 8080;
+	if (ac == 2) port = std::atoi(av[1]);
+
+	TcpServer server = TcpServer("127.0.0.1", port);
 
 	server.startListen();
 	return 0;

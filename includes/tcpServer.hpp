@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:37:10 by jspitz            #+#    #+#             */
-/*   Updated: 2025/07/29 10:10:37 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/07/29 10:59:24 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ class TcpServer
 		int						m_new_socket;
 	//	long					m_incomingMessage;
 		struct	sockaddr_in 	m_socketAddress;
-//		struct	sockaddr_in		csin;
+		struct	sockaddr_in		csin;
 		unsigned int			m_socketAddress_len;
 		std::string				m_serverMessage;
 		int						_efd; // epoll fd
@@ -56,7 +56,7 @@ class TcpServer
 		void					closeServer();
 		void					AcceptConnection(int &new_socket);
 		std::string				buildResponse();
-		void					sendResponse();
+		void					sendResponse( void );
 };
 
 extern int g_signal;

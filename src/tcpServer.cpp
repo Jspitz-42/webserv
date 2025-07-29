@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:41:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/07/29 10:10:10 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/07/29 11:10:44 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,15 @@ void exitWithError(const std::string & errorMessage)
 
 int TcpServer::startServer()
 {
-//	std::memset(&m_socketAddress, 0, sizeof(m_socketAddress));
-//	std::memset(&csin, 0, sizeof(csin));
 	m_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (m_socket < 0)
 	{
 		exitWithError("Cannot create socket");
 		return 1;
 	}
+
+//	std::memset(&m_socketAddress, 0, sizeof(m_socketAddress));
+//	std::memset(&csin, 0, sizeof(csin));
 
 	if (bind(m_socket, (sockaddr*)&m_socketAddress, m_socketAddress_len) < 0)
 	{
@@ -87,14 +88,16 @@ void TcpServer::startListen()
 //	int bytesReceveid;
 
 	_efd = epoll_create1(0);
+	
 	if (_efd < 0) {
 		perror("epoll_create1");
 		return ;
 	}
 	
 	_ev.events = EPOLLIN;
-	_ev.data.fd = STDIN_FILENO;
-	_ret = epoll_ctl(_efd, EPOLL_CTL_ADD, STDIN_FILENO, &_ev);
+	_ev.data.fd = m_socket;
+	_ret = epoll_ctl(_efd, EPOLL_CTL_ADD, m_socket, &_ev);
+	
 	if (_ret < 0) {
 		perror("eppoll_ctl");
 		return ;
@@ -106,33 +109,40 @@ void TcpServer::startListen()
 	while (1)
 	{
 		_nfds = epoll_wait(_efd, _evlist, MAX, -1);
+		
+		std:: cerr << "pouet pouet" << std::endl;
+		
 		if (_ret == -1) {
 			perror("epoll_wait");
 			break ;
 		}
 
-		for (i = 0 ; i < _nfds ; i++) {
-			if (_evlist[i].data.fd == STDIN_FILENO) {
-				std::fgets(buf, BUFFER_SIZE - 1, stdin);
-				std::string input(buf);
+		for (i = 0 ; i <= _nfds ; i++) {
+
+				if (_evlist[i].data.fd == m_socket) {
 				
-				if (!strcmp(buf, "quit\n") ||!strcmp(buf, "exit\n")){
-					close(m_socket);
-					return ;
-				} else if (_evlist[i].data.fd == m_socket) {
-					AcceptConnection(_cfd);
+					std::cerr << "pouet pouet 2" << std::endl;
+				
+					_cfd = accept(m_socket, (struct sockaddr *)&csin, &m_socketAddress_len);
+				
 					if (_cfd == -1) {
 						perror("accept");
 						return ;
 					}
+				
 					std::cout << "\x1b[0;32m[*] accept\x1b[0m" << std::endl;
+					
 					_ev.events = EPOLLIN;
 					_ev.data.fd = _cfd;
 					_ret = epoll_ctl(_efd, EPOLL_CTL_ADD, _cfd, &_ev);
+				
 					if (_ret == -1) {
 						perror("epoll_ctl");
 						return ;
 					}
+					
+					send(_cfd, buildResponse().c_str(), buildResponse().size(), 0);
+
 				} else {
 					_cfd = _evlist[i].data.fd;
 
@@ -142,13 +152,18 @@ void TcpServer::startListen()
 							perror("close");
 							return ;
 						}
+					
 						std::cout << "\x1b[0;31m[*] close \x1b[0m" << std::endl;
+					
 						epoll_ctl(_efd, EPOLL_CTL_DEL, _cfd, &_evlist[i]);
+					
 						if (_ret == -1) {
 							perror("epoll_ctl");
 							return ;
 						}
+					
 					} else {
+					
 						buf[buflen] = '\0';
 						std::string msgPrefix = "prevent-arbitrary-connection";
 						std::string msg = buf;
@@ -161,28 +176,7 @@ void TcpServer::startListen()
 						}
 					}
 				}
-			}
 		}
-	//	std::cerr << g_signal << std::endl;
-	//	log("=== wait for new connection ===\n\n\n");
-	//	AcceptConnection(m_new_socket);
-	//	
-	//	char buffer[BUFFER_SIZE] = {0};
-	//	bytesReceveid = read(m_new_socket, buffer, BUFFER_SIZE);
-//
-	//	if (bytesReceveid < 0)
-	//	{
-	//		exitWithError("Failed to read byte from client socket connection");
-	//		break ;
-	//	}
-	//	
-	//	std::ostringstream ss;
-	//	ss << "----- Receveid Request from clent -----" << std::endl << std::endl;
-	//	log(ss.str());
-	//	
-	//	sendResponse();
-//
-	//	close(m_new_socket);
 	}
 }
 
@@ -207,7 +201,7 @@ std::string TcpServer::buildResponse( void )
 	return ss.str();
 }
 
-void TcpServer::sendResponse()
+void TcpServer::sendResponse( void )
 {
 	long bytesSent;
 

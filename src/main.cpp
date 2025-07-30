@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 07:44:24 by jspitz            #+#    #+#             */
-/*   Updated: 2025/07/29 11:47:01 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/07/30 15:09:14 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,13 @@ int main(int ac , char **av)
 	if (ac == 1) port = 8080;
 	if (ac == 2) port = std::atoi(av[1]);
 
-	TcpServer server = TcpServer("127.0.0.1", port);
-
-	server.startListen();
+	try {
+		TcpServer server = TcpServer("127.0.0.1", port);
+		server.startListen();
+	} catch (const std::exception & e) { // exception and throw are still work to do
+		
+	}
+	
 	return 0;
 }
 

@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:41:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/07/30 14:16:18 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/07/30 15:07:33 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,6 @@ int TcpServer::startServer()
 		return 1;
 	}
 
-	//int opt = 1;
-	//if (setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt) < 0))
-	//{
-	//	std::cerr << "line 42 error called" << std::endl;
-	//	exitWithError("cannot create socket");
-	//	return 1;
-	//}
 	std::cerr <<  " socket = " << m_socket << std::endl;
 	if (bind(m_socket, (sockaddr*)&m_socketAddress, m_socketAddress_len) < 0)
 	{
@@ -54,7 +47,11 @@ int TcpServer::startServer()
 	return 0;
 }
 
-TcpServer::TcpServer(std::string ip_address, int port) : m_ip_addr(ip_address), m_port(port), m_socket(), m_new_socket(), m_socketAddress(), m_socketAddress_len(sizeof(m_socketAddress)), m_serverMessage(buildResponse())
+TcpServer::TcpServer(std::string ip_address, int port) :	m_ip_addr(ip_address),
+															m_port(port), m_socket(),
+															m_new_socket(), m_socketAddress(),
+															m_socketAddress_len(sizeof(m_socketAddress)),
+															m_serverMessage(buildResponse())
 {
 	std::memset(&m_socketAddress, 0, sizeof(m_socketAddress));
 	std::memset(&csin, 0, sizeof(csin));
@@ -84,12 +81,21 @@ void TcpServer::closeServer( void )
 	close(m_new_socket);
 }
 
-#include <fcntl.h>
-
 void setnonblocking(int fd)
 {
 	int flags = fcntl(fd, F_GETFL, 0);
   	fcntl(fd, F_SETFL, flags | O_NONBLOCK); //error checking to be done here
+}
+
+bool TcpServer::findClientFile( void )
+{
+	std::vector<int>::iterator it = _cfds.begin();
+
+	for ( ; it != _cfds.end() ; it++) {
+		if (*it == _cfd)
+			return true;
+	}
+	return false;
 }
 
 void TcpServer::startListen()
@@ -130,7 +136,6 @@ void TcpServer::startListen()
 			perror("epoll_wait");
 			break ;
 		}
-
 		for (i = 0 ; i <= _nfds ; i++) {
 
 				if (_evlist[i].data.fd == m_socket) {
@@ -157,8 +162,12 @@ void TcpServer::startListen()
 					
 					
 					// add the accepted client to a list of connected clients
+					_cfds.push_back(_cfd);
 
-				} else  { // check if its a connected client
+				}
+
+				_cfd = _evlist[i].data.fd;
+				if (findClientFile()) { // check if its a connected client
 					_cfd = _evlist[i].data.fd;
 					
 					std::cout << "client trying to send something" << std::endl;
@@ -184,6 +193,7 @@ void TcpServer::startListen()
 							return ;
 						}
 						// remove the client from the list
+						_cfds.erase(std::remove(_cfds.begin(), _cfds.end(), _cfd), _cfds.end());
 		
 					
 					} else {

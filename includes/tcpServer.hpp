@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:37:10 by jspitz            #+#    #+#             */
-/*   Updated: 2025/07/30 08:02:02 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/07/30 15:08:12 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,11 @@
 # include <sys/epoll.h>
 # include <iostream>
 # include <fstream>
-
+# include <fcntl.h>
+# include <vector>
+# include <list>
+# include <algorithm>
+# include <exception> 
 # define MAX 1024
 
 class TcpServer
@@ -58,6 +62,9 @@ class TcpServer
 		void					AcceptConnection(int &new_socket);
 		std::string				buildResponse();
 		void					sendResponse( void );
+		bool					findClientFile( void );
+		
+		std::vector<int>			_cfds; // all accepted client fd stocked
 };
 
 extern int g_signal;

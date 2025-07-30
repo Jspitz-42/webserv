@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:37:10 by jspitz            #+#    #+#             */
-/*   Updated: 2025/07/29 10:59:24 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/07/30 08:02:02 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <unistd.h>
 # include <sys/epoll.h>
 # include <iostream>
+# include <fstream>
 
 # define MAX 1024
 

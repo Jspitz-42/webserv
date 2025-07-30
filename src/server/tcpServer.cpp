@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:41:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/07/30 11:44:38 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/07/30 14:16:18 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,14 @@ void TcpServer::closeServer( void )
 	close(m_new_socket);
 }
 
+#include <fcntl.h>
+
+void setnonblocking(int fd)
+{
+	int flags = fcntl(fd, F_GETFL, 0);
+  	fcntl(fd, F_SETFL, flags | O_NONBLOCK); //error checking to be done here
+}
+
 void TcpServer::startListen()
 {
 	if (listen(m_socket, 20) < 0)
@@ -137,6 +145,7 @@ void TcpServer::startListen()
 				
 					std::cout << "\x1b[0;32m[*] accept\x1b[0m" << std::endl;
 					
+					setnonblocking(_cfd);
 					_ev.events = EPOLLIN;
 					_ev.data.fd = _cfd;
 					_ret = epoll_ctl(_efd, EPOLL_CTL_ADD, _cfd, &_ev);
@@ -146,12 +155,20 @@ void TcpServer::startListen()
 						return ;
 					}
 					
-					send(_cfd, buildResponse().c_str(), buildResponse().size(), 0);
+					
+					// add the accepted client to a list of connected clients
 
-				} else {
+				} else  { // check if its a connected client
 					_cfd = _evlist[i].data.fd;
+					
+					std::cout << "client trying to send something" << std::endl;
 
-					buflen = read(_cfd, buf, BUFSIZ-1);
+					buflen = recv(_cfd, buf, BUFSIZ-1, MSG_DONTWAIT);
+					// buflen = read(_cfd, buf, BUFSIZ-1);
+					
+					std::cout << "Client sent: " << buflen << " bytes of data" << std::endl;
+					std::cout << buf << std::endl;
+					// remember to check for error if buflen == -1
 					if (buflen ==  0) {
 						if (close(_cfd) == -1) {
 							perror("close");
@@ -166,11 +183,14 @@ void TcpServer::startListen()
 							perror("epoll_ctl");
 							return ;
 						}
+						// remove the client from the list
+		
 					
 					} else {
 						buf[buflen] = '\0';
 						std::string msgPrefix = "prevent-arbitrary-connection";
 						std::string msg = buf;
+
 
 						if (msgPrefix.length() > msg.length()) continue ;
 
@@ -178,6 +198,7 @@ void TcpServer::startListen()
 							msg = msg.substr(msgPrefix.length(), msg.length());
 							std::cout << msg << std::endl;
 						}
+						send(_cfd, buildResponse().c_str(), buildResponse().size(), 0);
 					}
 				}
 		}

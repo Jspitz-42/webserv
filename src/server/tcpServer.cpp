@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:41:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/07/30 08:15:30 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/07/30 11:44:38 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,6 @@ void TcpServer::startListen()
 
 				if (_evlist[i].data.fd == m_socket) {
 				
-					std::cerr << "if (_evlist[i] ..) called " << std::endl;
 				
 					_cfd = accept(m_socket, (struct sockaddr *)&csin, &m_socketAddress_len);
 				
@@ -150,7 +149,6 @@ void TcpServer::startListen()
 					send(_cfd, buildResponse().c_str(), buildResponse().size(), 0);
 
 				} else {
-					std::cerr << "else called" << std::endl;
 					_cfd = _evlist[i].data.fd;
 
 					buflen = read(_cfd, buf, BUFSIZ-1);
@@ -170,7 +168,6 @@ void TcpServer::startListen()
 						}
 					
 					} else {
-						std::cerr << "else else called" << std::endl;
 						buf[buflen] = '\0';
 						std::string msgPrefix = "prevent-arbitrary-connection";
 						std::string msg = buf;
@@ -210,7 +207,6 @@ std::string TcpServer::buildResponse( void )
 		htmlFile += temp;
 		htmlFile += " ";
 	}
-	std::cerr << htmlFile << std::endl;
 	myFile.close();
 	std::ostringstream ss;
 	ss << "HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: " << htmlFile.size() << "\n\n"

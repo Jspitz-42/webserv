@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:41:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/03 10:19:24 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/03 12:05:54 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ TcpServer::TcpServer(std::string ip_address, int port) :	m_ip_addr(ip_address),
 															m_socketAddress_len(sizeof(m_socketAddress)),
 															m_serverMessage(buildResponse())
 {
+	std::memset(&_ev, 0, sizeof(_ev));
+	std::memset(&_evlist, 0, sizeof(_evlist));
 	std::memset(&m_socketAddress, 0, sizeof(m_socketAddress));
 	std::memset(&csin, 0, sizeof(csin));
 

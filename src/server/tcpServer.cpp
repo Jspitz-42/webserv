@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:41:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/07/30 15:07:33 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/03 10:19:24 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,28 +20,18 @@ void log(const std::string & message)
 	std::cout << message << std::endl;
 }
 
-void exitWithError(const std::string & errorMessage)
-{
-	log("ERROR: " + errorMessage);
-	exit(1);
-}
-
 int TcpServer::startServer()
 {
 	m_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (m_socket < 0)
 	{
-		std::cerr << "line 34 errror called" << std::endl;
-		exitWithError("Cannot create socket");
-		return 1;
+		throw TcpServer::ErrorMessage("socket: creation failed");
 	}
 
 	std::cerr <<  " socket = " << m_socket << std::endl;
 	if (bind(m_socket, (sockaddr*)&m_socketAddress, m_socketAddress_len) < 0)
 	{
-		std::cout << "yes it is bind error " << std::endl;
-		exitWithError("Cannot connect socket to address");
-		return 1;
+		throw TcpServer::ErrorMessage("bind: cannot connect socket");
 	}
 
 	return 0;
@@ -65,7 +55,7 @@ TcpServer::TcpServer(std::string ip_address, int port) :	m_ip_addr(ip_address),
 		std::ostringstream ss;
 
 		ss << "Failed to start server with PORT:" << ntohs(m_socketAddress.sin_port);
-		log(ss.str());
+		throw TcpServer::ErrorMessage(ss.str());
 	}
 
 }
@@ -84,7 +74,9 @@ void TcpServer::closeServer( void )
 void setnonblocking(int fd)
 {
 	int flags = fcntl(fd, F_GETFL, 0);
-  	fcntl(fd, F_SETFL, flags | O_NONBLOCK); //error checking to be done here
+	
+  	if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) < 0)
+		throw TcpServer::ErrorMessage("fcntl: failures");//error checking to be done here
 }
 
 bool TcpServer::findClientFile( void )
@@ -102,7 +94,7 @@ void TcpServer::startListen()
 {
 	if (listen(m_socket, 20) < 0)
 	{
-		exitWithError("Socket listen failed");
+		throw TcpServer::ErrorMessage("Socket: listen: failed");
 	}
 
 	std::ostringstream ss;
@@ -113,7 +105,7 @@ void TcpServer::startListen()
 
 	if (_efd < 0) {
 		perror("epoll_create1");
-		return ;
+		throw TcpServer::ErrorMessage("epoll_create1: failed");
 	}
 
 	_ev.events = EPOLLIN;
@@ -121,8 +113,7 @@ void TcpServer::startListen()
 	_ret = epoll_ctl(_efd, EPOLL_CTL_ADD, m_socket, &_ev);
 
 	if (_ret < 0) {
-		perror("eppoll_ctl");
-		return ;
+		throw TcpServer::ErrorMessage("epoll_ctl: failed");
 	}
 
 	int i, buflen;
@@ -134,7 +125,7 @@ void TcpServer::startListen()
 		
 		if (_ret == -1) {
 			perror("epoll_wait");
-			break ;
+			throw TcpServer::ErrorMessage("epoll_wait: failed");
 		}
 		for (i = 0 ; i <= _nfds ; i++) {
 
@@ -144,7 +135,7 @@ void TcpServer::startListen()
 					_cfd = accept(m_socket, (struct sockaddr *)&csin, &m_socketAddress_len);
 				
 					if (_cfd == -1) {
-						perror("accept");
+						throw TcpServer::ErrorMessage("accept: failed");
 						return ;
 					}
 				
@@ -157,7 +148,7 @@ void TcpServer::startListen()
 				
 					if (_ret == -1) {
 						perror("epoll_ctl");
-						return ;
+						throw TcpServer::ErrorMessage("epoll_ctl: failed");
 					}
 					
 					
@@ -181,7 +172,7 @@ void TcpServer::startListen()
 					if (buflen ==  0) {
 						if (close(_cfd) == -1) {
 							perror("close");
-							return ;
+							throw TcpServer::ErrorMessage("close: failed");
 						}
 					
 						std::cout << "\x1b[0;31m[*] close \x1b[0m" << std::endl;
@@ -190,7 +181,7 @@ void TcpServer::startListen()
 					
 						if (_ret == -1) {
 							perror("epoll_ctl");
-							return ;
+							throw TcpServer::ErrorMessage("epoll_ctl: failed");
 						}
 						// remove the client from the list
 						_cfds.erase(std::remove(_cfds.begin(), _cfds.end(), _cfd), _cfds.end());
@@ -222,7 +213,7 @@ void TcpServer::AcceptConnection(int & new_socket)
 	{
 		std::ostringstream ss;
 		ss << "Server failed to accept incoming connection from ADDRESS: " << inet_ntoa(m_socketAddress.sin_addr) << "; PORT: " << ntohs(m_socketAddress.sin_port);
-		exitWithError(ss.str());
+		throw TcpServer::ErrorMessage(ss.str());
 	}
 }
 

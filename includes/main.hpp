@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 11:46:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/07/29 08:52:10 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/03 10:12:52 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,13 @@
 #include <cstdlib>
 #include <unistd.h>
 #include <csignal>
+#include "tcpServer.hpp"
 
-void sig_handle(int signal);
+extern int g_signal;
+
+void sigint_handle_main(int signum);
+
+int set_sig_handler(int signum, void (*fn)(int));
+
 
 #endif

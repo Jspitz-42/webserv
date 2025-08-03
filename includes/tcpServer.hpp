@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:37:10 by jspitz            #+#    #+#             */
-/*   Updated: 2025/07/30 15:08:12 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/03 09:59:33 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,22 @@ class TcpServer
 								TcpServer(std::string ip_address, int port);		
 								~TcpServer();
 		void					startListen( void );
+
+		class ErrorMessage : virtual public std::exception
+		{
+			std::string msg;
+			
+			public:
+
+			ErrorMessage(const std::string & message ) : msg(message) {}
+
+			virtual ~ErrorMessage() throw() {}
+
+			const char * what() const throw()
+			{
+				return msg.c_str();
+			}	
+		};
 
 	protected:
 
@@ -65,6 +81,8 @@ class TcpServer
 		bool					findClientFile( void );
 		
 		std::vector<int>			_cfds; // all accepted client fd stocked
+
+
 };
 
 extern int g_signal;

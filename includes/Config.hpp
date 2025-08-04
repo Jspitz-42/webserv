@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:12 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/04 13:04:03 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/04 13:44:46 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@
 # include <map>
 # include <cstdlib>
 
-class config
+class Config
 {
 	public:
 

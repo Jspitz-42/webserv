@@ -1,6 +1,7 @@
 NAME = webserv
 
 SRC = ./src/main.cpp \
+	  ./src/utils.cpp \
 	  ./src/server/tcpServer.cpp
 
 ROOT = ./

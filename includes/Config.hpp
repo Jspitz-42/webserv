@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:12 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/05 09:46:02 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/05 14:29:11 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 # define ALL_ERROR_CODES			40
 # define PORT_MAX					65535
 # define PORT_MIN					1
-# define SEPARATORS					" \t\v\n\r\f"
+# define SEPARATORS					" \t\v\n\r\f;"
 # define SERVER_CONTEXT				1
 # define LOCATION_CONTEXT			2
 
@@ -41,6 +41,7 @@
 # include <fstream>
 # include <sstream>
 # include <map>
+# include <vector>
 # include <cstdlib>
 
 class Config
@@ -86,7 +87,7 @@ class Config
 					public:
 																			AutoIndex(const std::string &) throw (std::exception);
 						virtual												~AutoIndex( void );
-						virtual void										SetDirective(ServerConfig &, int) const;
+						virtual void										setDirective(ServerConfig &, int) const;
 					
 					protected:
 
@@ -140,14 +141,14 @@ class Config
 																			ErrorCodePage(const std::string & s) throw (std::exception);
 						virtual 											~ErrorCodePage();
 						virtual void 										setDirective(ServerConfig & , int) const;
-						static const int									_allErrorCode[ALL_ERROR_CODES];
+						static const int									_allErrorCodes[ALL_ERROR_CODES];
 					protected:
 
 					private:
 		
 						std::vector<int>									_error_codes;
 						std::string											_error_path;
-						bool												loadErrorCodes(const std::string & s);
+						bool												loadErrorCodes(const std::string &);
 																			ErrorCodePage();
 				} ;
 
@@ -183,7 +184,7 @@ class Config
 				{
 					public:
 																			Listen(const std::string &) throw (std::exception);
-						virtual												~listen( void );
+						virtual												~Listen( void );
 						virtual void										setDirective(ServerConfig &, int) const;
 
 					protected:
@@ -200,7 +201,7 @@ class Config
 					public:
 																			Location(std::string const &) throw (std::exception);
 						virtual												~Location( void );
-						virtual void										SetDirective(ServerConfig &, int) const;
+						virtual void										setDirective(ServerConfig &, int) const;
 						bool												findMethod(std::string const &) const;
 						bool												checkMaxBody( int ) const;
 						
@@ -210,10 +211,11 @@ class Config
 						std::vector<std::string>							_indexes;
 						
 						int													_max_body_size;
-						int													redirect_status;
+						int													_redirect_status;
 						bool												_autoindex;
 						
 						std::string											_cgi_bin;
+						std::string											_upload_path;
 						std::string											_redirect_uri;
 						std::map<std::string, std::vector<std::string> >	_cgi_map;
 						std::map<std::string, std::vector<int> >			_location_errors_map;
@@ -243,7 +245,7 @@ class Config
 				class Root: public Directive
 				{
 					public:
-																			Root(const std::string &) throw (std::exception) const;
+																			Root(const std::string &) throw (std::exception);
 						virtual												~Root( void );
 						virtual void										setDirective(ServerConfig &, int) const;
 						
@@ -273,7 +275,7 @@ class Config
 					public:
 																			Upload(const std::string &) throw (std::exception);
 						virtual												~Upload( void );
-						virtual void										setDirective(serverConfig &, int) const;
+						virtual void										setDirective(ServerConfig &, int) const;
 					protected:
 
 					private:
@@ -305,6 +307,7 @@ class Config
 		} ;
 	
 	public:
+											Config( void );
 											Config(std::string const &) throw(std::exception);
 											~Config( void );
 		std::vector<ServerConfig>			_servers;
@@ -315,10 +318,9 @@ class Config
 		static const std::string			_location_directives[LOCATION_CONTEXT_DIRECTIVE];
 		bool								validDirective(const std::string &, const std::string *, int len) const;
 		Config::ServerConfig::Directive *	createDirective(std::string const &, std::string const &) throw(std::exception);
-											Config( void );
 											Config(const Config &);
 
 } ;
 
-std::ostream & operator<<(std::ostream &, const Config &);
-std::ostream & operator<<(std::ostream &, const Config::ServerConfig &);
+//std::ostream & operator<<(std::ostream &, const Config &);
+//std::ostream & operator<<(std::ostream &, const Config::ServerConfig &);

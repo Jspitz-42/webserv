@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 07:44:24 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/03 10:26:51 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/05 13:22:43 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,14 @@ int main(int ac , char **av)
 
 	try {
 		set_sig_handler(SIGINT, &sigint_handle_main);
-		TcpServer server = TcpServer("127.0.0.1", port);
-		server.startListen();
+		if (ac == 1) {
+			TcpServer server1("127.0.0.1", port);
+			server1.startListen();
+		}
+		if (ac == 2) {
+			std::string	path(av[1]);
+			TcpServer server2(path);
+		}
 	} catch (const std::exception & e) { // exception and throw are still work to do
 		std::cerr << e.what() << std::endl;
 	}

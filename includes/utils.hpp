@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 10:32:51 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/05 09:52:58 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/05 12:29:27 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <sys/time.h>
 # include <sys/stat.h> 
 
-# include "config.hpp"
+# include "Config.hpp"
 # include "tcpServer.hpp"
 
 # define uint64_t unsigned long int

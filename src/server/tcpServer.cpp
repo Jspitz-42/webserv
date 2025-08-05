@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:41:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/03 12:05:54 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/05 14:37:04 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,27 @@ int TcpServer::startServer()
 	return 0;
 }
 
+TcpServer::TcpServer(std::string & file) : _config(file)
+{
+	std::vector<Config::ServerConfig>::iterator it;
+	std::vector<Config::ServerConfig> servers = _config.servers;
+	
+	_efd = epoll_create(10);
+	if (_efd < 0)
+		throw TcpServer::ErrorMessage("ERROR: [TcpServer::TcpServer] [epoll_create] : failed to create epoll fd");
+	
+	for (it = servers.begin() ; it != servers.end() ; ++ it) {
+		
+	}
+	
+	return ;
+}
+
 TcpServer::TcpServer(std::string ip_address, int port) :	m_ip_addr(ip_address),
 															m_port(port), m_socket(),
 															m_new_socket(), m_socketAddress(),
 															m_socketAddress_len(sizeof(m_socketAddress)),
-															m_serverMessage(buildResponse())
+															m_serverMessage(buildResponse()), _config()
 {
 	std::memset(&_ev, 0, sizeof(_ev));
 	std::memset(&_evlist, 0, sizeof(_evlist));

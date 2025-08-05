@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   config.hpp                                         :+:      :+:    :+:   */
+/*   Config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:12 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/04 13:44:46 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/05 09:46:02 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -307,7 +307,7 @@ class Config
 	public:
 											Config(std::string const &) throw(std::exception);
 											~Config( void );
-				std::vector<ServerConfig>	_servers;
+		std::vector<ServerConfig>			_servers;
 	protected:
 
 	private:

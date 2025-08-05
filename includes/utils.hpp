@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 10:32:51 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/04 11:59:47 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/05 09:52:58 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,6 @@ uint64_t			timestamp_in_ms( void );
 char *				get_local_time( void );
 const std::string & readFileStream(std::ifstream const & s1, std::string & s2);
 const std::string & readFileString(std::string const & s1, std::string & s2);
-const std::string  autoindex_header(std::string const & path);
+const std::string 	autoindex_header(std::string const & path);
 bool				isDir(const std::string & path);
 bool				ifFile(const std::string & path);

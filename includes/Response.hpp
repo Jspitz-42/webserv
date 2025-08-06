@@ -1,28 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.hpp                                         :+:      :+:    :+:   */
+/*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/04 10:28:16 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/06 11:45:05 by jspitz           ###   ########.fr       */
+/*   Created: 2025/07/29 07:38:31 by jspitz            #+#    #+#             */
+/*   Updated: 2025/08/06 11:45:50 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# pragma once
+#pragma once
 
 # include <iostream>
-# include "Socket.hpp"
+# include <map>
+# include <fstream>
+# include <sstream>
+# include <ostream>
+# include <string>
+# include <limits>
+# include <algorithm>
+# include <fcntl.h>
+# include <cstdlib>
+# include <sys/stat.h>
+# include <cstdio>
+# include <unistd.h>
+# include <dirent.h>
+# include <time>
+# include <sys/time.h>
+# include <sys/wait.h>
 
+# include "Request.hpp"
+# include "utils.hpp"
 
-class Client
+class Response
 {
 	public:
-
 		class ErrorMessage : virtual public std::exception
 		{
-			std::string	msg;
+			std::string 													msg;
 			
 			public:
 
@@ -35,9 +51,9 @@ class Client
 				return msg.c_str();
 			}	
 		};
-		
 
 	protected:
 
 	private:
+
 };

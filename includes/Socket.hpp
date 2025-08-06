@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 10:29:52 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/04 10:31:38 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/06 11:07:41 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,61 @@
 # include <fcntl.h>
 
 # include "config.hpp"
+# include "Config.hpp"
+# include "utils.hpp"
 # include "tcpServer.hpp"
+
+class Config;
 
 class Socket
 {
 	public:
 
+		class ErrorMessage : virtual public std::exception
+		{
+			std::string msg;
+			
+			public:
+
+			ErrorMessage(const std::string & message ) : msg(message) {}
+
+			virtual ~ErrorMessage() throw() {}
+
+			const char * what() const throw()
+			{
+				return msg.c_str();
+			}	
+		};
+
+											Socket(const std::string &, int);
+											~Socket( void );
+											Socket(const Socket &);
+
+		int 								acceptConnection( void );
+		int									getPort( void ) const;
+		int									getSocketFd( void ) const;
+		int									getAddressLen( void ) const;
+
+		void								addServerConf(Config::ServerConfig &);
+		Config::ServerConfig const & 		getServerConfig(std::string const &) const;
+
+		const std::string & 				getIpAdress( void ) const;
+		struct sockaddr_in					getAdress( void ) const;
+	
 	protected:
 
 	private:
+	
+											Socket( void );
+		int									_socket_fd;
+		int									_addrlen;
+		int									_port;
+		
+		std::string							_ip_address;
+		
+		struct sockaddr_in					_address;
+		
+		std::vector<Config::ServerConfig>	_conf_servers;
+		
+		
 };

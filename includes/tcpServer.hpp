@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:37:10 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/06 08:51:15 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/06 11:34:08 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,21 @@
 # include <algorithm>
 # include <exception>
 # include "Config.hpp"
+# include "Client.hpp"
 # define MAX 1024
 
 class TcpServer
 {
 	public:
-								TcpServer(std::string ip_address, int port);		
+								TcpServer(std::string const &) throw (std::exception);
+		void					addSocket(Socket &) throw (std::exception);
+		void					cleanEpollClientList( void );
+		void					removeClient(std::pair<int, int> &);
+		int						getEpollFd( void ) const;
+		int						numSockets( void ) const;		
 //								TcpServer(std::string & file);
 								~TcpServer();
-		void					startListen( void );
+		void					run( void );
 
 		class ErrorMessage : virtual public std::exception
 		{
@@ -57,32 +63,39 @@ class TcpServer
 	protected:
 
 	private:
-
-		std::string 			m_ip_addr;
-		int						m_port;
-		int						m_socket;
-		int						m_new_socket;
-	//	long					m_incomingMessage;
-		struct	sockaddr_in 	m_socketAddress;
-		struct	sockaddr_in		csin;
-		unsigned int			m_socketAddress_len;
-		std::string				m_serverMessage;
-		int						_efd; // epoll fd
-		int						_ret;
-		int						_nfds;
-		int						_cfd;
-
-		struct epoll_event		_ev;
-		struct epoll_event		_evlist[MAX];
-
-		int						startServer();
-		void					closeServer();
-		void					AcceptConnection(int &new_socket);
-		std::string				buildResponse();
-		void					sendResponse( void );
-		bool					findClientFile( void );
-		
-		std::vector<int>		_cfds; // all accepted client fd stocked
+		int									_epollfd;
+		std::vector<socket>					_sockets;
+		std::map<int, std::vector<Client> >	_clients;
+		Config								_config;
+		socket &							getOrCreateSocket(std::string const &, int);
+		void								acceptConnectionAt( int ) throw(std::exception);
+		bool								isSocketFd( int );
+		void								initMsg( void );
+//		std::string 			m_ip_addr;
+//		int						m_port;
+//		int						m_socket;
+//		int						m_new_socket;
+//	//	long					m_incomingMessage;
+//		struct	sockaddr_in 	m_socketAddress;
+//		struct	sockaddr_in		csin;
+//		unsigned int			m_socketAddress_len;
+//		std::string				m_serverMessage;
+//		int						_efd; // epoll fd
+//		int						_ret;
+//		int						_nfds;
+//		int						_cfd;
+//
+//		struct epoll_event		_ev;
+//		struct epoll_event		_evlist[MAX];
+//
+//		int						startServer();
+//		void					closeServer();
+//		void					AcceptConnection(int &new_socket);
+//		std::string				buildResponse();
+//		void					sendResponse( void );
+//		bool					findClientFile( void );
+//		
+//		std::vector<int>		_cfds; // all accepted client fd stocked
 //		Config					_config;
 
 };

@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 07:44:24 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/05 13:22:43 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/06 08:52:44 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,21 +36,17 @@ int set_sig_handler(int signum, void (*fn)(int))
 
 int main(int ac , char **av)
 {
-	int port;
+//	int port;
+	std::string path;
 
-	if (ac == 1) port = 8080;
-	if (ac == 2) port = std::atoi(av[1]);
+	if (ac == 1) {/*port = 8080; */ path = "./conf/default.conf" ; }
+	else if (ac == 2) { /*port = std::atoi(av[1]);*/ path = av[1]; }
+	else { std::cerr << "ERROR: [Too many arguments] [please: only one is required] [tips: one is less than two]" << std::endl ;}
 
 	try {
 		set_sig_handler(SIGINT, &sigint_handle_main);
-		if (ac == 1) {
-			TcpServer server1("127.0.0.1", port);
-			server1.startListen();
-		}
-		if (ac == 2) {
-			std::string	path(av[1]);
-			TcpServer server2(path);
-		}
+
+		Config test(path);
 	} catch (const std::exception & e) { // exception and throw are still work to do
 		std::cerr << e.what() << std::endl;
 	}

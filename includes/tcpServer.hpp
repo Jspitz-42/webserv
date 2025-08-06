@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:37:10 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/05 13:18:03 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/06 08:51:15 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ class TcpServer
 {
 	public:
 								TcpServer(std::string ip_address, int port);		
-								TcpServer(std::string & file);
+//								TcpServer(std::string & file);
 								~TcpServer();
 		void					startListen( void );
 
@@ -83,7 +83,7 @@ class TcpServer
 		bool					findClientFile( void );
 		
 		std::vector<int>		_cfds; // all accepted client fd stocked
-		Config					_config;
+//		Config					_config;
 
 };
 

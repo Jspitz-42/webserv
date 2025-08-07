@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 07:44:24 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/06 08:52:44 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/07 13:38:38 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int g_signal = 0;
 void sigint_handle_main(int signum)
 {
 	g_signal |= signum;
-	throw TcpServer::ErrorMessage("Server: quit with ctrl + c (SIGINT)");
+	throw TCPServer::ErrorMessage("Server: quit with ctrl + c (SIGINT)");
 }
 
 int set_sig_handler(int signum, void (*fn)(int))
@@ -29,7 +29,7 @@ int set_sig_handler(int signum, void (*fn)(int))
 	sig.sa_flags = 0;
 	sigemptyset(&sig.sa_mask);
 	if (sigaction(signum, &sig, 0) < 0) {
-		throw TcpServer::ErrorMessage("sigaction: failed");
+		throw TCPServer::ErrorMessage("sigaction: failed");
 	}
 	return 0;
 }
@@ -46,7 +46,8 @@ int main(int ac , char **av)
 	try {
 		set_sig_handler(SIGINT, &sigint_handle_main);
 
-		Config test(path);
+		TCPServer test(path);
+		test.run();
 	} catch (const std::exception & e) { // exception and throw are still work to do
 		std::cerr << e.what() << std::endl;
 	}

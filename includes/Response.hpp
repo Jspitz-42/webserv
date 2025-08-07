@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:31 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/06 13:27:51 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/07 13:18:00 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,13 @@
 # include <cstdio>
 # include <unistd.h>
 # include <dirent.h>
-# include <time>
+# include <time.h>
 # include <sys/time.h>
 # include <sys/wait.h>
 
-# include "Request.hpp"
 # include "utils.hpp"
+
+class Request;
 
 class Response
 {
@@ -52,8 +53,8 @@ class Response
 			}	
 		};
 		
-													Reponse(Request const &, Config::ServerConfig const &);
-													~Reponse( void );
+													Response(Request const &, Config::ServerConfig const &);
+													~Response( void );
 
 		const										std::string createResponse( void );
 	

@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:08:34 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/06 11:31:52 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/07 13:06:10 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ Socket::Socket(const std::string & ip, int port) : _ip_address(ip), _port(port)
 	_address.sin_port = htons(_port);
 	_addrlen = sizeof(_address);
 
-	std::bzero(_addres.sin_zero, sizeof(_address.sin_zero));
+	bzero(_address.sin_zero, sizeof(_address.sin_zero));
 	
 	int opt = 1;
 
@@ -46,7 +46,7 @@ Socket::Socket(const Socket & other)
 	_addrlen = other._addrlen;
 	_port = other._port;
 	_ip_address = other._ip_address;
-	_addres = other._address;
+	_address = other._address;
 	_conf_servers = other._conf_servers;
 }
 
@@ -90,4 +90,10 @@ void Socket::addServerConf(Config::ServerConfig & sc)
 int Socket::acceptConnection( void )
 {
 	return accept(_socket_fd, (struct sockaddr *)&_address, (socklen_t *)&_addrlen);	
+}
+
+std::ostream& operator<<(std::ostream& s, const Socket& param)
+{
+	s << "http://" << param.getIpAdress() << ":" << param.getPort();
+	return (s);
 }

@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 10:29:52 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/06 11:07:41 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/07 13:05:30 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 # include <cstdlib>
 # include <fcntl.h>
 
-# include "config.hpp"
 # include "Config.hpp"
 # include "utils.hpp"
 # include "tcpServer.hpp"
@@ -70,9 +69,9 @@ class Socket
 											Socket( void );
 		int									_socket_fd;
 		int									_addrlen;
-		int									_port;
 		
 		std::string							_ip_address;
+		int									_port;
 		
 		struct sockaddr_in					_address;
 		
@@ -80,3 +79,5 @@ class Socket
 		
 		
 };
+
+std::ostream&	operator<<(std::ostream&, const Socket&);

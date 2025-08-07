@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:27:53 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/06 10:49:17 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/07 13:37:06 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -641,6 +641,13 @@ void Config::ServerConfig::Location::setDirective(ServerConfig & serv_conf, int 
 	if (context == SERVER_CONTEXT) {
 		serv_conf._locations.push_back(*this);
 	}
+}
+
+bool Config::ServerConfig::Location::checkMaxBody(int len) const
+{
+	if (len > _max_body_size && _max_body_size > 0) return false;
+
+	return true;
 }
 
 bool Config::ServerConfig::Location::findMethod(const std::string & method) const

@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 12:58:15 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/07 13:13:55 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/08 10:26:08 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,10 @@ Client::Client(const Client & param): _fd(param._fd), _keep_alive(param._keep_al
 	return ;
 }
 
-Client& Client::operator= (const Client& param)
+Client& Client::operator= (const Client & other)
 {
-	_fd = param._fd;
-	_socket = param._socket;
-	_time_to_die = param._time_to_die;
-	_keep_alive = param._keep_alive;
+	if (this != & other) { *this = other ;}
+		
 	return (*this);
 }
 

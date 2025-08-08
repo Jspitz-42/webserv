@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:27:53 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/07 13:37:06 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/08 11:32:19 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ Config::Config(std::string const & file_s) throw(std::exception)
 
 	file.open(file_s.c_str(), std::ios::in);
 
-	if (!file.is_open()) throw Config::ErrorMessage("Invalid file: make sure you have permission, file exist and extension is .conf");
+	if (!file.is_open()) throw Config::ErrorMessage(CONFIG_INVALID_FILE);
 	
 	while (std::getline(file, line))
 	{
@@ -86,7 +86,7 @@ Config::Config(std::string const & file_s) throw(std::exception)
 		}
 
 		if (directive == "}" && directive_content.empty()) {
-			if (--context < 0) throw Config::ErrorMessage("ERROR: [Config::Config] : Invalid Directive");
+			if (--context < 0) throw Config::ErrorMessage(CONFIG_INVALID_DIR_EMPTY);
 			
 			continue ;
 		}
@@ -99,7 +99,7 @@ Config::Config(std::string const & file_s) throw(std::exception)
 					_servers.push_back(s);
 					context++;
 				} else {
-					throw Config::ErrorMessage("ERROR: [Config::COnfig: switch] [case 0] : invalid Directive");
+					throw Config::ErrorMessage(CONFIG_CASE_0_ERR);
 				}
 				break ;
 			
@@ -115,10 +115,10 @@ Config::Config(std::string const & file_s) throw(std::exception)
 						}
 						delete (_directive);
 					} else {
-						throw Config::ErrorMessage("ERROR: [Config::Config] [switch :case SERVER_CONTEXT] : Wrong Syntax");
+						throw Config::ErrorMessage(CONFIG_CASE_SERVER_CONTEXT_ERR_1);
 					}
 				} else {
-					throw Config::ErrorMessage("ERROR: [Config::Config] [switch: case SERVER_CONTEXT] : Invalid Directive");
+					throw Config::ErrorMessage(CONFIG_CASE_SERVER_CONTEXT_ERR_2);
 				}
 				break ;
 			
@@ -131,15 +131,15 @@ Config::Config(std::string const & file_s) throw(std::exception)
 							_directive->setDirective(_servers.back(), context);
 							delete(_directive);
 						} else {
-							throw Config::ErrorMessage("ERROR: [Config::Config] [switch : case LOCATION_CONTEXT] : wrong Syntax");
+							throw Config::ErrorMessage(CONFIG_CASE_LOCATION_CONTEXT_ERR_1);
 						}
 					} else {
-						throw Config::ErrorMessage("ERROR: [Config::Config] [switch: case LOCATION_CONTEXT] : Invalid directive");
+						throw Config::ErrorMessage(CONFIG_CASE_LOCATION_CONTEXT_ERR_2);
 					}
 					break ;
 					
 				default:
-					throw Config::ErrorMessage("ERROR: [Config::Config] [switch: case default] : Invalid Directive");
+					throw Config::ErrorMessage(CONFIG_CASE_LOCATION_CONTEXT_ERR_3);
 		}
 	}
 }
@@ -268,7 +268,7 @@ Config::ServerConfig::AutoIndex::AutoIndex( const std::string & content) throw (
 	} else if (content == "off") {
 		_option = false;
 	} else {
-		throw Config::ErrorMessage("ERROR: [Config::ServerConfig::AutoIndex::AutoIndex] : Invalid Directive");
+		throw Config::ErrorMessage(AUTOINDEX_INVALID_DIR);
 	}
 
 }
@@ -295,14 +295,13 @@ Config::ServerConfig::AutoIndex::~AutoIndex( void )
 Config::ServerConfig::ClientMaxBodySize::ClientMaxBodySize(const std::string & content) throw (std::exception) : Directive(CLIENTMAXBODYSIZE), _max_size(0)
 {
 	if (content.find(SEPARATORS) != std::string::npos)
-		throw Config::ErrorMessage("ERROR: [Config::ServerConfig::ClientMaxBodySize::ClientMaxBodySize] : Wrong Syntax");
-	
+		throw Config::ErrorMessage(CLIENTMAXBODYSIZE_WRONG_SYNTAX);
 	std::stringstream intValue(content);
 	
 	intValue >> _max_size;
 	
 	if (_max_size < 0)
-		throw Config::ErrorMessage("ERROR: [Config::ServerConfig::ClientMaxBodySize::ClientMaxBodySize]: Invalid Directive");
+		throw Config::ErrorMessage(CLIENTMAXBODYSIZE_INVALID_DIR);
 }
 
 void Config::ServerConfig::ClientMaxBodySize::setDirective(ServerConfig & serv_conf, int context) const
@@ -326,7 +325,7 @@ Config::ServerConfig::ClientMaxBodySize::~ClientMaxBodySize( void )
 Config::ServerConfig::Cgi::Cgi(const std::string & content) throw (std::exception) : Directive(CGI)
 {
 	if (content.empty())
-		throw Config::ErrorMessage("ERROR: [Config::ServerConfig::Cgi::Cgi] : Wrong Syntax");
+		throw Config::ErrorMessage(CGI_WRONG_SYNTAX);
 
 	_parseCgiContent(_cgi, content);
 }
@@ -349,7 +348,7 @@ void Config::ServerConfig::Cgi::_parseCgiContent(std::vector<std::string> & _tar
 	}
 
 	if (_target.size() != 2) 
-		throw Config::ErrorMessage("ERROR: [Config::ServerConfig::Cgi::_parseCgiContent] : Invalid Directive");
+		throw Config::ErrorMessage(CGI_PARSCONTENT_INVALID_DIR);
 }
 
 Config::ServerConfig::Cgi::~Cgi( void ) { return ;}
@@ -362,7 +361,7 @@ Config::ServerConfig::Cgi::~Cgi( void ) { return ;}
 Config::ServerConfig::CgiBin::CgiBin(const std::string & content) throw (std::exception) : Directive(CGIBIN), _path(content)
 {
 	if (_path.empty())
-		throw Config::ErrorMessage("ERROR: [Config::ServerConfig::CgiBin::CgiBin] : Syntax");
+		throw Config::ErrorMessage(CGIBIN_WRONG_SYNTAX);
 }
 
 void Config::ServerConfig::CgiBin::setDirective(ServerConfig & serv_conf, int context) const
@@ -387,10 +386,10 @@ Config::ServerConfig::ErrorCodePage::ErrorCodePage(const std::string & content) 
 	size_t found = content.find_last_of(SEPARATORS);
 
 	if (content.empty() || found == std::string::npos)
-		throw Config::ErrorMessage("ERROR: [Config::ServerConfig::ErrorCodePage::ErrorCodePage] : Wrong Syntax");
+		throw Config::ErrorMessage(ERRORCODEPAGE_WRONG_SYNTAX);
 	
 	if (!loadErrorCodes(content.substr(0, found)))
-		throw Config::ErrorMessage("ERROR: [Config::ServerConfig::ErrorCodePage::ErrorCodePage] : Invalid Directive");
+		throw Config::ErrorMessage(ERRORCODEPAGE_INVALID_DIR);
 	
 	_error_path = content.substr(found + 1) ;
 }
@@ -446,7 +445,7 @@ Config::ServerConfig::ErrorCodePage::~ErrorCodePage( void )
 Config::ServerConfig::Index::Index(const std::string & content) throw (std::exception) : Directive(INDEX)
 {
 	if (content.empty())
-		throw Config::ErrorMessage("ERROR: [Config::ServerConfig::Index::Index] : Syntax");
+		throw Config::ErrorMessage(INDEX_WRONG_SYNTAX);
 	
 	std::string tmp(content);
 
@@ -485,14 +484,14 @@ Config::ServerConfig::Methods::Methods(const std::string & content) throw (std::
 	while (str)
 	{
 		if (!_validMethod(std::string(str)))
-			throw Config::ErrorMessage("ERRROR: [Config::ServerConfig::Methods::Methods] [_validMethod false ] : Invalid Directive");
+			throw Config::ErrorMessage(METHODS_INVALID_DIR_1);
 
 		std::vector<std::string>::iterator last = _methods.end();
 		std::vector<std::string>::iterator tmp = _methods.begin();
 
 		for ( ; tmp != last ; ++tmp) {
 			if (*tmp == str)
-				throw Config::ErrorMessage("ERROR: [Config::ServerConfig::Methods::Methods] [double Methods]: Invalid Directive");
+				throw Config::ErrorMessage(METHODS_INVALID_DIR_2);
 			_methods.push_back(std::string(str));
 			str = std::strtok(NULL, " ");
 		}
@@ -525,10 +524,12 @@ Config::ServerConfig::Methods::~Methods( void )
 
 //-----------------------Listen only------------------------------------------------------------------------------
 
-Config::ServerConfig::Listen::Listen(const std::string & content) throw (std::exception): Directive(LISTEN), _ip("127.0.0.1"), _port(80)
+Config::ServerConfig::Listen::Listen(const std::string & content) throw (std::exception): Directive(LISTEN),
+																						 _ip("127.0.0.1"), 
+																						 _port(80)
 {
 	if (content.empty() || content.find_first_of(SEPARATORS) != std::string::npos)
-		throw Config::ErrorMessage("ERROR: [Config::ServerConfig::Listen::Listen] : Wrong syntax");
+		throw Config::ErrorMessage(LISTEN_WRONG_SYNTAX);
 	
 	std::string 		tmp;
 	std::stringstream	stoi_converter;
@@ -537,7 +538,7 @@ Config::ServerConfig::Listen::Listen(const std::string & content) throw (std::ex
 		std::string ip_str = content.substr(0, content.find(':'));
 		std::string	port_str = content.substr(content.find(':') + 1);
 		if (!isIpValid(ip_str) || port_str.empty()) {
-			throw Config::ErrorMessage("ERROR: [Config::ServerConfig::Listen::Listen] [ip invalid or port invalid]: Invalid Directive");
+			throw Config::ErrorMessage(LISTEN_INVALID_IP);
 		} else if (ip_str == "*") {
 			_ip = "0.0.0.0";
 		} else if (ip_str == "localhost") {
@@ -564,7 +565,7 @@ Config::ServerConfig::Listen::Listen(const std::string & content) throw (std::ex
 		stoi_converter >> _port;
 		
 		if (_port > PORT_MAX || _port <= PORT_MIN)
-			throw Config::ErrorMessage("ERROR: [Config::ServerConfig::Listen::Listen] [Port out of range] : Invalid Directive");
+			throw Config::ErrorMessage(LISTEN_OUT_OF_RANGE);
 	}
 }
 
@@ -627,13 +628,13 @@ Config::ServerConfig::Location::Location(std:: string const & content) throw (st
 																								_autoindex(false)
 {
 	if (content.empty() || content[content.length() - 1] != '{')
-		throw Config::ErrorMessage("ERROR: [Config::ServerConfig::Location::Location] [content] : Wrong Syntax");
+		throw Config::ErrorMessage(LOCATION_WRONG_SYNTAX_1);
 	
 	_target = _target.substr(0, content.length() - 1);
 	_target = strtrim(_target);
 
 	if (_target.empty() || _target.find(SEPARATORS) != std::string::npos)
-		throw Config::ErrorMessage("ERROR: [Config::ServerConfig::Location::Location] [_target] : Wrong Syntax");
+		throw Config::ErrorMessage(LOCATION_WRONG_SYNTAX_2);
 }
 
 void Config::ServerConfig::Location::setDirective(ServerConfig & serv_conf, int context) const
@@ -670,7 +671,8 @@ Config::ServerConfig::Location::~Location( void )
 
 //-----------------------Redirect only----------------------------------------------------------------------------------
 
-Config::ServerConfig::Redirect::Redirect(const std::string & content) throw (std::exception) : Directive(REDIRECT)
+Config::ServerConfig::Redirect::Redirect(const std::string & content) throw (std::exception) : 
+																			Directive(REDIRECT)
 {
 	std::string 		tmp;
 	std::stringstream	ss;
@@ -679,13 +681,13 @@ Config::ServerConfig::Redirect::Redirect(const std::string & content) throw (std
 	ss >> _status_code;
 
 	if (_redirect_status_codes.find(_status_code) == _redirect_status_codes.end())
-		throw Config::ErrorMessage("ERROR: [Config::ServerConfig::Redirect::Redirect] [_redirect_status_code] : Wrong Syntax");
+		throw Config::ErrorMessage(REDIRECT_WRONG_SYNTAX_1);
 	
 	tmp = content.substr(3);
 	tmp = strtrim(tmp);
 	
 	if (tmp.empty() || tmp.find(SEPARATORS) != std::string::npos)
-		throw Config::ErrorMessage("ERROR: [Config::ServerConfig::Redirect::Redirect] [tmp.empty | unwanted Separators] : Wrong Syntax");
+		throw Config::ErrorMessage(REDIRECT_WRONG_SYNTAX_2);
 	
 	_redirect_uri = tmp;
 }
@@ -707,10 +709,11 @@ Config::ServerConfig::Redirect::~Redirect( void )
 
 //---------------------Root only--------------------------------------------------------------------------------------
 
-Config::ServerConfig::Root::Root(const std::string & content) throw (std::exception) : Directive(ROOT), _path(content)
+Config::ServerConfig::Root::Root(const std::string & content) throw (std::exception) : Directive(ROOT),
+																					  _path(content)
 {
 	if (content.empty() || content.find(SEPARATORS) != std::string::npos || content[content.length() - 1] != '/')
-		throw Config::ErrorMessage("ERROR: [Config::ServerConfig::Root::Root] : Wrong Syntax");
+		throw Config::ErrorMessage(ROOT_WRONG_SYNTAX);
 }
 
 void Config::ServerConfig::Root::setDirective(ServerConfig & serv_conf, int context) const
@@ -763,7 +766,7 @@ Config::ServerConfig::ServerName::~ServerName( void )
 Config::ServerConfig::Upload::Upload(const std::string & content) throw (std::exception) : Directive(ROOT), _upload_path(content)
 {
 	if (content.empty() || content.find(SEPARATORS) != std::string::npos || content[content.length() - 1] != '/')
-		throw Config::ErrorMessage("ERROR: [Config::ServerConfig::Upload::Upload] : Wrong Syntax");
+		throw Config::ErrorMessage(UPLOAD_WRONG_SYNTAX);
 }
 
 void Config::ServerConfig::Upload::setDirective(ServerConfig & serv_conf, int context) const

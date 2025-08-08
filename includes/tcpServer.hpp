@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:37:10 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/07 13:07:44 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/08 11:03:03 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # include "Config.hpp"
 # include "Client.hpp"
 # include "Socket.hpp"
+# include "Error.hpp"
 # define MAX 1024
 # define MAX_EVENTS 10
 class Client;
@@ -55,30 +56,6 @@ class TCPServer
 			}	
 		};
 
-		class AcceptException: public std::exception {
-			public:
-				virtual const char * what() const throw();
-		};
-		class EpollAddException: public std::exception {
-			public:
-				virtual const char * what() const throw();
-		};
-		class EpollCreateException: public std::exception {
-			public:
-				virtual const char * what() const throw();
-		};
-		class EpollDeleteException: public std::exception {
-			public:
-				virtual const char * what() const throw();
-		};
-		class EpollWaitException: public std::exception {
-			public:
-				virtual const char * what() const throw();
-		};
-		class ReadFdException: public std::exception {
-			public:
-				virtual const char * what() const throw();
-		};
 		TCPServer(std::string const &) throw (std::exception);
 		~TCPServer();
 		void	addSocket(Socket &) throw (std::exception);

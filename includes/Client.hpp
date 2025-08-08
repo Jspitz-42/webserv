@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 10:28:16 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/07 13:13:19 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/08 10:26:47 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,27 @@ class Socket;
 
 class Client
 {
-	private:
-		int _fd;
-		bool _keep_alive;
-		uint64_t _time_to_die;
-		Socket & _socket;
-		Client();
 	public:
-		Client(int, Socket &);
-		Client(const Client &);
-		Client & operator= (const Client &);
-		~Client();
+							Client(int, Socket &);
+							Client(const Client &);
+							~Client();
+		
 		int					getFd() const;
-		Socket const &		getSocket() const;
-		void				handleRequest();
 		bool 				keepAlive() const;
+		void				handleRequest();
+		Socket const &		getSocket() const;
 		uint64_t const &	timeToDie() const;
+		Client & operator=	(const Client &);
+							
+	protected:
+
+	private:
+		int					_fd;
+		bool				_keep_alive;
+		uint64_t			_time_to_die;
+		Socket &			 _socket;
+							Client();
+
 };
 std::ostream &	operator<<(std::ostream &, const Client &);
 

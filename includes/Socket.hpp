@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 10:29:52 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/07 13:05:30 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/08 09:10:13 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include "Config.hpp"
 # include "utils.hpp"
 # include "tcpServer.hpp"
+# include "Error.hpp"
 
 class Config;
 

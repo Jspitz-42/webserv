@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:12 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/07 13:35:33 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/08 11:14:01 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@
 # include <map>
 # include <vector>
 # include <cstdlib>
+# include "Error.hpp"
 
 class Config
 {
@@ -290,6 +291,7 @@ class Config
 				int											getPort( void ) const;
 				bool										checkMaxBody( int ) const;
 				std::string const & 						getIp( void ) const;
+
 				bool										_autoindex;
 				int											_max_body_size;
 				std::string									_ip;

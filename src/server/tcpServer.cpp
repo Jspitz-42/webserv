@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:41:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/07 13:04:53 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/08 11:07:05 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,15 @@ void exit_webserv(int param) {
 	std::cout << std::endl <<  "Exit webserv..." << std::endl;
 }
 
-const char * TCPServer::AcceptException::what() const throw() {return ("Failed to accept a connection from the Socket");}
-const char * TCPServer::EpollAddException::what() const throw() {return ("Epoll Failed to add a file descriptor");}
-const char * TCPServer::EpollCreateException::what() const throw() {return ("Epoll Failed to return a file descriptor");}
-const char * TCPServer::EpollDeleteException::what() const throw() {return ("Epoll Failed to delete a descriptor");}
-const char * TCPServer::EpollWaitException::what() const throw() {return ("Epoll Failed to wait and return the events");}
-const char * TCPServer::ReadFdException::what() const throw() {return ("Failed to Read the event file descriptor");}
-
-TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(file) {
-	_epollfd = epoll_create(10);
+TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(file), _epollfd(epoll_create(10))
+{
 	std::vector<Config::ServerConfig>::iterator it;
 	std::vector<Config::ServerConfig> servers = _config._servers;
 	
 	if (_epollfd == -1)
-	   throw EpollCreateException();
+	   throw TCPServer::ErrorMessage(TCPSERVER_ERR_MSG);
 	for (it = servers.begin(); it != servers.end(); ++it) {
-		(void)(*it);
+
 		try {
 			getOrCreateSocket(it->getIp(), it->getPort()).addServerConf(*it);
 		} catch (std::exception & e) {
@@ -47,17 +40,23 @@ TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(
 	}
 }
 
-Socket & TCPServer::getOrCreateSocket(std::string const & ip, int port) {
+Socket & TCPServer::getOrCreateSocket(std::string const & ip, int port)
+{
 	std::vector<Socket>::iterator it;
 
 	for (it = _sockets.begin(); it != _sockets.end(); it++) {
-		if (it->getPort() == port && ip == it->getIpAdress())
-			return (*it);
+		if (it->getPort() == port && ip == it->getIpAdress()) {
+ 			return (*it);
+		}
 	}
+	
 	Socket s(ip, port);
 	addSocket(s);
+	
 	std::pair<int, std::vector<Client> > p(s.getSocketFd(), std::vector<Client>());
+	
 	_clients.insert(p);
+
 	return (_sockets.back());
 }
 
@@ -80,6 +79,7 @@ TCPServer::~TCPServer() {
 	}
 }
 
+
 void TCPServer::acceptConnectionAt(int fd) throw (std::exception) {
 	int								conn_sock;
 	struct epoll_event				ev;
@@ -89,11 +89,11 @@ void TCPServer::acceptConnectionAt(int fd) throw (std::exception) {
 		if (it->getSocketFd() == fd) {
 			conn_sock = (*it).acceptConnection();
 			if (conn_sock == -1)
-			   throw AcceptException();
+			   throw TCPServer::ErrorMessage(ACCEPTCONNECTION_ERR_MSG);
 			ev.events = EPOLLIN | EPOLLET;
 			ev.data.fd = conn_sock;
 			if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, conn_sock, &ev) == -1)
-			   throw EpollAddException();
+			   throw TCPServer::ErrorMessage(ACCEPTCONNEXTIONAT_ERR_MSG);
 			break ;
 		}
 	}
@@ -102,17 +102,20 @@ void TCPServer::acceptConnectionAt(int fd) throw (std::exception) {
 		_clients.find(fd)->second.push_back(c);
 }
 
-void TCPServer::addSocket(Socket & s) throw (std::exception) {
+
+void TCPServer::addSocket(Socket & s) throw (std::exception)
+{
 	struct epoll_event	ev;
 
 	ev.events = EPOLLIN;
 	ev.data.fd = s.getSocketFd();
 	if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, s.getSocketFd(), &ev) == -1)
-		throw EpollAddException();
+		throw TCPServer::ErrorMessage(ADDSOCKET_ERR_MSG);
 	_sockets.push_back(s);
 }
 
-int TCPServer::getEpollFd() const {
+int TCPServer::getEpollFd() const 
+{
 	return (_epollfd);
 }
 
@@ -156,12 +159,14 @@ void TCPServer::run()
 	signal(SIGINT, exit_webserv);
 	initMsg();
 	timestamp_in_ms();
-	while (true) {
+	
+	while (1)
+	{
 		nfds = epoll_wait(_epollfd, events, MAX_EVENTS, 2000);
 		if (!webserv_run)
 			break;
 		if (nfds == -1)
-		   throw EpollWaitException();
+		   throw TCPServer::ErrorMessage(TCPSERVER_RUN_ERR_MSG);
 		for (n = 0; n < nfds; ++n) {
 			if (isSocketFd(events[n].data.fd)) {
 				acceptConnectionAt(events[n].data.fd);
@@ -180,7 +185,8 @@ void TCPServer::run()
 	}
 }
 
-void TCPServer::removeClient(std::pair<int, int> & pair) {
+void TCPServer::removeClient(std::pair<int, int> & pair)
+{
 	std::map<int, std::vector<Client> >::iterator	m_it;
 	std::vector<Client>::iterator					v_it;
 
@@ -199,7 +205,8 @@ void TCPServer::removeClient(std::pair<int, int> & pair) {
 	}
 }
 
-void TCPServer::cleanEpollAndClientsList() {
+void TCPServer::cleanEpollAndClientsList()
+{
 	uint64_t										timestamp;
 	std::vector<Client>::iterator					v_it;
 	std::vector<std::pair<int, int> >				vi_it;

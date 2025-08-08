@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 07:44:24 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/07 13:38:38 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/08 13:22:40 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ int main(int ac , char **av)
 	try {
 		set_sig_handler(SIGINT, &sigint_handle_main);
 
-		TCPServer test(path);
-		test.run();
+		TCPServer a(path);
+		a.run();
 	} catch (const std::exception & e) { // exception and throw are still work to do
 		std::cerr << e.what() << std::endl;
 	}

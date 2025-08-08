@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:12 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/08 11:14:01 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/08 13:19:05 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 # define ALL_ERROR_CODES			40
 # define PORT_MAX					65535
 # define PORT_MIN					1
-# define SEPARATORS					" \t\v\n\r\f;"
+# define SEPARATORS					" \t\v\n\r\f;:"
 # define SERVER_CONTEXT				1
 # define LOCATION_CONTEXT			2
 

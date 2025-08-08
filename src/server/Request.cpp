@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/07 13:33:50 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/08 12:47:32 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ Request::Request(std::string const & request, Config::ServerConfig const & sc) :
 			_final_path = _lock->_root_path + _uri_target.substr(_lock->_target.length());
 			std::string tmp("Started: " + _method + " \"" + _uri_target + "\" ");
 			std::cout.width(35);
-			std::cout << std::left << tmp << std::cout << "=>" << " Target Path [" << _final_path << "]" << std::endl;
+			std::cout << std::left << tmp << "=>" << " Target Path [" << _final_path << "]" << std::endl;
 		}
 		if (!_lock->findMethod(_method)) {
 			_error_code = 405;

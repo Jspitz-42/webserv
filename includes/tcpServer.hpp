@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:37:10 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/08 11:03:03 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/08 12:37:49 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,24 +56,25 @@ class TCPServer
 			}	
 		};
 
-		TCPServer(std::string const &) throw (std::exception);
-		~TCPServer();
-		void	addSocket(Socket &) throw (std::exception);
-		void	cleanEpollAndClientsList();
-		void	removeClient(std::pair<int, int> &);
-		int		getEpollFd() const;
-		int		numSockets() const;
-		void	run();
+											TCPServer(std::string const &) throw (std::exception);
+											~TCPServer();
+		void								addSocket(Socket &) throw (std::exception);
+		void								cleanEpollAndClientsList();
+		void								removeClient(std::pair<int, int> &);
+		int									getEpollFd() const;
+		int									numSockets() const;
+		void								run();
+
 	private:
 		int									_epollfd;
 		std::vector<Socket>					_sockets;
 		std::map<int, std::vector<Client> >	_clients;
 		Config								_config;
-		Socket &	getOrCreateSocket(std::string const &, int);
-		void	acceptConnectionAt(int) throw (std::exception); 
-		bool	isSocketFd(int);
-		void	initMsg(void);
-		TCPServer(const TCPServer &);
+		Socket &							getOrCreateSocket(std::string const &, int);
+		void								acceptConnectionAt(int) throw (std::exception); 
+		bool								isSocketFd(int);
+		void								initMsg(void);
+											TCPServer(const TCPServer &);
 };
 
 

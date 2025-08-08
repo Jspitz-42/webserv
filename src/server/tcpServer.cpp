@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:41:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/08 11:07:05 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/08 13:23:38 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,19 @@
 
 bool webserv_run = true;
 
-void exit_webserv(int param) {
+void exit_webserv(int param)
+{
 	(void)param;
 	webserv_run = false;
 	std::cout << std::endl <<  "Exit webserv..." << std::endl;
 }
 
-TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(file), _epollfd(epoll_create(10))
+TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(file)
 {
+	std::cout << "constructor TCPServer called" << std::endl;
 	std::vector<Config::ServerConfig>::iterator it;
 	std::vector<Config::ServerConfig> servers = _config._servers;
-	
+	_epollfd = epoll_create(10);
 	if (_epollfd == -1)
 	   throw TCPServer::ErrorMessage(TCPSERVER_ERR_MSG);
 	for (it = servers.begin(); it != servers.end(); ++it) {
@@ -60,7 +62,8 @@ Socket & TCPServer::getOrCreateSocket(std::string const & ip, int port)
 	return (_sockets.back());
 }
 
-TCPServer::~TCPServer() {
+TCPServer::~TCPServer()
+{
 	std::vector<Socket>::iterator					it;
 	std::vector<Client>::iterator					v_it;
 	std::map<int, std::vector<Client> >::iterator	m_it;
@@ -80,18 +83,26 @@ TCPServer::~TCPServer() {
 }
 
 
-void TCPServer::acceptConnectionAt(int fd) throw (std::exception) {
+void TCPServer::acceptConnectionAt(int fd) throw (std::exception)
+{
 	int								conn_sock;
 	struct epoll_event				ev;
 	std::vector<Socket>::iterator	it;
 
-	for (it = _sockets.begin(); it != _sockets.end(); it++) {
+	it = _sockets.begin();
+	conn_sock = (*it).acceptConnection();
+	if (conn_sock == -1) {
+		throw TCPServer::ErrorMessage(ACCEPTCONNECTION_ERR_MSG);
+	}
+	for (it = _sockets.begin(); it != _sockets.end(); ++it) {
 		if (it->getSocketFd() == fd) {
 			conn_sock = (*it).acceptConnection();
 			if (conn_sock == -1)
 			   throw TCPServer::ErrorMessage(ACCEPTCONNECTION_ERR_MSG);
+			
 			ev.events = EPOLLIN | EPOLLET;
 			ev.data.fd = conn_sock;
+
 			if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, conn_sock, &ev) == -1)
 			   throw TCPServer::ErrorMessage(ACCEPTCONNEXTIONAT_ERR_MSG);
 			break ;
@@ -119,7 +130,8 @@ int TCPServer::getEpollFd() const
 	return (_epollfd);
 }
 
-bool TCPServer::isSocketFd(int fd) {
+bool TCPServer::isSocketFd(int fd)
+{
 	std::vector<Socket>::iterator it;
 	std::vector<Socket>::iterator end = _sockets.end();
 	for (it = _sockets.begin(); it != end; it++) {
@@ -129,11 +141,13 @@ bool TCPServer::isSocketFd(int fd) {
 	return (false);
 }
 
-int TCPServer::numSockets() const {
+int TCPServer::numSockets() const
+{
 	return (_sockets.size());
 }
 
-void TCPServer::initMsg() {
+void TCPServer::initMsg()
+{
 	std::vector<Socket>::iterator	it;
 	std::map<int, std::vector<Client> >::iterator	m_it;
 

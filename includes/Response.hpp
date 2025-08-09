@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:31 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 09:46:10 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/17 12:37:21 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,22 +58,22 @@ class Response
 													~Response( void );
 
 		const										std::string createResponse( void );
-	
+
 		bool										getKeepAlive( void ) const;
 		int											getStatusCode( void ) const;
-		
+	
 		static std::map<int, std::string>			_codeMessage;
 		static std::map<std::string, std::string>	_mime_types;
-	
+
 	protected:
 
 	private:
 		int											_status_code;
-	
+7
 		bool										_keep_alive;
 		bool										_autoindex;
 		bool										_cgi_response;
-	
+
 		std::string									_date;
 		std::string									_server_name;
 		std::string									_content_type;
@@ -81,11 +81,11 @@ class Response
 
 		Request	const &								_req;
 		Config::ServerConfig const &				_server_config;
-	
+
 		int											execCGI( void );
-	
+
 		void										setMimeType(std::string const &);		
-	
+
 		const std::string 							createRedirectionResponse( void );
 		const std::string 							createAutoindexResponse( void );
 		const std::string 							deleteResponse( void );

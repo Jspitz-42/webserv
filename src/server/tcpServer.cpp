@@ -6,23 +6,13 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:41:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 14:54:19 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/11 15:38:42 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tcpServer.hpp"
 # include "Config.hpp"
 #include "main.hpp"
-
-
-bool webserv_run = true;
-
-void exit_webserv(int param)
-{
-	(void)param;
-	webserv_run = false;
-	std::cout << std::endl <<  "Exit webserv..." << std::endl;
-}
 
 TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(file)
 {
@@ -188,14 +178,11 @@ void TCPServer::run()
 	std::vector<Client>::iterator					v_it;
 	std::map<int, std::vector<Client> >::iterator	m_it;
 
-	signal(SIGINT, exit_webserv);
 	initMsg();
 	timestamp_in_ms();
 	while (1)
 	{
 		nfds = epoll_wait(_epollfd, events, MAX_EVENTS, 2000);
-		if (!webserv_run)
-			break;
 		if (nfds == -1)
 		   throw TCPServer::ErrorMessage(TCPSERVER_RUN_ERR_MSG);
 		for (n = 0; n < nfds; ++n) {

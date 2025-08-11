@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:08:34 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 09:31:11 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/11 12:58:11 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ struct 	sockaddr_in Socket::getAdress( void ) const 	{ return _address ;}
 
 Config::ServerConfig const & Socket::getServerConfig(std::string const & line) const
 {
-	std::string											 method;
+	std::string											method;
 	std::string 										target;
 	Config::ServerConfig::Location * 					loc;
 	std::vector<Config::ServerConfig>::const_iterator	it;

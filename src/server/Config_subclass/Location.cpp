@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:15:49 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 09:16:08 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/11 13:31:35 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ bool Config::ServerConfig::Location::checkMaxBody(int len) const
 bool Config::ServerConfig::Location::findMethod(const std::string & method) const
 {
 	std::vector<std::string>::const_iterator it = _methods.begin();
-
+	std::cout << "findMethod arg = " << method << std::endl;
 	for (; it != _methods.end() ; it++) {
 		if (method == *it) return true;
 	}

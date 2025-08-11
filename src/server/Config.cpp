@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:27:53 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 11:45:49 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/11 13:33:51 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,6 @@ static const std::map<int, std::string> genRedirectStatusCodes()
 }
 
 std::map<int, std::string> Config::ServerConfig::Redirect::_redirect_status_codes = genRedirectStatusCodes();
-
-// -----------------------------this part is for the Config class only --------------------
 
 bool Config::validDirective(const std::string & str, const std::string * list, int len) const
 {
@@ -123,8 +121,8 @@ Config::Config(std::string const & file_s) throw(std::exception)
 				break ;
 			
 				case LOCATION_CONTEXT:
-					if (validDirective(directive, _location_directives, LOCATION_CONTEXT_DIRECTIVE)) {
-						ServerConfig::Directive * _directive;
+				if (validDirective(directive, _location_directives, LOCATION_CONTEXT_DIRECTIVE)) {
+					ServerConfig::Directive * _directive;
 						_directive = createDirective(directive, directive_content);
 						if (_directive != 0) {
 							_directive->setDirective(_servers.back(), context);

@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:12 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 11:45:30 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/11 14:05:19 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -316,13 +316,14 @@ class Config
 				std::vector<std::string>					_indexes;
 				std::vector<std::string>					_names;
 				std::map<std::string, std::vector<int> > 	_server_error_maps;
-				static const std::string					_valid_methods_server[3];
+				static const std::string					_valid_methods_server[4];
+				std::vector<std::string>					_approved_methods;
 
 			protected:
 
 			private:
 		} ;
-	
+
 	public:
 											Config( void );
 											Config(std::string const &) throw(std::exception);

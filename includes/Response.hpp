@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:31 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/07 13:18:00 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/11 09:46:10 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 # include <sys/wait.h>
 
 # include "utils.hpp"
+# include "Config.hpp"
 
 class Request;
 

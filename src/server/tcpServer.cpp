@@ -6,11 +6,12 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:41:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/08 13:23:38 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/11 11:34:51 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tcpServer.hpp"
+# include "Config.hpp"
 #include "main.hpp"
 
 
@@ -40,6 +41,13 @@ TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(
 			std::cout << "This Server Configuration contains errors, or an invalid [ip_address:port]. Please review the configuration file" << std::endl;
 		}
 	}
+}
+
+void	TCPServer::printConfig( void ) const
+{
+	std::cout << "_config._servers.begin()->_listing = " << _config._servers.begin()->_listing << std::endl;
+	std::cout << "_config._servers.begin()->_autoindex = " << _config._servers.begin()->_autoindex << std::endl;
+
 }
 
 Socket & TCPServer::getOrCreateSocket(std::string const & ip, int port)
@@ -221,7 +229,7 @@ void TCPServer::removeClient(std::pair<int, int> & pair)
 
 void TCPServer::cleanEpollAndClientsList()
 {
-	uint64_t										timestamp;
+	UINT64_T										timestamp;
 	std::vector<Client>::iterator					v_it;
 	std::vector<std::pair<int, int> >				vi_it;
 	std::map<int, std::vector<Client> >::iterator	m_it;

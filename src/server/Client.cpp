@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 12:58:15 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/08 10:26:08 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/11 09:43:10 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void Client::handleRequest()
 {
 	char		buffer[30000] = {0};
 	int			valread;
-	uint64_t	ms_s;
+	UINT64_T	ms_s;
 	std::string	buf;
 
 	ms_s = timestamp_in_ms();
@@ -80,7 +80,7 @@ bool Client::keepAlive() const
 	return (_keep_alive);
 }
 
-uint64_t const & Client::timeToDie() const
+UINT64_T const & Client::timeToDie() const
 {
 	return (_time_to_die);
 }

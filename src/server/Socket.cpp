@@ -6,13 +6,12 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:08:34 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/08 09:21:44 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/11 09:31:11 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Socket.hpp"
-
-
+#include "Config.hpp"
 
 Socket::Socket(const std::string & ip, int port) : _ip_address(ip), _port(port)
 {

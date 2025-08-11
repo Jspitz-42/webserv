@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:12 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/08 13:19:05 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/11 11:45:30 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,14 @@
 # define UPLOAD						11
 # define INDEX						12
 # define REDIRECT					13
+# define LISTING					14
 
 # define SERVER_CONTEXT_DIRECTIVE	8
-# define LOCATION_CONTEXT_DIRECTIVE	10
+# define LOCATION_CONTEXT_DIRECTIVE	11
 # define TOTAL_DIRECTIVE			13
 # define ALL_ERROR_CODES			40
 # define PORT_MAX					65535
 # define PORT_MIN					1
-# define SEPARATORS					" \t\v\n\r\f;:"
 # define SERVER_CONTEXT				1
 # define LOCATION_CONTEXT			2
 
@@ -44,6 +44,7 @@
 # include <vector>
 # include <cstdlib>
 # include "Error.hpp"
+# include "utils.hpp"
 
 class Config
 {
@@ -214,6 +215,7 @@ class Config
 						int													_max_body_size;
 						int													_redirect_status;
 						bool												_autoindex;
+						bool												_listing;
 						
 						std::string											_cgi_bin;
 						std::string											_upload_path;
@@ -283,7 +285,19 @@ class Config
 						std::string											_upload_path;
 				} ;
 
-				
+				class DirectoryListing : public Directive
+				{
+					public:
+																			DirectoryListing(const std::string &) throw (std::exception);
+					virtual													~DirectoryListing( void );
+					virtual void											setDirective(ServerConfig &, int) const;
+					protected:
+
+					private:
+						bool												_ListingOnOff;
+
+				};
+
 															ServerConfig( void );
 															~ServerConfig( void );
 				Location *									findLocation(std::string const &) const;
@@ -293,6 +307,7 @@ class Config
 				std::string const & 						getIp( void ) const;
 
 				bool										_autoindex;
+				bool										_listing;
 				int											_max_body_size;
 				std::string									_ip;
 				int											_port;
@@ -302,7 +317,7 @@ class Config
 				std::vector<std::string>					_names;
 				std::map<std::string, std::vector<int> > 	_server_error_maps;
 				static const std::string					_valid_methods_server[3];
-				
+
 			protected:
 
 			private:
@@ -323,6 +338,3 @@ class Config
 											Config(const Config &);
 
 } ;
-
-//std::ostream & operator<<(std::ostream &, const Config &);
-//std::ostream & operator<<(std::ostream &, const Config::ServerConfig &);

@@ -6,11 +6,13 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 10:38:19 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/04 10:55:15 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/11 09:43:10 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "utils.hpp"
+# include "Config.hpp"
+# include "tcpServer.hpp"
 
 std::string &	strtrim(std::string & s, const char * separator )
 {
@@ -20,18 +22,18 @@ std::string &	strtrim(std::string & s, const char * separator )
 	return s;
 }
 
-static uint64_t gettimeofday_ms( void )
+static UINT64_T gettimeofday_ms( void )
 {
 	static struct timeval tv;
 
 	gettimeofday(&tv, NULL);
 
-	return ((tv.tv_sec * (uint64_t)1000) + (tv.tv_usec / 1000));
+	return ((tv.tv_sec * (UINT64_T)1000) + (tv.tv_usec / 1000));
 }
 
-uint64_t	timestamp_in_ms( void )
+UINT64_T	timestamp_in_ms( void )
 {
-	static uint64_t start = 0;
+	static UINT64_T start = 0;
 
 	if (start == 0) {start = gettimeofday_ms() ;}
 

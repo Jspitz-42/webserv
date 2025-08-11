@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:22 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/07 13:30:49 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/11 09:40:38 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 # include <map>
 # include <algorithm>
 
-# include "Socket.hpp"
 # include "utils.hpp"
+# include "Config.hpp"
 
-class Config;
+class Socket;
 class Request
 {
 	public:

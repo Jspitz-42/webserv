@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 09:10:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/08 11:32:09 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/11 11:50:44 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,3 +75,10 @@
 # define ROOT_WRONG_SYNTAX "ERROR: [Config::ServerConfig::Root::Root] : Wrong Syntax"
 
 # define UPLOAD_WRONG_SYNTAX "ERROR: [Config::ServerConfig::Upload::Upload] : Wrong Syntax"
+
+# define LISTING_INVALID_DIR "ERROR: [Directory Listing] [INVALID DIRECTIVE]"
+
+// main file error msg
+# define MAIN_ARGUMENT_ERRROR "ERROR: [Too many arguments] [please: only one is required] [tips: one is less than two]"
+# define SIGINT_QUIT_MSG "Server: quit with ctrl + c (SIGINT)"
+# define SIGINT_ERR_MSG "ERROR: [set_sig_handler] [SIGACTION FAILURES]"

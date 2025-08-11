@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 10:32:51 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/05 12:29:27 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/11 09:43:10 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,16 @@
 # include <sys/time.h>
 # include <sys/stat.h> 
 
-# include "Config.hpp"
-# include "tcpServer.hpp"
+# define SEPARATORS					" \t\v\n\r\f;:"
 
-# define uint64_t unsigned long int
+
+class Config;
+class TcpServer;
+
+# define UINT64_T unsigned long int
 
 std::string &		strtrim(std::string & s, const char * separator = SEPARATORS);
-uint64_t			timestamp_in_ms( void );
+UINT64_T			timestamp_in_ms( void );
 char *				get_local_time( void );
 const std::string & readFileStream(std::ifstream const & s1, std::string & s2);
 const std::string & readFileString(std::string const & s1, std::string & s2);

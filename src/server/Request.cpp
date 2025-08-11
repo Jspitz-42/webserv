@@ -6,11 +6,12 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/08 12:47:32 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/11 09:34:56 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Request.hpp"
+#include "Socket.hpp"
 #include "Config.hpp"
 Request::Request(std::string const & request, Config::ServerConfig const & sc) : _lock(NULL), _error_code(0),_server_config(sc)
 {

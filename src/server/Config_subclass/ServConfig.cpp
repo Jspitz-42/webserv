@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServConfig.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:07:24 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 11:44:30 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/11 16:16:06 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,16 @@ Config::ServerConfig::Location * Config::ServerConfig::findLocation(const std::s
 			tmp_it = l_it;
 		}
 	}
-
+	if (matches == 0) {
+        for (std::vector<Location>::iterator it = tmp_locs.begin(); it != tmp_locs.end(); ++it) {
+            if (it->_target == "/") {
+                tmp_it = it;
+                matches = 1;
+                break;
+            }
+        }
+    }
+	
 	if (matches == 0) 
 		return 0;
 	return (new Location(*tmp_it));

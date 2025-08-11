@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tcpServer.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:41:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 14:22:06 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/11 16:04:13 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,11 +107,7 @@ void TCPServer::acceptConnectionAt(int fd) throw (std::exception)
 	struct epoll_event				ev;
 	std::vector<Socket>::iterator	it;
 
-	it = _sockets.begin();
-	conn_sock = (*it).acceptConnection();
-	if (conn_sock == -1) {
-		throw TCPServer::ErrorMessage(ACCEPTCONNECTION_ERR_MSG);
-	}
+	conn_sock = -2;
 	for (it = _sockets.begin(); it != _sockets.end(); ++it) {
 		if (it->getSocketFd() == fd) {
 			conn_sock = (*it).acceptConnection();
@@ -126,9 +122,12 @@ void TCPServer::acceptConnectionAt(int fd) throw (std::exception)
 			break ;
 		}
 	}
-	Client c(conn_sock, *it);
-	if (_clients.find(fd) != _clients.end())
-		_clients.find(fd)->second.push_back(c);
+	if (conn_sock != -2)
+	{
+		Client c(conn_sock, *it);
+		if (_clients.find(fd) != _clients.end())
+			_clients.find(fd)->second.push_back(c);
+	}
 }
 
 

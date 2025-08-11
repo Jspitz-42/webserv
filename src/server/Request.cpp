@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 09:34:56 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/11 16:06:30 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ Request::Request(std::string const & request, Config::ServerConfig const & sc) :
 	std::getline(ss, line);
 	line = strtrim(line, " \r\t");
 
-	_method = line.substr(0, line.find_first_not_of(" \r\t"));
+	std :: cout << line << std :: cout ;
+	_method = line.substr(0, line.find_first_of(" \r\t"));
 	_uri_target = line.substr(_method.length(), line.find_last_of(" \r\t") - _method.length());
 	_http_version = line.substr(_method.length() + _uri_target.length());
 	std::transform(_method.begin(), _method.end(), _method.begin(), ::toupper);
@@ -82,7 +83,6 @@ Request::Request(std::string const & request, Config::ServerConfig const & sc) :
 			_error_code = 400;
 		}
 	}
-
 	if (!_server_config.checkMaxBody(request.length()) && (_lock && !_lock->checkMaxBody(request.length())))
 		_error_code = 413;
 }
@@ -141,7 +141,7 @@ const std::string Request::getIndex( void ) const
 	std::vector<std::string>::const_iterator c_it;
 
 	for (i_it = _lock->_indexes.begin() ; i_it != _lock->_indexes.end() ; i_it++) {
-		location = getFinalPath() + *c_it;
+		location = getFinalPath() + *i_it;
 		if (ifFile(location)) 
 			return location;
 	}

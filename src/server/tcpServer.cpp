@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:41:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 14:22:06 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/11 14:54:19 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,17 +45,17 @@ TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(
 
 void	TCPServer::printConfig( void ) const
 {
-	std::cout << "_config._servers.begin()->_autoindex = " << _config._servers.begin()->_autoindex << std::endl;
-	std::cout << "_config._servers.begin()->_listing = " << _config._servers.begin()->_listing << std::endl;
-	std::cout << "_config._servers.begin()->_max_body_size = " << _config._servers.begin()->_max_body_size << std::endl;
-	std::cout << "_config._servers.begin()->ip = " << _config._servers.begin()->_ip << std::endl;
-	std::cout << "_config._servers.begin()->_port = " << _config._servers.begin()->_port << std::endl;
-	std::cout << "_config._servers.begin()->_root path = " << _config._servers.begin()->_root_path << std::endl;
+	std::cout << "_config._servers.begin()->_autoindex				= " << _config._servers.begin()->_autoindex << std::endl;
+	std::cout << "_config._servers.begin()->_listing 				= " << _config._servers.begin()->_listing << std::endl;
+	std::cout << "_config._servers.begin()->_max_body_size			= " << _config._servers.begin()->_max_body_size << std::endl;
+	std::cout << "_config._servers.begin()->ip					= " << _config._servers.begin()->_ip << std::endl;
+	std::cout << "_config._servers.begin()->_port					= " << _config._servers.begin()->_port << std::endl;
+	std::cout << "_config._servers.begin()->_root path				= " << _config._servers.begin()->_root_path << std::endl;
 
 	std::vector<std::string>::const_iterator it = _config._servers.begin()->_approved_methods.begin();
 	for (size_t i = 0 ; i < _config._servers.begin()->_approved_methods.size() ; i++)
 	{
-		std::cout << "_config._servers.begin()->_approved_methods it = " << *it << std::endl;
+	std::cout << "_config._servers.begin()->_approved_methods it			= " << *it << std::endl;
 		it++;
 	}
 }
@@ -191,7 +191,6 @@ void TCPServer::run()
 	signal(SIGINT, exit_webserv);
 	initMsg();
 	timestamp_in_ms();
-	
 	while (1)
 	{
 		nfds = epoll_wait(_epollfd, events, MAX_EVENTS, 2000);

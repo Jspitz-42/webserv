@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:12 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 14:05:19 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/11 14:57:22 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@
 # define REDIRECT					13
 # define LISTING					14
 
-# define SERVER_CONTEXT_DIRECTIVE	8
-# define LOCATION_CONTEXT_DIRECTIVE	11
+# define SERVER_CONTEXT_DIRECTIVE	9
+# define LOCATION_CONTEXT_DIRECTIVE	10
 # define TOTAL_DIRECTIVE			13
 # define ALL_ERROR_CODES			40
 # define PORT_MAX					65535

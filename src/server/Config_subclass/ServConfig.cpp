@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:07:24 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 11:44:30 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/11 14:37:05 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 Config::ServerConfig::ServerConfig( void ) : _autoindex(false),_max_body_size(0), _ip("127.0.0.1"), _port(80), _root_path("www/")
 {
-	if (_listing != true)
-		_listing = false;
 	return ;
 }
 
@@ -38,7 +36,6 @@ void Config::ServerConfig::setDefault( void )
 {
 	Config::ServerConfig::Location & loc = _locations.back();
 	
-	loc._listing = _listing;
 	loc._autoindex = _autoindex;
 	loc._max_body_size = _max_body_size;
 	loc._root_path = _root_path;

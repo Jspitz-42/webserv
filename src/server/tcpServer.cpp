@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:41:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/12 08:22:59 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/12 14:29:43 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,16 @@ void	TCPServer::printConfig( void ) const
 	std::cout << "_config._servers.begin()->_port					= " << _config._servers.begin()->_port << std::endl;
 	std::cout << "_config._servers.begin()->_root path				= " << _config._servers.begin()->_root_path << std::endl;
 
-	std::vector<std::string>::const_iterator it = _config._servers.begin()->_approved_methods.begin();
-	for (size_t i = 0 ; i < _config._servers.begin()->_approved_methods.size() ; i++)
+	if (!_config._servers.empty() && !_config._servers.begin()->_locations.empty())
 	{
-	std::cout << "_config._servers.begin()->_approved_methods it			= " << *it << std::endl;
-		it++;
+		std::multimap<std::string, std::string>::const_iterator it =
+			_config._servers.begin()->_locations.back()._cgi_map.begin();
+		for ( ;)
+		if (it != _config._servers.begin()->_locations.back()._cgi_map.end() &&
+		    !it->first.empty() && !it->second.empty())
+		{
+			std::cout << it->first << " " << it->second << std::endl;
+		}
 	}
 }
 

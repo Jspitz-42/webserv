@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:12 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 14:57:22 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/12 13:43:31 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,8 @@ class Config
 
 					private:
 						std::vector<std::string>							_cgi;
-						void 												_parseCgiContent(std::vector<std::string> &, const std::string &);
+						std::multimap<std::string, std::string>				_all_cgi;
+						void 												_parseCgiContent(const std::string &);
 				} ;
 
 				class CgiBin : public Directive
@@ -220,7 +221,7 @@ class Config
 						std::string											_cgi_bin;
 						std::string											_upload_path;
 						std::string											_redirect_uri;
-						std::map<std::string, std::vector<std::string> >	_cgi_map;
+						std::multimap<std::string, std::string>				_cgi_map;
 						std::map<std::string, std::vector<int> >			_location_errors_map;
 
 					protected:

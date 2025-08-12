@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:30:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/07 13:18:11 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/12 07:16:54 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -507,6 +507,20 @@ const std::string Response::createResponse() {
 		}
 	}
 	response += "HTTP/1.1 " + so.str() + " " + _codeMessage[_status_code] + "\n";
+	//INSERT COOKIE HERE
+	const std::string cookieValue = !this->_req.getCookies().empty() ? this->_req.getCookies().substr(this->_req.getCookies().find("id_session=")) : "";
+	if (!cookieValue.empty()) {
+		std::cout << "mmmmhhh" << std::endl;
+		response += "Set-Cookie: id_session=";
+		response += cookieValue;
+		response += "; Path=/; HttpOnly\n";
+	} else {
+		std::cout << "new client added !" << std::endl;
+		const std::string newCookie = const_cast<Request&>(this->_req).createClientId();
+		response += "Set-Cookie: id_session=";
+		response += newCookie;
+		response += "; Path=/; HttpOnly\n";
+	}
 	response += "Date: " + _date;
 	response += "Server: " + _server_name + "\n";
 	response += "Accept-Charset: utf-8\n";

@@ -21,6 +21,7 @@ SRC = ./src/main.cpp \
 	  ./src/server/Config_subclass/ServConfig.cpp \
 	  ./src/server/Config_subclass/ServerName.cpp \
 	  ./src/server/Config_subclass/Upload.cpp \
+	  ./src/server/SessionClient.cpp \
 	  ./src/server/Response.cpp \
 	  ./src/server/Request.cpp \
 	  ./src/server/tcpServer.cpp
@@ -32,7 +33,7 @@ OBJS = $(SRCS:.cpp=.o)
 
 CC = c++
 
-CFLAGS = -Wall -Wextra -Werror -I./includes -I/usr/includes -std=c++98
+CFLAGS = -Wall -Wextra -Werror -I./includes -I/usr/includes -std=c++98 -g3
 
 %.o:%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@

@@ -6,7 +6,7 @@
 /*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:41:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 16:04:13 by altheven         ###   ########.fr       */
+/*   Updated: 2025/08/12 12:26:19 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,6 @@ TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(
 	std::cout << "constructor TCPServer called" << std::endl;
 	std::vector<Config::ServerConfig>::iterator it;
 	std::vector<Config::ServerConfig> servers = _config._servers;
-	_epollfd = epoll_create(10);
-	if (_epollfd == -1)
-	   throw TCPServer::ErrorMessage(TCPSERVER_ERR_MSG);
 	for (it = servers.begin(); it != servers.end(); ++it) {
 
 		try {
@@ -41,12 +38,18 @@ TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(
 			std::cout << "This Server Configuration contains errors, or an invalid [ip_address:port]. Please review the configuration file" << std::endl;
 		}
 	}
+	_epollfd = epoll_create(10);
+	if (_epollfd == -1)
+	   throw TCPServer::ErrorMessage(TCPSERVER_ERR_MSG);
 }
 
 void	TCPServer::printConfig( void ) const
 {
-	std::cout << "_config._servers.begin()->_autoindex = " << _config._servers.begin()->_autoindex << std::endl;
-	std::cout << "_config._servers.begin()->_listing = " << _config._servers.begin()->_listing << std::endl;
+	if (_config._servers.begin()->_autoindex == true)
+		std::cout << "Autoindex = ON" << std::endl;
+	else 
+		std::cout << "Autoindex = OFF" << std::endl;
+	std::cout << "Listing = " << _config._servers.begin()->_listing << std::endl;
 	std::cout << "_config._servers.begin()->_max_body_size = " << _config._servers.begin()->_max_body_size << std::endl;
 	std::cout << "_config._servers.begin()->ip = " << _config._servers.begin()->_ip << std::endl;
 	std::cout << "_config._servers.begin()->_port = " << _config._servers.begin()->_port << std::endl;

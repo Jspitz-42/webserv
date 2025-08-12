@@ -6,7 +6,7 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/12 07:22:06 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/12 08:51:31 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ Request::Request(std::string const & request, Config::ServerConfig const & sc) :
 		if (line.find(':') != std::string::npos) {
 			std::string name(line.substr(0, line.find(':')));
 			std::string	content(line.substr(line.find(':')));
-			std::cout << "HEader : " << name << std::endl;
 			std::transform(name.begin(), name.end(), name.begin(), ::tolower);
 			_headers[name] = strtrim(content, ": \t");
 		} else {
@@ -206,15 +205,14 @@ const std::string Request::getContentType( void ) const
 
 const std::string Request::getCookies( void ) const 
 {
-	if (_headers.find("Cookie") != _headers.end()) {
-		return (_headers.find("Cookie")->second);
+	if (_headers.find("cookie") != _headers.end()) {
+		return (_headers.find("cookie")->second);
 	} else {
 		return ("");
 	}
 }
 
 bool	Request::getClientId(std::string uuid) const {
-	std::cout << uuid << std::endl;
 	for (int i = 0; i < 2048; i++) {
 		if (const_cast<SessionClient&>(this->_clientList[i]).getUUID() == uuid)
 			return (true);

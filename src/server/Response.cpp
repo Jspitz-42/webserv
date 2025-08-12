@@ -6,7 +6,7 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:30:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/12 07:16:54 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/12 08:41:39 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -510,7 +510,7 @@ const std::string Response::createResponse() {
 	//INSERT COOKIE HERE
 	const std::string cookieValue = !this->_req.getCookies().empty() ? this->_req.getCookies().substr(this->_req.getCookies().find("id_session=")) : "";
 	if (!cookieValue.empty()) {
-		std::cout << "mmmmhhh" << std::endl;
+		std::cout << "Cookie already exist !" << std::endl;
 		response += "Set-Cookie: id_session=";
 		response += cookieValue;
 		response += "; Path=/; HttpOnly\n";

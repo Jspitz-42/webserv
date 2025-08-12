@@ -1,15 +1,27 @@
 <!doctype html>
 <html lang="en">
 	<head>
-	  <link href="style/syle.css" rel="stylesheet">
+	  <link href="style.css" rel="stylesheet">
 	  <meta charset="utf-8" />
 	  <meta name="viewport" content="width=device-width, initial-scale=1" />
 	  <title>webserv</title>
 	</head>
 	<style>
+		button, label.upload-btn {
+			padding: 20px 40px;
+			font-size: 1.4rem;
+			color: #0ff;
+			background:  linear-gradient(145deg, #32cd32, #1e90ff);
+			border: none;
+			border-radius: 20px;
+			cursor: pointer;
+			box-shadow: 0 0 20px #32cd32;
+			transition: all 0.5s ease;
+			user-select: none;
+		}
 		body {
 			text-align: center;
-			background-color: powderblue;
+			background-color: rgb(0, 0, 0);
 		}
 		h1 {
 			text-align: center;
@@ -25,17 +37,97 @@
 		img {
 			border: 3px solid palevioletred;
 		}
+		.aurora-glow-button {
+			padding: 20px 40px;
+			font-size: 1.4rem;
+			color: #0ff;
+			background:  linear-gradient(145deg, #32cd32, #1e90ff);
+			border: none;
+			border-radius: 20px;
+			cursor: pointer;
+			box-shadow: 0 0 20px #32cd32;
+			transition: all 0.5s ease;
+
+		}
+		.aurora-glow-button:hover {
+			background: linear-gradient(145deg, #ff4500, #ff00ff);
+			box-shadow: 0 0 50px #ff4500, 0 0 80px #ff00ff;
+			transform: scale(1.1);
+			color: #000;
+			font-weight: 700;
+			font-style: oblique;
+		}
+		.aurora-glow-button:active {
+			box-shadow: 0 0 40px rgba(255, 69, 0,0.8);
+		}
+		aside {
+			padding-left: 30px;
+		}
+		.container {
+			display: grid;
+			gap: 50px;
+			grid-template-columns: auto auto;
+			padding: 10px;
+		}
+		label.upload-btn {
+			display: inline-block;
+		}
+		.container > div {
+			padding: 20px;
+			font-size: 30px;
+			text-align: center;
+		}
+		#file-name {
+			margin-top: 8px;
+			color: #555;
+			font-style: italic;
+			width: 100%;
+			text-align: center;
+		}
+		input[type="file"] {
+			display: none;
+		}
 	</style>
-	<body>
-    <h1>HOME</h1>
-    <p>Hello from your server :)</p>
-    <img src="https://http.cat/100.jpg" alt="test image" />
 
-	<button type="button"
-	onclick="document.getElementById('demo').innerHTML = date()">
-	Click me for useless things </button>
+<body>
+    <h1>Webserv</h1>
+
 	<p2 id ="demo"></p2>
-	<h2> GO BACK TO WORK è_é </h2>
+	<div class="container">
+	
+		<div>
+		
+			<form action="/upload" method="POST" enctype="multipart/form-data">
+				<label for="file" class="upload-btn">Chose a file</label>
+				<input type="file" name="file" id="file" required />
+				</div>
+		
+				<div>
+				<button class="aurora-glow-button"
+				type="submit"> Send </button>
+			</form>
+		</div>
 
-  </body>
+
+		<div>
+			<button class="aurora-glow-button"  > get Cgi </button>
+		</div>
+		<div>
+			<button class="aurora-glow-button"  > redirection </button>
+		</div>
+		<div>
+			<button = class="aurora-glow-button"> Upload Cgi </button>
+		</div>
+		<div>
+			<button class="aurora-glow-button"> Directory Listing </button>
+		</div>
+	</div>
+</body>
 </html>
+
+<!--
+	1 : 6 boutons : un qui lance l'upload, 1 pour choisir les fichiers, 1 pour getCgi,
+					un pour redir, un pour upload cgi, un pour acceder au directory listing
+					
+					un over aurora pour les bouttons, un fond en mode pop art avec des boules qui bouge
+					-->

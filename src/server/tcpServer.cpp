@@ -6,23 +6,13 @@
 /*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:41:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/12 12:26:19 by altheven         ###   ########.fr       */
+/*   Updated: 2025/08/12 14:17:04 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tcpServer.hpp"
 # include "Config.hpp"
 #include "main.hpp"
-
-
-bool webserv_run = true;
-
-void exit_webserv(int param)
-{
-	(void)param;
-	webserv_run = false;
-	std::cout << std::endl <<  "Exit webserv..." << std::endl;
-}
 
 TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(file)
 {
@@ -58,7 +48,7 @@ void	TCPServer::printConfig( void ) const
 	std::vector<std::string>::const_iterator it = _config._servers.begin()->_approved_methods.begin();
 	for (size_t i = 0 ; i < _config._servers.begin()->_approved_methods.size() ; i++)
 	{
-		std::cout << "_config._servers.begin()->_approved_methods it = " << *it << std::endl;
+	std::cout << "_config._servers.begin()->_approved_methods it			= " << *it << std::endl;
 		it++;
 	}
 }
@@ -190,15 +180,11 @@ void TCPServer::run()
 	std::vector<Client>::iterator					v_it;
 	std::map<int, std::vector<Client> >::iterator	m_it;
 
-	signal(SIGINT, exit_webserv);
 	initMsg();
 	timestamp_in_ms();
-	
 	while (1)
 	{
 		nfds = epoll_wait(_epollfd, events, MAX_EVENTS, 2000);
-		if (!webserv_run)
-			break;
 		if (nfds == -1)
 		   throw TCPServer::ErrorMessage(TCPSERVER_RUN_ERR_MSG);
 		for (n = 0; n < nfds; ++n) {

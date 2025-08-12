@@ -8,3 +8,8 @@ li {
 	border: 1px solid black;
 	margin-bottom: 5px;
 }
+
+.container {
+	display: grid;
+	gap: 50px;
+}

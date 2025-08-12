@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Listen.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:13:38 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 09:13:46 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/12 14:17:48 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Config.hpp"
 
-Config::ServerConfig::Listen::Listen(const std::string & content) throw (std::exception): Directive(LISTEN),
-																						 _ip("127.0.0.1"), 
+Config::ServerConfig::Listen::Listen(const std::string & content) throw (std::exception): Directive(LISTEN),										 
 																						 _port(80)
 {
 	if (content.empty() || content.find_first_of(SEPARATORS) != std::string::npos) {
@@ -21,7 +20,7 @@ Config::ServerConfig::Listen::Listen(const std::string & content) throw (std::ex
 	}
 	std::string 		tmp;
 	std::stringstream	stoi_converter;
-	
+	std::cout << "Listen content : " << content << std::endl;
 	if (content.find(':') != std::string::npos) {
 
 		std::string ip_str = content.substr(0, content.find(':'));

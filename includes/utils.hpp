@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 10:32:51 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 09:43:10 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/12 12:14:50 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <sys/time.h>
 # include <sys/stat.h> 
 
-# define SEPARATORS					" \t\v\n\r\f;:"
+# define SEPARATORS					" \t\v\n\r\f;"
 
 
 class Config;

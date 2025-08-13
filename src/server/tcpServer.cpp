@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:41:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/13 08:25:41 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/13 10:48:44 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	TCPServer::printConfig( void ) const throw (std::exception)
 			} else {
 				std::cout << "Server configuration number [" << i << "] Autoindex : OFF" << std::endl;
 			}
-	
+
 			if (it_Conf->_listing) {
 				std::cout << "Server configuration number [" << i << "] directory listing : ON" << std::endl;
 			} else {
@@ -79,6 +79,20 @@ void	TCPServer::printConfig( void ) const throw (std::exception)
 				std::cout << "Server configuration number [" << i << "] no name detected" << std::endl;
 			}
 
+			if (!it_Conf->_server_error_maps.empty()) {
+				std::map<std::string, std::vector<int> >::const_iterator it_map = it_Conf->_server_error_maps.begin();
+				for ( ; it_map != it_Conf->_server_error_maps.end() ; it_map++) {
+					if (!it_map->first.empty() && !it_map->second.empty()) {
+						std::cout << "Server configuration number [" << i << "] servers errors map first : " << it_map->first.c_str() << std::endl;
+						std::vector<int>::const_iterator it_vector = it_map->second.begin();
+						for ( ; it_vector != it_map->second.end() ; it_vector++) {
+							std::cout << "Server configuration number [" << i << "] servers errors codes : " << *it_vector << std::endl;
+						}
+					}
+				}
+			} else {
+				std::cout << "Server configuration number [" << i << "] no servers error code" << std::endl;
+			}
 			if (!it_Conf->_approved_methods.empty()) {
 				std::vector<std::string>::const_iterator it_methods = it_Conf->_approved_methods.begin();
 				for ( ; it_methods != it_Conf->_approved_methods.end() ; it_methods++) {
@@ -90,7 +104,7 @@ void	TCPServer::printConfig( void ) const throw (std::exception)
 
 			if (!it_Conf->_locations.empty()) {
 				std::vector<Config::ServerConfig::Location>::const_iterator it_loc = it_Conf->_locations.begin();
-				
+
 				for (int a = 1; it_loc != it_Conf->_locations.end(); it_loc++) {
 
 					if (!it_loc->_methods.empty()){
@@ -101,7 +115,7 @@ void	TCPServer::printConfig( void ) const throw (std::exception)
 					} else {
 						std::cout <<  "Server configuration number [" << i <<"] location number [" << a << "] methods : none" << std::endl; 
 					}
-					
+
 					if (!it_loc->_root_path.empty()) {
 						std::cout << "Server configuration number [" << i <<"] location number [" << a  << "] root path : " << it_loc->_root_path << std::endl;
 					} else {
@@ -126,7 +140,7 @@ void	TCPServer::printConfig( void ) const throw (std::exception)
 					}
 
 					std::cout << "Server configuration number [" << i << "] Location number [" << a << "] Max Body size : " << it_loc->_max_body_size << std::endl;
-					
+
 					std::cout << "Server configuration number [" << i << "] Location number [" << a << "] redirect status : " << it_loc->_redirect_status << std::endl;
 
 					if (it_loc->_autoindex) {

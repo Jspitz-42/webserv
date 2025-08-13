@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 09:10:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 11:50:44 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/13 07:19:53 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # define ADDSOCKET_ERR_MSG "ERROR: [TCPServer::addSocket] [Epoll_ctl] [Failed to add a file descriptor]"
 # define ACCEPTCONNECTION_ERR_MSG "ERROR: [TCPServer::acceptConnection] [Failed to accept connection from socket]"
 # define TCPSERVER_RUN_ERR_MSG "ERROR: [TCPServer::run] [Epoll Failed to wait and return the events]"
+# define TCPSERVER_PRINTCONFING_ERR "ERROR: [TCPSERVER::printConfig] : No Configuration detected"
 
 /**
  * error message for Config class error handling

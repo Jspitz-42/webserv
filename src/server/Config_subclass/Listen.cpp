@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:13:38 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/12 12:14:22 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/13 07:44:39 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ Config::ServerConfig::Listen::Listen(const std::string & content) throw (std::ex
 	}
 	std::string 		tmp;
 	std::stringstream	stoi_converter;
-	std::cout << "Listen content : " << content << std::endl;
 	if (content.find(':') != std::string::npos) {
 
 		std::string ip_str = content.substr(0, content.find(':'));

@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:37:10 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 11:45:17 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/13 07:18:28 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ class TCPServer
 		void								removeClient(std::pair<int, int> &);
 		int									getEpollFd() const;
 		int									numSockets() const;
-		void								printConfig( void ) const;
+		void								printConfig( void ) const throw (std::exception);
 		void								run();
 
 	private:

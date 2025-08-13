@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:41:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/12 14:29:43 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/13 08:25:41 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 
 TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(file)
 {
-	std::cout << "constructor TCPServer called" << std::endl;
 	std::vector<Config::ServerConfig>::iterator it;
 	std::vector<Config::ServerConfig> servers = _config._servers;
 	_epollfd = epoll_create(10);
@@ -33,24 +32,148 @@ TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(
 	}
 }
 
-void	TCPServer::printConfig( void ) const
+void	TCPServer::printConfig( void ) const throw (std::exception)
 {
-	std::cout << "_config._servers.begin()->_autoindex				= " << _config._servers.begin()->_autoindex << std::endl;
-	std::cout << "_config._servers.begin()->_listing 				= " << _config._servers.begin()->_listing << std::endl;
-	std::cout << "_config._servers.begin()->_max_body_size			= " << _config._servers.begin()->_max_body_size << std::endl;
-	std::cout << "_config._servers.begin()->ip					= " << _config._servers.begin()->_ip << std::endl;
-	std::cout << "_config._servers.begin()->_port					= " << _config._servers.begin()->_port << std::endl;
-	std::cout << "_config._servers.begin()->_root path				= " << _config._servers.begin()->_root_path << std::endl;
+	if (_config._servers.empty()) {
+		throw TCPServer::ErrorMessage(TCPSERVER_PRINTCONFING_ERR);
+	} else {
+		std::vector<Config::ServerConfig>::const_iterator it_Conf = _config._servers.begin();
+		int i = 1;
+		for (  ; it_Conf != _config._servers.end() ; it_Conf++) {
+	
+			if (it_Conf->_autoindex) {
+				std::cout << "Server configuration number [" << i << "] Autoindex : ON" << std::endl;
+			} else {
+				std::cout << "Server configuration number [" << i << "] Autoindex : OFF" << std::endl;
+			}
+	
+			if (it_Conf->_listing) {
+				std::cout << "Server configuration number [" << i << "] directory listing : ON" << std::endl;
+			} else {
+				std::cout << "Server configuration number [" << i << "] directory listing : OFF" << std::endl;
+			}
+			
+			std::cout << "Server configuration number [" << i << "] Max body size : " << it_Conf->_max_body_size << std::endl; 
+				
+			std::cout << "Server configuration number [" << i << "] host ip : " << it_Conf->_ip << std::endl;
+				
+			std::cout << "Server configuration number [" << i << "] port : " << it_Conf->_port << std::endl;
 
-	if (!_config._servers.empty() && !_config._servers.begin()->_locations.empty())
-	{
-		std::multimap<std::string, std::string>::const_iterator it =
-			_config._servers.begin()->_locations.back()._cgi_map.begin();
-		for ( ;)
-		if (it != _config._servers.begin()->_locations.back()._cgi_map.end() &&
-		    !it->first.empty() && !it->second.empty())
-		{
-			std::cout << it->first << " " << it->second << std::endl;
+			std::cout << "Server configuration number [" << i << "] Root : " << it_Conf->_root_path << std::endl;
+	
+			if (!it_Conf->_indexes.empty()) {
+				std::vector<std::string>::const_iterator it_index = it_Conf->_indexes.begin();
+				for ( ; it_index != it_Conf->_indexes.end() ; it_index++) {
+					std::cout << "Server configuration number [" << i << "] indexes : " << *it_index << std::endl;
+				}
+			} else {
+				std::cout << "Server configuration number [" << i << "] no index detected" << std::endl;
+			}
+
+			if (!it_Conf->_names.empty()) {
+				std::vector<std::string>::const_iterator it_names = it_Conf->_names.begin();
+				for ( ; it_names != it_Conf->_names.end() ; it_names++) {
+					std::cout << "Server configuration number [" << i << "] names : " << *it_names << std::endl;
+				}
+			} else {
+				std::cout << "Server configuration number [" << i << "] no name detected" << std::endl;
+			}
+
+			if (!it_Conf->_approved_methods.empty()) {
+				std::vector<std::string>::const_iterator it_methods = it_Conf->_approved_methods.begin();
+				for ( ; it_methods != it_Conf->_approved_methods.end() ; it_methods++) {
+					std::cout << "Server configuration number [" << i << "] approved methods : " << *it_methods << std::endl;
+				}
+			} else {
+				std::cout << "Server configuration number [" << i << "] no methods detected" << std::endl;
+			}
+
+			if (!it_Conf->_locations.empty()) {
+				std::vector<Config::ServerConfig::Location>::const_iterator it_loc = it_Conf->_locations.begin();
+				
+				for (int a = 1; it_loc != it_Conf->_locations.end(); it_loc++) {
+
+					if (!it_loc->_methods.empty()){
+						std::vector<std::string>::const_iterator it_loc_methods = it_loc->_methods.begin();
+						for ( ; it_loc_methods != it_loc->_methods.end() ; it_loc_methods++) {
+							std::cout << "Server configuration number [" << i <<"] location number [" << a  << "] methods : " << *it_loc_methods << std::endl;
+						}
+					} else {
+						std::cout <<  "Server configuration number [" << i <<"] location number [" << a << "] methods : none" << std::endl; 
+					}
+					
+					if (!it_loc->_root_path.empty()) {
+						std::cout << "Server configuration number [" << i <<"] location number [" << a  << "] root path : " << it_loc->_root_path << std::endl;
+					} else {
+						std::cout << "Server configuration number [" << i <<"] location number [" << a  << "] root path : none " << std::endl;
+					}
+
+					if (!it_loc->_target.empty()) {
+						std::cout << "Server configuration number [" << i <<"] location number [" << a  << "] target : " << it_loc->_target << std::endl;
+					} else {
+						std::cout << "Server configuration number [" << i <<"] location number [" << a  << "] target : none " << std::endl;
+					}
+
+					if (!it_loc->_indexes.empty()) {
+						std::vector<std::string>::const_iterator it_loc_indexes = it_loc->_indexes.begin();
+						for ( ; it_loc_indexes != it_loc->_indexes.end() ; it_loc_indexes++) {
+
+								std::cout << "Server configuration number [" << i 
+								<< "] Location number [" << a << "] indexes : " << *it_loc_indexes << std::endl;
+						}
+					} else {
+						std::cout << "Server configuration numver [" << i << "] Location number [" << a << "] no index detected" << std::endl;
+					}
+
+					std::cout << "Server configuration number [" << i << "] Location number [" << a << "] Max Body size : " << it_loc->_max_body_size << std::endl;
+					
+					std::cout << "Server configuration number [" << i << "] Location number [" << a << "] redirect status : " << it_loc->_redirect_status << std::endl;
+
+					if (it_loc->_autoindex) {
+						std::cout << "Server configuration number [" << i << "] Location number [" << a << "] auto index : ON" << std::endl;
+					} else {
+						std::cout << "Server configuration number [" << i << "] Location number [" << a << "] auto index : OFF" << std::endl;						
+					}
+
+					if (it_loc->_listing) {
+						std::cout << "Server configuration number [" << i << "] Location number [" << a << "] diretory listing : ON" << std::endl;
+					} else {
+						std::cout << "Server configuration number [" << i << "] Location number [" << a << "] directory listing : OFF" << std::endl;
+					}
+
+					if (!it_loc->_cgi_bin.empty()) {
+						std::cout << "Server configuration number [" << i << "] Location number [" << a << "] cgi bin : " << it_loc->_cgi_bin << std::endl;
+					} else {
+						std::cout << "Server configuration number [" << i << "] Location number [" << a << "] cgi bin : none" << std::endl;
+					}
+
+					if (!it_loc->_upload_path.empty()) {
+						std::cout << "Server configuration number [" << i << "] Location number [" << a << "] Upload path : " << it_loc->_upload_path << std::endl;
+					} else {
+						std::cout << "Server configuration number [" << i << "] Location number [" << a << "] Upload path : none " << std::endl;
+					}
+
+					if (!it_loc->_redirect_uri.empty()) {
+						std::cout << "Server configuration number [" << i << "] Location number [" << a << "] redirect uri : " << it_loc->_redirect_uri << std::endl;
+					} else {
+						std::cout << "Server configuration number [" << i << "] Location number [" << a << "] redirect uri : none" << std::endl;
+					}
+					if (!it_loc->_cgi_map.empty()) {
+						std::multimap<std::string, std::string>::const_iterator it = it_loc->_cgi_map.begin();
+						for ( ; it != it_loc->_cgi_map.end() ; it ++) {
+							if ( !it->first.empty() && !it->second.empty())
+							{
+								std::cout << "Server configuration number [" << i 
+								<< "] Location number [" << a << "] cgi detected : " << it->first << " " << it->second << std::endl;
+							}
+						}
+					}
+					++a;
+					std::cout << std::endl;
+				}
+			}	
+			std::cout << std::endl;
+			i++;
 		}
 	}
 }

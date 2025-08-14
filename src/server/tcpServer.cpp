@@ -6,21 +6,46 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:41:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/13 10:48:44 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/14 08:00:15 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tcpServer.hpp"
-# include "Config.hpp"
+#include "Config.hpp"
 #include "main.hpp"
+
 
 TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(file)
 {
 	std::vector<Config::ServerConfig>::iterator it;
 	std::vector<Config::ServerConfig> servers = _config._servers;
+
+	if (_config._servers.size() > 1) {
+		throw TCPServer::ErrorMessage(TCPSERVER_DUP_CONF);
+	}
+
+	const Config::ServerConfig &server = _config._servers.front();
+	
+	if (!server._locations.empty()) {
+
+		std::set<std::string> seen;
+		std::vector<Config::ServerConfig::Location>::const_iterator it_loc = server._locations.begin();
+
+		for ( ; it_loc != server._locations.end() ; it_loc++) {
+			const std::string & target = it_loc->_target;
+
+			if (!seen.insert(target).second) {
+				throw TCPServer::ErrorMessage(TCPSERVER_DUP_LOC);
+			}
+			
+		}
+	}
+
 	_epollfd = epoll_create(10);
+
 	if (_epollfd == -1)
 	   throw TCPServer::ErrorMessage(TCPSERVER_ERR_MSG);
+
 	for (it = servers.begin(); it != servers.end(); ++it) {
 
 		try {

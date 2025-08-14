@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:07:24 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/12 08:23:06 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/14 08:58:50 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ Config::ServerConfig::Location * Config::ServerConfig::findLocation(const std::s
     }
 	
 	if (matches == 0) 
-		return 0;
+		return NULL;
 	return (new Location(*tmp_it));
 }
 

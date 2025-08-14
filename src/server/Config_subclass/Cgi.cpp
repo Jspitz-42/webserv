@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:09:10 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/13 07:45:11 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/14 08:53:00 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void Config::ServerConfig::Cgi::setDirective(ServerConfig & serv_conf, int conte
 	std::multimap<std::string, std::string>::const_iterator it = _all_cgi.begin();
 	if (context == LOCATION_CONTEXT) {
 		if (serv_conf._locations.empty()) {
-			throw std::runtime_error("No location define before Cgi directive");
+			throw std::runtime_error(CGI_SETDIRECTIVE_ERR);
 		}
 		serv_conf._locations.back()._cgi_map.insert(std::pair<std::string,std::string>(it->first.c_str(), it->second.c_str()));
 	}

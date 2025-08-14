@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:37:10 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/14 07:57:32 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/14 08:50:35 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@
 # include "Socket.hpp"
 # include "Error.hpp"
 # include <set>
+
 # define MAX 1024
 # define MAX_EVENTS 10
-class Congig;
 class Client;
 class Socket;
 

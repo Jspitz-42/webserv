@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 09:10:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/14 07:06:25 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/14 08:53:18 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@
 
 # define CGI_WRONG_SYNTAX "ERROR: [Config::ServerConfig::Cgi::Cgi] : Wrong Syntax"
 # define CGI_PARSCONTENT_INVALID_DIR  "ERROR: [Config::ServerConfig::Cgi::_parseCgiContent] : Invalid Directive"
+# define CGI_SETDIRECTIVE_ERR "Error: [CGI] [NO lOC] : cgi out of location context"
 
 # define CGIBIN_WRONG_SYNTAX "ERROR: [Config::ServerConfig::CgiBin::CgiBin] : Wrong syntax"
 

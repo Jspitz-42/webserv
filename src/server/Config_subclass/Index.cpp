@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:10:53 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 09:11:00 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/14 08:40:36 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,13 @@ Config::ServerConfig::Index::Index(const std::string & content) throw (std::exce
 		throw Config::ErrorMessage(INDEX_WRONG_SYNTAX);
 	}
 
-	std::string tmp(content);
-
-	char * token = strtok(const_cast<char*>(tmp.data()), SEPARATORS);
+	std::istringstream is(content);
+	std::string token;
 	
-	while (token != NULL)
+	while (is)
 	{
+		is >> token;
 		_indexes.push_back(token);
-		token = strtok(NULL, SEPARATORS);
 	}
 }
 

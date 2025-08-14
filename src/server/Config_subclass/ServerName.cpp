@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:18:47 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 09:18:52 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/14 08:44:16 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 Config::ServerConfig::ServerName::ServerName(const std::string & content) throw (std::exception) : Directive(SERVERNAME)
 {
-	std::string	tmp(content);
-	char *		token = strtok(const_cast<char*>(tmp.c_str()), SEPARATORS);
+	std::istringstream iss(content);
+	std::string			token;
 
-	while (token)
+	while (iss)
 	{
+		iss >> token;
 		_server_names.push_back(token);
-		token = strtok(NULL, SEPARATORS);
 	}
 }
 

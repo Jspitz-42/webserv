@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Methods.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:11:05 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 14:53:57 by altheven         ###   ########.fr       */
+/*   Updated: 2025/08/14 08:42:41 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,19 @@
 
 Config::ServerConfig::Methods::Methods(const std::string & content) throw (std::exception) : Directive(LIMITMETHODS)
 {
-	char * str = std::strtok(const_cast<char*>(content.c_str()), " ");
-		if (!_validMethod(std::string(str))) {
-			throw Config::ErrorMessage(METHODS_INVALID_DIR_1);
-		}
+	std::istringstream iss(content);
+	std::string s;
 
-		for ( ; str != NULL ; ) {
-			_methods.push_back(std::string(str));
-			str = std::strtok(NULL, " ");
-		}
+	iss >> s;
+	if (!_validMethod(std::string(s))) {
+		throw Config::ErrorMessage(METHODS_INVALID_DIR_1);
+	}
+
+	while (iss)
+	{
+		iss >> s;
+		_methods.push_back(std::string(s));
+	}
 }
 
 void  Config::ServerConfig::Methods::setDirective(ServerConfig & serv_conf, int context) const

@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:09:55 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 09:10:41 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/14 08:38:37 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,15 @@ bool Config::ServerConfig::ErrorCodePage::loadErrorCodes(const std::string & con
 	int					converted_number;
 	int					loop_counter = 0;
 
-	char *token = strtok(const_cast<char*>(content.data()), SEPARATORS);
-
-	while (token != 0)
+	std::istringstream	is(content);
+	std::string			token1;
+	while (is)
 	{
+		is >> token1;
 		loop_counter++;
 		stoi_converter.clear();
 		
-		stoi_converter << token;
+		stoi_converter << token1;
 		stoi_converter >> converted_number;
 		
 		for (int i = 0; i < 40 ; i++) {
@@ -64,7 +65,6 @@ bool Config::ServerConfig::ErrorCodePage::loadErrorCodes(const std::string & con
 				loop_counter--;
 			}
 		}
-		token = strtok(NULL, SEPARATORS);
 	}
 	return (!loop_counter) ? true : false;
 }

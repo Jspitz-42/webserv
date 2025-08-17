@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:39:40 by altheven          #+#    #+#             */
-/*   Updated: 2025/08/17 09:12:40 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/17 09:14:16 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ TCPServer :: TCPServer(std :: string const & file) throw (std :: exception) : _c
 	}
 
 	_epollfd = epoll_create(10);
+
 	if (_epollfd == -1)
 		throw TCPServer :: ErrorMessage(TCPSERVER_ERR_MSG);
 	try {

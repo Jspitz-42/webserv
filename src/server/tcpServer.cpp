@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:39:40 by altheven          #+#    #+#             */
-/*   Updated: 2025/08/17 09:14:40 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/17 09:19:40 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(file)
 {
 	std::vector<Config::ServerConfig>::iterator it;
-	std::vector<Config::ServerConfig> servers = _config._servers;
 
 	if (_config._servers.size() > 1) {
 		throw TCPServer::ErrorMessage(TCPSERVER_DUP_CONF);

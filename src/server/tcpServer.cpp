@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:39:40 by altheven          #+#    #+#             */
-/*   Updated: 2025/08/17 09:19:40 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/17 10:17:46 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,8 +198,9 @@ void	TCPServer::printConfig( void ) const throw (std::exception)
 							if ( !it->first.empty() && !it->second.empty())
 							{
 								std::cout << "Server configuration number [" << i 
-								<< "] Location number [" << a << "] cgi detected : " << it->first << " " << it->second << std::endl;
+								<< "] Location number [" << a << "] cgi detected : " << it->first << " " << it->second << " [path to cgi] : " << it_loc->_root_path << std::endl;
 							}
+
 						}
 					}
 					++a;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:30:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/17 06:55:31 by altheven         ###   ########.fr       */
+/*   Updated: 2025/08/17 10:00:01 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,6 +197,7 @@ void Response::setMimeType(std::string const & file_name)
 
 int Response::execCGI()
 {
+	std::cerr<<"execCgi  is called"<<std::endl;
 	std::vector<char *> env;
 	std::vector<char *>::iterator it;
 	std::vector<char *> arg;

@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/17 09:16:31 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/17 10:04:58 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,11 @@ Request::Request(std::string const & request, Config::ServerConfig const & sc) :
 	std::stringstream	ss(request);
 	std::string			line;
 
+	std::cout << "request: " << request << std::endl;
 	std::getline(ss, line);
 	line = strtrim(line, " \r\t");
 
-	std::cout << line << std::cout ;
+	std::cout << "line: " << line << std::cout ;
 	_method = line.substr(0, line.find_first_of(" \r\t"));
 	_uri_target = line.substr(_method.length(), line.find_last_of(" \r\t") - _method.length());
 	_http_version = line.substr(_method.length() + _uri_target.length());
@@ -160,26 +161,26 @@ const std::string Request::getCGIBindPath( void ) const
 
 const std::string Request::getCGIFile( void ) const 
 {
-//	std::vector<std::string>::iterator	v_it;
-//	size_t								pos(_uri_target.find_last_of('.'));
-//
-//	if (_lock && isTargetCGI() && !_lock->_cgi_map.empty() && pos != std::string::npos) {
-//		std::string ext(_uri_target.substr(pos + 1));
-//		std::string file_no_ext(_uri_target.substr(0, pos));
-//		if (_lock->_cgi_map.find(ext) != _lock->_cgi_map.end()) { 
-//			for (v_it = _lock->_cgi_map.begin() ; v_it != _lock->_cgi_map[ext].end() ; v_it++) {
-//				size_t v_pos(v_it->find_last_of('.'));
-//				std::string v_it_no_ext(*v_it);
-//				if (pos != std::string::npos) {
-//					v_it_no_ext = v_it_no_ext.substr(0, v_pos);
-//				}
-//				if (v_it_no_ext.find(file_no_ext) != std::string::npos || file_no_ext.find(v_it_no_ext) != std::string::npos)
-//					return *v_it;
-//			}
-//			return _lock->_cgi_map.find(ext)->second.front();
-//		}
-//	}
-	return "";
+	std::multimap<std::string, std::string>::iterator	v_it;
+	size_t								pos(_uri_target.find_last_of('.'));
+
+	if (_lock && isTargetCGI() && !_lock->_cgi_map.empty() && pos != std::string::npos) {
+		std::string ext(_uri_target.substr(pos + 1));
+		std::string file_no_ext(_uri_target.substr(0, pos));
+		if (_lock->_cgi_map.find(ext) != _lock->_cgi_map.end()) { 
+			for (v_it = _lock->_cgi_map.begin() ; v_it != _lock->_cgi_map.end() ; v_it++) {
+				size_t v_pos(v_it->second.find_last_of('.'));
+				std::string v_it_no_ext(v_it->second);
+				if (pos != std::string::npos) {
+					v_it_no_ext = v_it_no_ext.substr(0, v_pos);
+				}
+				if (v_it_no_ext.find(file_no_ext) != std::string::npos || file_no_ext.find(v_it_no_ext) != std::string::npos)
+					return (std::cout<<"getCgiFilefirstreturniscalled"<<std::endl,v_it->second);
+			}
+			return (std::cout<<"getCgiFileSecondReturnIsCalled"<<std::endl,_lock->_cgi_map.find(ext)->second);
+		}
+	}
+	return (std::cout<<"getCgiFileThirReturnIsCalled"<<std::endl,"");
 }
 
 const std::string Request::getAcceptEncoding( void ) const

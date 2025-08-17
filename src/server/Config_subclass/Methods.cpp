@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:11:05 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/14 08:42:41 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/17 09:24:44 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ Config::ServerConfig::Methods::Methods(const std::string & content) throw (std::
 
 	while (iss)
 	{
-		iss >> s;
 		_methods.push_back(std::string(s));
+		iss >> s;
 	}
 }
 

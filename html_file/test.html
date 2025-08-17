@@ -110,10 +110,12 @@
 
 
 		<div>
-			<form action="/CGI/python.py" method="GET">
-			<button class="aurora-glow-button" type="submit" > get Cgi </button>
-			</form>
+		    <form action="/CGI/python.cgi" method="POST">
+		        <input type="text" name="query" placeholder="Enter text to search" required>
+		        <button class="aurora-glow-button" type="submit">Search CGI</button>
+		    </form>
 		</div>
+
 		<div>
 			<button class="aurora-glow-button"  > redirection </button>
 		</div>

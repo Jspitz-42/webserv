@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:09:10 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/17 09:01:29 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/17 11:07:52 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,10 @@ void Config::ServerConfig::Cgi::_parseCgiContent(const std::string & content)
 	std::string key, value;
 
 	if (iss >> key >> value) {
+		if (key == "py" || key == "python")
+			key = "/usr/bin/python3.10";
+		else if (key == "js")
+			key = "/usr/bin/node";
 		_all_cgi.insert(std::pair<std::string, std::string>(key, value));
 	}
 

@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:39:40 by altheven          #+#    #+#             */
-/*   Updated: 2025/08/17 09:03:54 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/17 09:14:40 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,8 +212,6 @@ void	TCPServer::printConfig( void ) const throw (std::exception)
 		}
 	}
 }
-
-
 
 void TCPServer :: createSocket(std :: string const & ip, int port)
 {

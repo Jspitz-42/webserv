@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 09:10:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/13 07:19:53 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/17 09:13:15 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,9 @@
 # define ACCEPTCONNECTION_ERR_MSG "ERROR: [TCPServer::acceptConnection] [Failed to accept connection from socket]"
 # define TCPSERVER_RUN_ERR_MSG "ERROR: [TCPServer::run] [Epoll Failed to wait and return the events]"
 # define TCPSERVER_PRINTCONFING_ERR "ERROR: [TCPSERVER::printConfig] : No Configuration detected"
+# define TCPSERVER_DUP_CONF "ERROR: [TCPServer] [duplicate configuration]"
+# define TCPSERVER_DUP_LOC "ERROR: [TCPServer::_config] [duplicate location]"
+
 
 /**
  * error message for Config class error handling

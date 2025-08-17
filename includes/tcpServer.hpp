@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:37:10 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/14 08:50:35 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/17 08:59:36 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 # define MAX 1024
 # define MAX_EVENTS 10
 class Client;
-class Socket;
+
 
 class TCPServer
 {
@@ -61,18 +61,16 @@ class TCPServer
 											~TCPServer();
 		void								addSocket(Socket &) throw (std::exception);
 		void								cleanEpollAndClientsList();
-		void								removeClient(std::pair<int, int> &);
 		int									getEpollFd() const;
-		int									numSockets() const;
 		void								printConfig( void ) const throw (std::exception);
 		void								run();
 
 	private:
 		int									_epollfd;
-		std::vector<Socket>					_sockets;
-		std::map<int, std::vector<Client> >	_clients;
+		Socket								_sockets;
+		std::vector<Client>					_clients;
 		Config								_config;
-		Socket &							getOrCreateSocket(std::string const &, int);
+		void								createSocket(std::string const &, int);
 		void								acceptConnectionAt(int) throw (std::exception); 
 		bool								isSocketFd(int);
 		void								initMsg(void);

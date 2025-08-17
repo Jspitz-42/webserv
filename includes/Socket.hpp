@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 10:29:52 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 09:40:19 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/17 06:29:29 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 # include <fcntl.h>
 
 # include "utils.hpp"
-# include "tcpServer.hpp"
 # include "Error.hpp"
 # include "Config.hpp"
 
@@ -50,15 +49,13 @@ class Socket
 
 											Socket(const std::string &, int);
 											~Socket( void );
+											Socket( void );
 											Socket(const Socket &);
 
 		int 								acceptConnection( void );
 		int									getPort( void ) const;
 		int									getSocketFd( void ) const;
 		int									getAddressLen( void ) const;
-
-		void								addServerConf(Config::ServerConfig &);
-		Config::ServerConfig const & 		getServerConfig(std::string const &) const;
 
 		const std::string & 				getIpAdress( void ) const;
 		struct sockaddr_in					getAdress( void ) const;
@@ -67,17 +64,13 @@ class Socket
 
 	private:
 	
-											Socket( void );
 		int									_socket_fd;
 		int									_addrlen;
 		
 		std::string							_ip_address;
 		int									_port;
 		
-		struct sockaddr_in					_address;
-		
-		std::vector<Config::ServerConfig>	_conf_servers;
-		
+		struct sockaddr_in					_address;		
 		
 };
 

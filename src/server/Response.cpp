@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:30:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/07 13:18:11 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/17 06:55:31 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ Response::Response(Request const & request, Config::ServerConfig const & sc):	_k
 	
 		if (_req.isTargetCGI()) {
 			if (isDir(_req._lock->_cgi_bin)) {
-				_status_code = execCGI(); // implement what breno suggested, create cgi object
+				_status_code = execCGI();
 				if (_status_code <= 0)
 					_status_code = 500;
 			} else if (_req.getMethod() == "DELETE") {
@@ -453,7 +453,7 @@ const std::string Response::createResponse() {
 	}
 	so << _status_code;
 	if (_status_code != 200) {
-		//_keep_alive = false;
+		_keep_alive = false;
 		if (_req._lock) {
 			/* FIND LOCATION ERROR MAP 					*/
 			/* FIND THE ERROR ON THE LOCATION ERRORS MAP*/

@@ -6,12 +6,13 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:27:53 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/14 08:45:50 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/17 08:47:56 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Config.hpp"
 # include "utils.hpp"
+
 Config::Config(void) { return ;}
 
 const std::string Config::_server_directives[SERVER_CONTEXT_DIRECTIVE] = {"root", "listen", "server_name", "error_page", "client_max_body_size", "location", "index", "autoindex", "directory_listing"};

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:22 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/12 07:16:04 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/11 09:40:38 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 # include <iostream>
 # include <map>
 # include <algorithm>
-# include <SessionClient.hpp>
-#include <iomanip>
+
 # include "utils.hpp"
 # include "Config.hpp"
 
@@ -27,17 +26,17 @@ class Request
 											Request(std::string const &, Config::ServerConfig const &);
 											~Request( void );
 
-		std::string const					createClientId();
 		int									getErrorCode( void ) const;
 		bool								isTargetDir( void ) const;
 		bool								isTargetCGI( void ) const;
 		bool								isTargetRedirect( void ) const;
+		
 		std::string const & 				getFinalPath( void ) const;
 		std::string const & 				getContent( void ) const ;
 		std::string const & 				getQuery( void ) const ;
 		std::string const & 				getMethod( void ) const ;
 		std::string const & 				getUriTarget( void ) const;
-		bool								getClientId(std::string uuid) const;
+		
 		const std::string 					getIndex( void ) const;
 		const std::string 					getCGIBindPath( void ) const;
 		const std::string 					getCGIFile( void ) const;
@@ -58,7 +57,6 @@ class Request
 		std::string							_query;
 		std::string							_content;
 		std::map<std::string, std::string>	_headers;
-		SessionClient						_clientList[2048];
 		Config::ServerConfig const & 		_server_config;
 		
 //		bool								_check_default_error_code_and_assign_path( int ) const;

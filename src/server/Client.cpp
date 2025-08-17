@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 12:58:15 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/12 10:38:03 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/17 06:38:39 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 #include "Socket.hpp"
 
-Client::Client(int fd, Socket & s): _fd(fd), _keep_alive(true), _time_to_die(timestamp_in_ms() + TIME_TO_DIE), _socket(s)
+Client :: Client(int fd, Socket & s): _fd(fd), _keep_alive(true), _time_to_die(timestamp_in_ms() + TIME_TO_DIE), _socket(s)
 {
-	return ;
+	return;
 }
 
 Client::Client(const Client & param): _fd(param._fd), _keep_alive(param._keep_alive), _time_to_die(param._time_to_die), _socket(param._socket)
@@ -23,70 +23,66 @@ Client::Client(const Client & param): _fd(param._fd), _keep_alive(param._keep_al
 	return ;
 }
 
-Client& Client::operator= (const Client & other)
+Client & Client :: operator=(const Client & other)
 {
-	if (this != & other) { *this = other ;}
-		
-	return (*this);
+	if (this != &other)
+	{
+		*this = other;
+	}
+	return(*this);
 }
 
-Client::~Client()
+Client :: ~Client(void)
 {
 	return ;
 }
 
-int Client::getFd() const
+int	Client :: getFd(void) const
 {
-	return	(_fd); 
+	return (_fd);
 }
 
-Socket const & Client::getSocket() const
+Socket const & Client :: getSocket(void) const
 {
-	return	(_socket);
+	return (_socket);
 }
 
-void Client::handleRequest()
+void Client :: handleRequest(Config :: ServerConfig conf)
 {
-	char		buffer[30000] = {0};
-	int			valread;
-	UINT64_T	ms_s;
-	std::string	buf;
+	char			buffer[30000] = {0};
+	int				valread;
+	std :: string	buf;
+	UINT64_T		ms = timestamp_in_ms();
 
-	ms_s = timestamp_in_ms();
 	do {
-		valread = read(_fd, buffer, 30000);
+		valread = read(_fd, buffer, 3000);
 		if (valread <= 0)
 			break ;
-		std::string tmp(buffer, valread);
+		std :: string tmp(buffer, valread);
 		buf += tmp;
-	} while (valread == 30000); // CHECK FOR EOF... // READ BY CHUNCKS???
-	if (buf.length() > 0) { // perhaps don't check this? return 408 if response is empty...?	
-		_time_to_die = ms_s + TIME_TO_DIE;
-		std::string line(buf.substr(0, buf.find_first_of("\n\r")));
-		Request req(buf, _socket.getServerConfig(line));
-		Response res(req, _socket.getServerConfig(line));
-		std::string response_content(res.createResponse());
-		write(_fd, response_content.c_str(), response_content.length());
+	} while (valread == 30000);
+	if (buf.length() > 0)
+	{
+		_time_to_die = ms + TIME_TO_DIE;
+		Request req(buf, conf);
+		Response res(req, conf);
+		std :: string full_response(res.createResponse());
+		write(_fd, full_response.c_str(), full_response.length());
 		_keep_alive = res.getKeepAlive();
-		std::cout << " Completed " << res.getStatusCode() << " " << Response::_codeMessage[res.getStatusCode()] << " in " << timestamp_in_ms() - ms_s << "ms " << " at " << get_local_time() << std::endl;
-	} else {
-		// RESPONSE 408!!!
+		std::cout << " Completed " << res.getStatusCode() << " " << Response::_codeMessage[res.getStatusCode()] << " in " << timestamp_in_ms() - ms << "ms " << " at " << get_local_time() << std::endl;
+	} else 
+	{
 		_keep_alive = false;
-	}
+	}	
 }
+
 
 bool Client::keepAlive() const
 {
 	return (_keep_alive);
 }
 
-UINT64_T const & Client::timeToDie() const
+UINT64_T	const & Client :: timeToDie() const
 {
 	return (_time_to_die);
-}
-
-std::ostream& operator<<(std::ostream& s, const Client& param)
-{
-	s << param.getFd();
-	return (s);
 }

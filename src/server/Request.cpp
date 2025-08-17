@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/12 08:51:31 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/12 13:59:37 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ Request::Request(std::string const & request, Config::ServerConfig const & sc) :
 	std::getline(ss, line);
 	line = strtrim(line, " \r\t");
 
-	std :: cout << line << std :: cout ;
+	std ::cout << line << std :: cout ;
 	_method = line.substr(0, line.find_first_of(" \r\t"));
 	_uri_target = line.substr(_method.length(), line.find_last_of(" \r\t") - _method.length());
 	_http_version = line.substr(_method.length() + _uri_target.length());
@@ -29,6 +29,7 @@ Request::Request(std::string const & request, Config::ServerConfig const & sc) :
 	std::transform(_http_version.begin(), _http_version.end(), _http_version.begin(), ::tolower);
 	_uri_target = strtrim(_uri_target, " \r\t");
 	_http_version = strtrim(_http_version, " \r\t");
+	
 	while (std::getline(ss, line) && line != "\r\n")
 	{
 		if (line.find(':') != std::string::npos) {
@@ -40,6 +41,7 @@ Request::Request(std::string const & request, Config::ServerConfig const & sc) :
 			break ;
 		}
 	}
+
 	if (_headers.find("content-length") != _headers.end()) {
 		int valread(0);
 		std::stringstream num_ss(_headers["content-length"]);
@@ -50,6 +52,10 @@ Request::Request(std::string const & request, Config::ServerConfig const & sc) :
 		}
 		_content = _content.substr(0, valread);	
 	}
+	if (_headers.find("coockies") != _headers.end()) {
+		; //TO DO
+	}
+
 	if (_uri_target.length() > 1024) {
 		_error_code = 414;
 	} else {
@@ -154,25 +160,25 @@ const std::string Request::getCGIBindPath( void ) const
 
 const std::string Request::getCGIFile( void ) const 
 {
-	std::vector<std::string>::iterator	v_it;
-	size_t								pos(_uri_target.find_last_of('.'));
-
-	if (_lock && isTargetCGI() && !_lock->_cgi_map.empty() && pos != std::string::npos) {
-		std::string ext(_uri_target.substr(pos + 1));
-		std::string file_no_ext(_uri_target.substr(0, pos));
-		if (_lock->_cgi_map.find(ext) != _lock->_cgi_map.end()) { 
-			for (v_it = _lock->_cgi_map[ext].begin() ; v_it != _lock->_cgi_map[ext].end() ; v_it++) {
-				size_t v_pos(v_it->find_last_of('.'));
-				std::string v_it_no_ext(*v_it);
-				if (pos != std::string::npos) {
-					v_it_no_ext = v_it_no_ext.substr(0, v_pos);
-				}
-				if (v_it_no_ext.find(file_no_ext) != std::string::npos || file_no_ext.find(v_it_no_ext) != std::string::npos)
-					return *v_it;
-			}
-			return _lock->_cgi_map.find(ext)->second.front();
-		}
-	}
+//	std::vector<std::string>::iterator	v_it;
+//	size_t								pos(_uri_target.find_last_of('.'));
+//
+//	if (_lock && isTargetCGI() && !_lock->_cgi_map.empty() && pos != std::string::npos) {
+//		std::string ext(_uri_target.substr(pos + 1));
+//		std::string file_no_ext(_uri_target.substr(0, pos));
+//		if (_lock->_cgi_map.find(ext) != _lock->_cgi_map.end()) { 
+//			for (v_it = _lock->_cgi_map.begin() ; v_it != _lock->_cgi_map[ext].end() ; v_it++) {
+//				size_t v_pos(v_it->find_last_of('.'));
+//				std::string v_it_no_ext(*v_it);
+//				if (pos != std::string::npos) {
+//					v_it_no_ext = v_it_no_ext.substr(0, v_pos);
+//				}
+//				if (v_it_no_ext.find(file_no_ext) != std::string::npos || file_no_ext.find(v_it_no_ext) != std::string::npos)
+//					return *v_it;
+//			}
+//			return _lock->_cgi_map.find(ext)->second.front();
+//		}
+//	}
 	return "";
 }
 
@@ -205,48 +211,9 @@ const std::string Request::getContentType( void ) const
 
 const std::string Request::getCookies( void ) const 
 {
-	if (_headers.find("cookie") != _headers.end()) {
-		return (_headers.find("cookie")->second);
+	if (_headers.find("Cookie") != _headers.end()) {
+		return (_headers.find("Cookie")->second);
 	} else {
 		return ("");
 	}
-}
-
-bool	Request::getClientId(std::string uuid) const {
-	for (int i = 0; i < 2048; i++) {
-		if (const_cast<SessionClient&>(this->_clientList[i]).getUUID() == uuid)
-			return (true);
-	}
-	return (false);
-}
-
-std::string generate_uuid_v4() {
-	std::stringstream ss;
-
-	for (int i = 0; i < 16; ++i) {
-		int byte = std::rand() % 256;
-		if (i == 6) {
-			byte = (byte & 0x0F) | 0x40;
-		}
-		else if (i == 8) {
-			byte = (byte & 0x3F) | 0x80;
-		}
-		ss << std::setw(2) << std::setfill('0') << std::hex << byte;
-		if (i == 3 || i == 5 || i == 7 || i == 9)
-			ss << "-";
-	}
-	return ss.str();
-}
-
-
-
-const std::string Request::createClientId() {
-	std::string uuidV4 = generate_uuid_v4();
-	for (int i = 0; i < 2048; i++) {
-		if (this->_clientList[i].getUUID().empty()) {
-			this->_clientList[i].setUUID(uuidV4);
-			return (uuidV4);
-		}
-	}
-	return ("");
 }

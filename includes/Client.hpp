@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 10:28:16 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 11:45:26 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/17 06:27:26 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ class Client
 		
 		int					getFd() const;
 		bool 				keepAlive() const;
-		void				handleRequest();
+		void				handleRequest(Config :: ServerConfig conf);
 		Socket const &		getSocket() const;
 		UINT64_T const &	timeToDie() const;
 		Client & operator=	(const Client &);

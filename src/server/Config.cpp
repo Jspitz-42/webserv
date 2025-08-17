@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:27:53 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/12 14:17:18 by altheven         ###   ########.fr       */
+/*   Updated: 2025/08/11 14:57:17 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ Config::Config(std::string const & file_s) throw(std::exception)
 	std::string		line;
 	std::string		directive;
 	std::string		directive_content;
-	int				context = 0;
+	short int		context(0);
 
 	file.open(file_s.c_str(), std::ios::in);
 

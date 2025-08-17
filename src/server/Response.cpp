@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:30:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/12 08:41:39 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/17 06:55:31 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ Response::Response(Request const & request, Config::ServerConfig const & sc):	_k
 	
 		if (_req.isTargetCGI()) {
 			if (isDir(_req._lock->_cgi_bin)) {
-				_status_code = execCGI(); // implement what breno suggested, create cgi object
+				_status_code = execCGI();
 				if (_status_code <= 0)
 					_status_code = 500;
 			} else if (_req.getMethod() == "DELETE") {
@@ -453,7 +453,7 @@ const std::string Response::createResponse() {
 	}
 	so << _status_code;
 	if (_status_code != 200) {
-		//_keep_alive = false;
+		_keep_alive = false;
 		if (_req._lock) {
 			/* FIND LOCATION ERROR MAP 					*/
 			/* FIND THE ERROR ON THE LOCATION ERRORS MAP*/
@@ -507,20 +507,6 @@ const std::string Response::createResponse() {
 		}
 	}
 	response += "HTTP/1.1 " + so.str() + " " + _codeMessage[_status_code] + "\n";
-	//INSERT COOKIE HERE
-	const std::string cookieValue = !this->_req.getCookies().empty() ? this->_req.getCookies().substr(this->_req.getCookies().find("id_session=")) : "";
-	if (!cookieValue.empty()) {
-		std::cout << "Cookie already exist !" << std::endl;
-		response += "Set-Cookie: id_session=";
-		response += cookieValue;
-		response += "; Path=/; HttpOnly\n";
-	} else {
-		std::cout << "new client added !" << std::endl;
-		const std::string newCookie = const_cast<Request&>(this->_req).createClientId();
-		response += "Set-Cookie: id_session=";
-		response += newCookie;
-		response += "; Path=/; HttpOnly\n";
-	}
 	response += "Date: " + _date;
 	response += "Server: " + _server_name + "\n";
 	response += "Accept-Charset: utf-8\n";

@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/12 13:59:37 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/17 09:16:31 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ Request::Request(std::string const & request, Config::ServerConfig const & sc) :
 	std::getline(ss, line);
 	line = strtrim(line, " \r\t");
 
-	std ::cout << line << std :: cout ;
+	std::cout << line << std::cout ;
 	_method = line.substr(0, line.find_first_of(" \r\t"));
 	_uri_target = line.substr(_method.length(), line.find_last_of(" \r\t") - _method.length());
 	_http_version = line.substr(_method.length() + _uri_target.length());

@@ -6,11 +6,12 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:18:18 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 09:18:21 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/17 15:00:08 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Config.hpp"
+#include "sys/stat.h"
 
 Config::ServerConfig::Root::Root(const std::string & content) throw (std::exception) : Directive(ROOT),
 																					  _path(content)
@@ -23,12 +24,27 @@ Config::ServerConfig::Root::Root(const std::string & content) throw (std::except
 
 void Config::ServerConfig::Root::setDirective(ServerConfig & serv_conf, int context) const
 {
-	if (context == SERVER_CONTEXT) {
-		serv_conf._root_path = _path;
-	} else if (context == LOCATION_CONTEXT) {
-		serv_conf._locations.back()._root_path = _path;
-	}
+	std::cout << _path << std::endl;
+    if (context == SERVER_CONTEXT) {
+        struct stat sb;
+        if (stat(_path.c_str(), &sb) != 0 || (sb.st_mode & S_IFDIR))
+            throw Config::ErrorMessage("ERROR: ROOT PATH DOES NOT EXIST OR IS NOT AN EXECUTABLE");
+
+        serv_conf._root_path = _path;
+    } 
+    else if (context == LOCATION_CONTEXT) {
+        if (serv_conf._locations.empty())
+            throw Config::ErrorMessage("No locations defined for setting root");
+
+        struct stat sb;
+        if (stat(_path.c_str(), &sb) != 0)
+            throw Config::ErrorMessage("ERROR: [ROOT] : [" + _path + "] does not exist");
+		if ((sb.st_mode & S_IFDIR))
+			throw Config::ErrorMessage("ERROR: [ROOT] : [" + _path + "] Is a directory");
+        serv_conf._locations.back()._root_path = _path;
+    }
 }
+
 
 
 Config::ServerConfig::Root::~Root( void )

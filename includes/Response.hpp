@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:31 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/17 12:37:21 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/17 12:38:01 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ class Response
 
 	private:
 		int											_status_code;
-7
+
 		bool										_keep_alive;
 		bool										_autoindex;
 		bool										_cgi_response;

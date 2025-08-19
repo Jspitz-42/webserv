@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:31 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/17 12:38:01 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/19 09:27:45 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ class Response
 				return msg.c_str();
 			}	
 		};
-		
+
 													Response(Request const &, Config::ServerConfig const &);
 													~Response( void );
 

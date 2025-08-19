@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Location.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:15:49 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 14:57:53 by altheven         ###   ########.fr       */
+/*   Updated: 2025/08/19 07:14:29 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ Config::ServerConfig::Location::Location(std:: string const & content) throw (st
 		throw Config::ErrorMessage(LOCATION_WRONG_SYNTAX_1);
 	}
 	
+	std::cout << "Location constructor _target" << std::endl;
 	_target = _target.substr(0, content.length() - 1);
 	_target = strtrim(_target);
 

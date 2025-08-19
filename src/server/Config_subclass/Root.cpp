@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:18:18 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/19 13:10:37 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/19 13:24:39 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,7 @@ void Config::ServerConfig::Root::setDirective(ServerConfig & serv_conf, int cont
         struct stat sb;
         if (stat(_path.c_str(), &sb) != 0)
             throw Config::ErrorMessage("ERROR: [ROOT] : [" + _path + "] does not exist");
-		if (serv_conf._locations.back()._is_cgi && (sb.st_mode & S_IFDIR))
-			throw Config::ErrorMessage("ERROR: [ROOT] : [" + _path + "] Is a directory");
+
         serv_conf._locations.back()._root_path = _path;
 		serv_conf._locations.back()._root_found = true;
     }

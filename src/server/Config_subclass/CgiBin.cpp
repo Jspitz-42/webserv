@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:09:41 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/19 12:51:39 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/19 13:25:25 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,6 @@ void Config::ServerConfig::CgiBin::setDirective(ServerConfig & serv_conf, int co
 			serv_conf._locations.back()._cgi_bin = _path;
 			serv_conf._locations.back()._cgi_bin_found = true;
 		}
-	} else {
-		throw Config::ErrorMessage("ERROR: [CGI-BIN] [INVALID CONTEXT]");
 	}
 }
 

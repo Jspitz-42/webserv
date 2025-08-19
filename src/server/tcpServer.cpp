@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:39:40 by altheven          #+#    #+#             */
-/*   Updated: 2025/08/19 10:22:56 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/19 13:27:10 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,6 @@ TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(
 			}
 			if (it_loc->_root_found != true) {
 				throw TCPServer::ErrorMessage("Error: [LOCATION] [INVALID DIRECTIVE] : No root path set");
-			}
-			if (it_loc->_is_cgi && it_loc->_cgi_bin_found != true) {
-				throw TCPServer::ErrorMessage("Error: [LOCATION] [INVALID DIRECTIVE] [CGI] : No Cgi-bin");
 			}
 		}
 	}

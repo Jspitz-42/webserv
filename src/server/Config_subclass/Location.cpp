@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:15:49 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/19 10:02:15 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/19 13:24:20 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ Config::ServerConfig::Location::Location(std:: string const & content) throw (st
 	{
 		throw Config::ErrorMessage("Error: [Location] [File do not exist] : " + _target);	
 	} else if ((stat(_target.c_str(), &s)) == 0 && !(s.st_mode & S_IFDIR)) {
-		throw Config::ErrorMessage("ERROR: [Location] [Diretory does not exist] : " + _target);
+		throw Config::ErrorMessage("ERROR: [Location] [Directory does not exist] : " + _target);
 	}
 	if (_target.empty() || _target.find(SEPARATORS) != std::string::npos) {
 		throw Config::ErrorMessage(LOCATION_WRONG_SYNTAX_2);

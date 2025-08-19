@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:39:40 by altheven          #+#    #+#             */
-/*   Updated: 2025/08/19 08:46:49 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/19 10:22:56 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(
 
 	const Config::ServerConfig &server = _config._servers.front();
 	
+	bool found_standard = false;
 	if (!server._locations.empty()) {
 
 		std::set<std::string> seen;
@@ -33,6 +34,8 @@ TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(
 		for ( ; it_loc != server._locations.end() ; it_loc++) {
 			const std::string & target = it_loc->_target;
 
+			if (it_loc->_target == "/")
+				found_standard = true;
 			if (!seen.insert(target).second) {
 				throw TCPServer::ErrorMessage(TCPSERVER_DUP_LOC);
 			}
@@ -45,6 +48,10 @@ TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(
 		}
 	}
 
+	if (!found_standard) {
+		throw TCPServer::ErrorMessage("ERROR: [LOCATION] [STANDARD \"/\"] : not found");
+	}
+
 	_epollfd = epoll_create(10);
 
 	if (_epollfd == -1)
@@ -53,7 +60,7 @@ TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(
 		createSocket(server.getIp(), server.getPort());
 	} catch (std :: exception & e) {
 		std :: cout << "[FAILED]" << e.what() << std :: endl;
-		std::cout << "This Server Configuration contains errors, or an invalid [ip_address:port]. Please review the configuration file" << std::endl;
+		std::cout << " Server Configuration contains errors, or an invalid [ip_address:port]. Please review the configuration file" << std::endl;
 	}
 }
 

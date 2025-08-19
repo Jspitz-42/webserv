@@ -6,23 +6,22 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/17 10:04:58 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/19 13:05:08 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Request.hpp"
 #include "Socket.hpp"
 #include "Config.hpp"
-Request::Request(std::string const & request, Config::ServerConfig const & sc) : _lock(NULL), _error_code(0),_server_config(sc)
+Request :: Request(std :: string const & request, Config :: ServerConfig const & sc) : _lock(NULL), _error_code(0), _server_config(sc)
 {
-	std::stringstream	ss(request);
-	std::string			line;
+	std :: stringstream ss(request);
+	std :: string line;
 
-	std::cout << "request: " << request << std::endl;
 	std::getline(ss, line);
 	line = strtrim(line, " \r\t");
-
-	std::cout << "line: " << line << std::cout ;
+	
+	std ::cout << line << std :: cout ;
 	_method = line.substr(0, line.find_first_of(" \r\t"));
 	_uri_target = line.substr(_method.length(), line.find_last_of(" \r\t") - _method.length());
 	_http_version = line.substr(_method.length() + _uri_target.length());
@@ -30,7 +29,7 @@ Request::Request(std::string const & request, Config::ServerConfig const & sc) :
 	std::transform(_http_version.begin(), _http_version.end(), _http_version.begin(), ::tolower);
 	_uri_target = strtrim(_uri_target, " \r\t");
 	_http_version = strtrim(_http_version, " \r\t");
-	
+
 	while (std::getline(ss, line) && line != "\r\n")
 	{
 		if (line.find(':') != std::string::npos) {
@@ -38,7 +37,9 @@ Request::Request(std::string const & request, Config::ServerConfig const & sc) :
 			std::string	content(line.substr(line.find(':')));
 			std::transform(name.begin(), name.end(), name.begin(), ::tolower);
 			_headers[name] = strtrim(content, ": \t");
-		} else {
+		} 
+		else 
+		{
 			break ;
 		}
 	}
@@ -53,34 +54,52 @@ Request::Request(std::string const & request, Config::ServerConfig const & sc) :
 		}
 		_content = _content.substr(0, valread);	
 	}
-	if (_headers.find("coockies") != _headers.end()) {
-		; //TO DO
+	if (_headers.find("cookies") != _headers.end()) 
+	{
+		;
 	}
 
-	if (_uri_target.length() > 1024) {
+	if (_uri_target.length() > 1024) 
+	{
 		_error_code = 414;
-	} else {
-		size_t q_start = _uri_target.find("?");
-		size_t q_end = _uri_target.find("#");
-		if (q_start != std::string::npos) {
-			_query = _uri_target.substr(q_start, q_end - q_start);
-			_uri_target = _uri_target.substr(0, q_start);
+	} 
+	else {
+		size_t pos_q = _uri_target.find('?');
+		size_t pos_frag = _uri_target.find('#');
+
+		if (pos_q != std::string::npos)
+		{
+    		size_t qbeg = pos_q + 1;
+    		size_t qlen = (pos_frag == std::string::npos) ? std::string::npos : (pos_frag - qbeg);
+
+			_query = _uri_target.substr(qbeg, qlen);
+    		_uri_target.erase(pos_q);
+		} 
+		else if (pos_frag != std::string::npos) 
+		{
+			_uri_target.erase(pos_frag);
 		}
-		_lock = _server_config.findLocation(_uri_target);
-		if (!_lock) {
+		_lock = _server_config.findLocation(sc._root_path + _uri_target);
+		if (!_lock)
+		{
 			_error_code = 404;
 			std::cerr << "Wrong target: [" << _uri_target << "] not found" << std::endl;
-		} else {
-			_final_path = _lock->_root_path + _uri_target.substr(_lock->_target.length());
+		} else 
+		{
+			_final_path = _lock->_root_path + _uri_target;
+	
 			std::string tmp("Started: " + _method + " \"" + _uri_target + "\" ");
 			std::cout.width(35);
 			std::cout << std::left << tmp << "=>" << " Target Path [" << _final_path << "]" << std::endl;
 		}
-		if (!_lock->findMethod(_method)) {
+		if (!_lock->findMethod(_method)) 
+		{
 			_error_code = 405;
-		} else if (_http_version == "http/1.0") {
+		} else if (_http_version == "http/1.0") 
+		{
 			_error_code = 505;
-		} else if (_http_version != "http/1.1") {
+		} else if (_http_version != "http/1.1") 
+		{
 			_error_code = 400;
 		}
 	}
@@ -108,15 +127,11 @@ bool Request::isTargetDir( void ) const
 }
 
 bool Request::isTargetCGI( void ) const
-{
-	size_t pos(_uri_target.find('.'));
-	
-	if (_lock && !isTargetDir() && pos != std::string::npos) {
-		std::string ext(_uri_target.substr(pos + 1));
-		if (!(_lock->_cgi_bin.empty()) && (_lock->_cgi_map.find(ext) != _lock->_cgi_map.end()))
-			return true;
+{	
+	if (_lock->_is_cgi) 
+	{
+		return true;
 	}
-
 	return false;
 }
 
@@ -134,6 +149,7 @@ std::string const & Request::getQuery( void) const { return _query ;}
 std::string const & Request::getMethod( void ) const { return _method ;}
 std::string const & Request::getUriTarget( void ) const { return _uri_target;}
 std::string const & Request::getFinalPath( void ) const { return _final_path ;}
+std::string const & Request::getHttpVersion( void ) const { return _http_version ;}
 
 const std::string Request::getIndex( void ) const 
 {
@@ -159,43 +175,47 @@ const std::string Request::getCGIBindPath( void ) const
 	return ("");
 }
 
-const std::string Request::getCGIFile( void ) const 
+
+const std::string Request::getCGIFile() const 
 {
-	std::multimap<std::string, std::string>::iterator	v_it;
-	size_t								pos(_uri_target.find_last_of('.'));
+	size_t pos(_uri_target.find_last_of('.'));
 
 	if (_lock && isTargetCGI() && !_lock->_cgi_map.empty() && pos != std::string::npos) {
 		std::string ext(_uri_target.substr(pos + 1));
 		std::string file_no_ext(_uri_target.substr(0, pos));
-		if (_lock->_cgi_map.find(ext) != _lock->_cgi_map.end()) { 
-			for (v_it = _lock->_cgi_map.begin() ; v_it != _lock->_cgi_map.end() ; v_it++) {
-				size_t v_pos(v_it->second.find_last_of('.'));
-				std::string v_it_no_ext(v_it->second);
-				if (pos != std::string::npos) {
-					v_it_no_ext = v_it_no_ext.substr(0, v_pos);
-				}
-				if (v_it_no_ext.find(file_no_ext) != std::string::npos || file_no_ext.find(v_it_no_ext) != std::string::npos)
-					return (std::cout<<"getCgiFilefirstreturniscalled"<<std::endl,v_it->second);
+
+		std::cout << "ext : " << ext << std::endl;
+
+		std::string extention_path[] = {"py", "js", "php"};
+
+		for (size_t i = 0; i < extention_path->size() ; i++) {
+			if (ext == extention_path[i]) {
+				ext = _lock->_root_path;
+				break ;
 			}
-			return (std::cout<<"getCgiFileSecondReturnIsCalled"<<std::endl,_lock->_cgi_map.find(ext)->second);
+		}
+
+		if (_lock->_cgi_map.find(ext) != _lock->_cgi_map.end()) 
+		{
+			std::multimap<std::string,std::string> :: iterator m_it = _lock->_cgi_map.find(ext);
+			std :: string m_str = m_it->second;
+			size_t v_pos(m_str.find_last_of('.'));
+			std :: string m_str_no_ext(m_str);
+			if (pos != std::string::npos)
+					m_str_no_ext = m_str_no_ext.substr(0, v_pos);
+			if (m_str_no_ext.find(file_no_ext) != std::string::npos 
+					|| file_no_ext.find(m_str_no_ext) != std::string::npos)
+					return (m_str);
+			return (_lock->_cgi_map.find(ext)->second);
 		}
 	}
-	return (std::cout<<"getCgiFileThirReturnIsCalled"<<std::endl,"");
-}
+	return ("");
+} 
 
 const std::string Request::getAcceptEncoding( void ) const
 {
 	if (_headers.find("accept-encoding") != _headers.end()) {
 		return  (_headers.find("accept-encoding")->second);
-	} else {
-		return ("");
-	}
-}
-
-const std::string Request::getUserAgent( void ) const 
-{
-	if (_headers.find("user-agent") != _headers.end()) {
-		return (_headers.find("user-agent")->second);
 	} else {
 		return ("");
 	}
@@ -210,10 +230,19 @@ const std::string Request::getContentType( void ) const
 	}
 }
 
+const std::string Request::getUserAgent( void ) const 
+{
+	if (_headers.find("user-agent") != _headers.end()) {
+		return (_headers.find("user-agent")->second);
+	} else {
+		return ("");
+	}
+}
+
 const std::string Request::getCookies( void ) const 
 {
-	if (_headers.find("Cookie") != _headers.end()) {
-		return (_headers.find("Cookie")->second);
+	if (_headers.find("cookie") != _headers.end()) {
+		return (_headers.find("cookie")->second);
 	} else {
 		return ("");
 	}

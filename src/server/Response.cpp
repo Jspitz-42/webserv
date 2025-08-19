@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:30:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/17 10:00:01 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/19 12:26:02 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Response.hpp"
 # include "Request.hpp"
-
 
 static void push_back_env(std::vector<char *> & vec, std::string const & name, std::string const & value)
 {
@@ -53,54 +52,7 @@ static const std::map<std::string, std::string> insert_to_mime_map( void )
 
 	mime_map["txt"]		= "text/plain";	
 	mime_map["html"]	= "text/html";
-	mime_map["css"]		= "text/css";
 	mime_map["js"] 		= "text/javascript";
-
-	mime_map["json"] 	= "application/json";
-	mime_map["jsonld"] 	= "application/ld+json";
-	mime_map["xml"] 	= "application/xml";
-	mime_map["pdf"] 	= "application/pdf";
-	mime_map["doc"] 	= "application/msword";
-	mime_map["docx"] 	= "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-	mime_map["ppt"] 	= "application/vnd.ms-powerpoint";
-	mime_map["pptx"] 	= "application/vnd.openxmlformats-officedocument.presentationml.presentation";
-	mime_map["odt"] 	= "application/vnd.oasis.opendocument.text";
-	mime_map["xls"] 	= "application/vnd.ms-excel";
-	mime_map["xlsx"] 	= "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-	mime_map["odp"] 	= "application/vnd.oasis.opendocument.presentation";
-	mime_map["ods"] 	= "application/vnd.oasis.opendocument.spreadsheet";
-
-	mime_map["bz"]		= "application/x-bzip";
-	mime_map["bz2"]		= "application/x-bzip2";
-	mime_map["gz"]		= "application/gzip";
-	mime_map["zip"]		= "application/zip";
-	mime_map["7z"]		= "application/x-7z-compressed";
-	mime_map["tar"]		= "application/x-tar";
-
-	mime_map["jpeg"]	= "image/jpeg";
-	mime_map["jpg"]		= "image/jpeg";
-	mime_map["png"]		= "image/png";
-	mime_map["apng"]	= "image/apng";
-	mime_map["avif"]	= "image/avif";
-	mime_map["gif"]		= "image/gif";
-	mime_map["svg"]		= "image/svg+xml";
-	mime_map["webp"]	= "image/webp";
-	mime_map["bmp"]		= "image/bmp";
-	mime_map["ico"]		= "image/x-icon";
-	mime_map["tif"]		= "image/tiff";
-	mime_map["tiff"]	= "image/tiff";
-	
-	mime_map["mp3"]		= "audio/mpeg";
-	mime_map["aac"]		= "audio/aac";
-	mime_map["wav"]		= "audio/wave";
-	mime_map["flac"]	= "audio/flac";
-
-	mime_map["mpeg"]	= "audio/mpeg";
-	mime_map["webm"]	= "video/webm";
-	mime_map["mp4"]		= "video/mp4";
-	mime_map["avi"]		= "video/x-msvideo";
-	mime_map["3gp"]		= "video/3gpp";
-
 	return (mime_map);
 }
 
@@ -119,7 +71,7 @@ Response::Response(Request const & request, Config::ServerConfig const & sc):	_k
 	
 	_status_code = _req.getErrorCode();
 	_date = get_local_time();
-	_server_name = "Breno_Tony_Pulga";
+	_server_name = "Tom_Nook";
 	
 	if (_req.isTargetRedirect() && _req._lock) {
 		_status_code = _req._lock->_redirect_status;
@@ -197,7 +149,6 @@ void Response::setMimeType(std::string const & file_name)
 
 int Response::execCGI()
 {
-	std::cerr<<"execCgi  is called"<<std::endl;
 	std::vector<char *> env;
 	std::vector<char *>::iterator it;
 	std::vector<char *> arg;
@@ -215,9 +166,6 @@ int Response::execCGI()
 	push_back_env(env, "PATH_INFO", _req.getCGIBindPath());
 	push_back_env(env, "PATH_TRANSLATED", _req.getCGIBindPath());
 	push_back_env(env, "QUERY_STRING", _req.getQuery());
-
-	push_back_env(env, "REMOTE_HOST", _server_config.getIp());
-
 	push_back_env(env, "REQUEST_METHOD", _req.getMethod());
 	push_back_env(env, "REQUEST_URI", _req.getUriTarget());
 	push_back_env(env, "SCRIPT_FILENAME", _req.getCGIFile());
@@ -235,6 +183,11 @@ int Response::execCGI()
 	arg.push_back(strdup(_req.getCGIFile().c_str()));
 	arg.push_back(NULL);
 
+	// for (int i = 0; env[i]; i++)
+	// {
+	// 	std :: cout << env[i] << " --- I VALUE = " <<i << std :: endl;
+	// }
+
 	int restore_input = dup(STDIN_FILENO);
 	int restore_output = dup(STDOUT_FILENO);
 	
@@ -249,6 +202,7 @@ int Response::execCGI()
 		return (-1);
 	write(tmp_fd_in, _req.getContent().c_str(), _req.getContent().length());
 	rewind(tmp_file_in);
+	fclose(tmp_file_in);
 	
 	int pid = fork();
 	if (pid < 0)
@@ -256,13 +210,14 @@ int Response::execCGI()
 	if (pid == 0) {
 		dup2(tmp_fd_in, STDIN_FILENO);
 		dup2(tmp_fd_out, STDOUT_FILENO);
+		close(tmp_fd_in);
+		close(tmp_fd_out);
 		if (chdir(_req._lock->_cgi_bin.c_str()) != -1) {
 			execve(_req.getCGIFile().c_str(), &arg[0], &env[0]);
 		}
 		exit(EXIT_FAILURE);
     }
 
-    //free env & arg
     for (it = env.begin(); it != env.end(); ++it)
     	if (*it)
     		free (*it);
@@ -282,17 +237,19 @@ int Response::execCGI()
     	bzero(buff, 1024);
 		valread = read(tmp_fd_out, buff, 1023);
 		if (valread < 0) {
+			close(tmp_fd_out);
+			fclose(tmp_file_out);
 			return (-1);
 		}
 		_content += buff;
     }    
-    
 	if (child_status != 0) {
     	_content = "ERROR!!!";
     	return (500);
     }
    
 	close(tmp_fd_out);
+	fclose(tmp_file_out);
     
 	dup2(restore_input, STDIN_FILENO);
     dup2(restore_output, STDOUT_FILENO);
@@ -307,20 +264,12 @@ int Response::execCGI()
 
 const std::string Response::createAutoindexResponse()
 {
-	std::string		file_icon, css_icon, html_icon, js_icon, py_icon, folder_icon, html_content;
-	std::ifstream	icon;
+	std::string		 html_content;
 	DIR	*			dr;
 	struct dirent *	de;
     struct stat		st;
     struct tm		tm_time;
 
-	/*website file to insert here*/
-	readFileString("utils/folder.svg", folder_icon);
-	readFileString("utils/file.svg", file_icon);
-	readFileString("utils/html_file.svg", html_icon);
-	readFileString("utils/js_file.svg", js_icon);
-	readFileString("utils/css_file.svg", css_icon);
-	readFileString("utils/py_file.svg", py_icon);
     dr = opendir(_req.getFinalPath().c_str());
 	if (dr == NULL) {
 		_status_code = 404;
@@ -329,7 +278,7 @@ const std::string Response::createAutoindexResponse()
 		while ((de = readdir(dr)) != NULL) {
 			if (*de->d_name == 0 || (*de->d_name == '.' && *(de->d_name + 1) == 0))
 				continue ;
-			std::string file_path(_req.getFinalPath() + de->d_name);
+			std::string file_path(_req.getFinalPath() + "/" + de->d_name);
 			int fd = open(file_path.c_str(), O_RDONLY);
 			if (fd < 0 || fstat(fd, &st) == -1) {
 				html_content += "<div>Failed to open " + file_path + "</div>";
@@ -340,25 +289,16 @@ const std::string Response::createAutoindexResponse()
 			std::string tmp_s_time(s_time.substr(0, s_time.length() - 1));
 			std::string file_name(de->d_name);
 			if (S_ISDIR(st.st_mode))
-				html_content += "<div><a href=\"" + file_name + "/\">" + folder_icon + "<span class=\"file_name\">" + de->d_name + "/</span></a><span class=\"flexible\"><span>" + tmp_s_time + "</span><span> - </span></span></div>";
+				html_content += "<div><a href=\"" + file_name + "/\">"  + "<span class=\"file_name\">" + de->d_name + "/</span></a><span class=\"flexible\"><span>" + tmp_s_time + "</span><span> - </span></span></div>";
 			else {
-				std::string & tmp_icon = file_icon;
 				size_t num_file_size(st.st_size);
 				std::stringstream ss;
 				ss << num_file_size;
-				if (file_name.find(".html", file_name.length() - 5) != std::string::npos) 
-					tmp_icon = html_icon;
-				else if (file_name.find(".css", file_name.length() - 4) != std::string::npos) 
-					tmp_icon = css_icon;
-				else if (file_name.find(".js", file_name.length() - 3) != std::string::npos) 
-					tmp_icon = js_icon;
-				else if (file_name.find(".py", file_name.length() - 3) != std::string::npos) 
-					tmp_icon = py_icon;
-				html_content += "<div><a href=\"" + file_name + "\">" + tmp_icon + "<span class=\"file_name\">" + de->d_name + "</span></a><span class=\"flexible\"><span>" + tmp_s_time + "</span><span> " + ss.str() + " Bytes</span></span></div>";
+				html_content += "<div><a href=\"" + file_name + "\">"  + "<span class=\"file_name\">" + de->d_name + "</span></a><span class=\"flexible\"><span>" + tmp_s_time + "</span><span> " + ss.str() + " Bytes</span></span></div>";
 			}
 			close (fd);
 	    }
-	    html_content += "\n<hr><center>brtopu/1.0</center>\n</body>\n</html>\n";
+	    html_content += "\n<hr><center>Tom_Nook/1.0</center>\n</body>\n</html>\n";
 	    closedir(dr);
 	}
 	return (html_content);
@@ -399,7 +339,7 @@ const std::string Response::createRedirectionResponse() {
 	ss << _status_code;
 	response_content += "HTTP/1.1 " + ss.str() + " " + Config::ServerConfig::Redirect::_redirect_status_codes[_status_code] + "\n";
 	response_content += "Date:" + _date;
-	response_content += "Server: Alex_tom_josh\n";
+	response_content += "Server: Tom_Nook\n";
 	response_content += "Location: " + _req._lock->_redirect_uri +"\n";
 	response_content += "Connection: close\n";
 	_keep_alive = false;
@@ -417,7 +357,7 @@ const std::string Response::deleteResponse() {
 	html_content += "</h1></body></html>";
 	response_content += "HTTP/1.1 200 " + _codeMessage[200] + "\n";
 	response_content += "Date:" + _date;
-	response_content += "Server: Breno_Tony_Pulga\n";
+	response_content += "Server: Tom_Nook\n";
 	ss << html_content.length();
 	response_content += "Content-Length: " + ss.str() + "\n";
 	response_content += "Connection: close\n";
@@ -456,8 +396,6 @@ const std::string Response::createResponse() {
 	if (_status_code != 200) {
 		_keep_alive = false;
 		if (_req._lock) {
-			/* FIND LOCATION ERROR MAP 					*/
-			/* FIND THE ERROR ON THE LOCATION ERRORS MAP*/
 			std::map<std::string, std::vector<int> >::iterator l_it;
 			for (l_it = _req._lock->_location_errors_map.begin(); l_it != _req._lock->_location_errors_map.end() && html_content.empty(); ++l_it) {
 				std::vector<int>::iterator e_it;
@@ -478,8 +416,6 @@ const std::string Response::createResponse() {
 				}
 			}
 		}
-		/* FIND SERVER ERROR MAP 					*/
-		/* FIND THE ERROR ON THE SERVER ERRORS MAP  */
 		std::map<std::string, std::vector<int> >::const_iterator l_it;
 		for (l_it = _server_config._server_error_maps.begin(); l_it != _server_config._server_error_maps.end() && html_content.empty(); ++l_it) {
 			std::vector<int>::const_iterator e_it;
@@ -490,7 +426,7 @@ const std::string Response::createResponse() {
 				}
 			}
 			if (e_it != l_it->second.end()) {
-				std::string error_loc = l_it->first + so.str() + ".html"; // We support only html errors
+				std::string error_loc = l_it->first + so.str() + ".html";
 
 				file.open(error_loc.c_str(), std::ifstream::binary);
 				if(file.is_open()) {
@@ -502,9 +438,8 @@ const std::string Response::createResponse() {
 			}
 		}
 		if (!html_content.length()) {
-			/* DEFAULT ERROR (NO CUSTOM ERROR FOUNDED)*/
 			_content_type = "text/html";
-			html_content = "<html>\n<head><title>" + so.str() + "</title></head>\n<body bgcolor=\"gray\">\n<center><h1>" + so.str() + " " + _codeMessage[_status_code] + "</h1></center>\n<hr><center>brtopu/1.0</center>\n</body>\n</html>\n";
+			html_content = "<html>\n<head><title>" + so.str() + "</title></head>\n<body bgcolor=\"gray\">\n<center><h1>" + so.str() + " " + _codeMessage[_status_code] + "</h1></center>\n<hr><center>Tom_Nook/1.0</center>\n</body>\n</html>\n";
 		}
 	}
 	response += "HTTP/1.1 " + so.str() + " " + _codeMessage[_status_code] + "\n";
@@ -530,7 +465,6 @@ int Response::getStatusCode(void) const {
 }
 
 std::ostream& operator<<(std::ostream& s, const Response& param) {
-	// s << param.CONST_METHOD()
 	(void)param;
 	return (s);
 }

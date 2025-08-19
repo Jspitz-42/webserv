@@ -6,12 +6,30 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:15:49 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/19 07:14:29 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/19 09:03:29 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Config.hpp"
 #include "utils.hpp"
+
+static bool is_cgi(std::string const & content)
+{
+	size_t found_py = content.find(".py");
+	size_t found_js = content.find(".js");
+	
+	if ((found_py != std::string::npos || found_js != std::string::npos)) {
+		return true ;
+	} else {
+		return false;
+	}
+
+}
+
+static bool file_exist_and_exec(std::string const & file)
+{
+	return (access(file.c_str(), F_OK | R_OK) == 0) ? true : false;
+}
 
 Config::ServerConfig::Location::Location(std:: string const & content) throw (std::exception) : Directive(LOCATION),
 																								_target(content),
@@ -23,10 +41,21 @@ Config::ServerConfig::Location::Location(std:: string const & content) throw (st
 		throw Config::ErrorMessage(LOCATION_WRONG_SYNTAX_1);
 	}
 	
-	std::cout << "Location constructor _target" << std::endl;
 	_target = _target.substr(0, content.length() - 1);
 	_target = strtrim(_target);
 
+	if (is_cgi(_target)) {
+		_is_cgi = true;
+	}
+
+	struct stat s;
+
+	if (_is_cgi && file_exist_and_exec(_target))
+	{
+		throw Config::ErrorMessage("Error: [Location] [File do not exist] : " + _target);	
+	} else if ((stat(_target.c_str(), &s)) == 0 && !(s.st_mode & S_IFDIR)) {
+		throw Config::ErrorMessage("ERROR: [Location] [Diretory does not exist] : " + _target);
+	}
 	if (_target.empty() || _target.find(SEPARATORS) != std::string::npos) {
 		throw Config::ErrorMessage(LOCATION_WRONG_SYNTAX_2);
 	}

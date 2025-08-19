@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:18:18 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/17 15:00:08 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/19 09:04:05 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ Config::ServerConfig::Root::Root(const std::string & content) throw (std::except
 
 void Config::ServerConfig::Root::setDirective(ServerConfig & serv_conf, int context) const
 {
-	std::cout << _path << std::endl;
     if (context == SERVER_CONTEXT) {
         struct stat sb;
         if (stat(_path.c_str(), &sb) != 0 || (sb.st_mode & S_IFDIR))
@@ -42,6 +41,7 @@ void Config::ServerConfig::Root::setDirective(ServerConfig & serv_conf, int cont
 		if ((sb.st_mode & S_IFDIR))
 			throw Config::ErrorMessage("ERROR: [ROOT] : [" + _path + "] Is a directory");
         serv_conf._locations.back()._root_path = _path;
+		serv_conf._locations.back()._root_found = true;
     }
 }
 

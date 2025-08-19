@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:12 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/12 13:43:31 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/19 08:44:54 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@
 # include <map>
 # include <vector>
 # include <cstdlib>
+# include <unistd.h>
+# include <fcntl.h>
 # include "Error.hpp"
 # include "utils.hpp"
 
@@ -217,6 +219,9 @@ class Config
 						int													_redirect_status;
 						bool												_autoindex;
 						bool												_listing;
+						bool												_root_found;
+						bool												_is_cgi;
+						bool												_cgi_bin_found;
 						
 						std::string											_cgi_bin;
 						std::string											_upload_path;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/19 12:26:15 by altheven         ###   ########.fr       */
+/*   Updated: 2025/08/19 13:05:08 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,8 +184,17 @@ const std::string Request::getCGIFile() const
 		std::string ext(_uri_target.substr(pos + 1));
 		std::string file_no_ext(_uri_target.substr(0, pos));
 
-		if (ext == "py")
-			ext = _lock->_root_path;
+		std::cout << "ext : " << ext << std::endl;
+
+		std::string extention_path[] = {"py", "js", "php"};
+
+		for (size_t i = 0; i < extention_path->size() ; i++) {
+			if (ext == extention_path[i]) {
+				ext = _lock->_root_path;
+				break ;
+			}
+		}
+
 		if (_lock->_cgi_map.find(ext) != _lock->_cgi_map.end()) 
 		{
 			std::multimap<std::string,std::string> :: iterator m_it = _lock->_cgi_map.find(ext);

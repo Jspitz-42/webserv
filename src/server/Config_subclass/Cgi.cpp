@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:09:10 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/19 12:26:08 by altheven         ###   ########.fr       */
+/*   Updated: 2025/08/19 12:56:14 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ void Config::ServerConfig::Cgi::_parseCgiContent(const std::string & content)
 			key = "/usr/bin/python3.10";
 		else if (key == "js")
 			key = "/usr/bin/node";
+		else if (key == "php")
+			key = "/usr/bin/php";
 		_all_cgi.insert(std::pair<std::string, std::string>(key, value));
 	}
 

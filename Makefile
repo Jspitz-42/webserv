@@ -23,6 +23,7 @@ SRC = ./src/main.cpp \
 	  ./src/server/Config_subclass/Upload.cpp \
 	  ./src/server/Response.cpp \
 	  ./src/server/SessionClient.cpp \
+	  ./src/server/Upload.cpp \
 	  ./src/server/Request.cpp \
 	  ./src/server/tcpServer.cpp
 

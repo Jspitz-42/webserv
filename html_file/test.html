@@ -162,7 +162,11 @@
 			<button class="aurora-glow-button"  > redirection </button>
 		</div>
 		<div>
-			<button = class="aurora-glow-button"> Upload Cgi </button>
+			<form action="cgi/upload.py" method="POST" enctype="multipart/form-data">
+				<label for="cgi-file" class="upload-btn">Choose file for CGI</label>
+				<input type="file" name="file" id="cgi-file" required />
+				<button class="aurora-glow-button" type="submit">Upload CGI</button>
+			</form>
 		</div>
 		<div>
 			<button class="aurora-glow-button"> Directory Listing </button>

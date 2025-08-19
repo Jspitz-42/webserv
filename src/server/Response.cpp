@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:30:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/19 12:26:02 by altheven         ###   ########.fr       */
+/*   Updated: 2025/08/19 23:07:55 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Response.hpp"
 # include "Request.hpp"
-
+# include "Upload.hpp"
 static void push_back_env(std::vector<char *> & vec, std::string const & name, std::string const & value)
 {
 	if (!name.empty() && !value.empty()) {
@@ -72,6 +72,45 @@ Response::Response(Request const & request, Config::ServerConfig const & sc):	_k
 	_status_code = _req.getErrorCode();
 	_date = get_local_time();
 	_server_name = "Tom_Nook";
+	_content_type = "text/html";
+	
+	if (_req.getMethod() == "POST" && _req.getUriTarget() == "/upload") {
+		
+		std::string uploadDir;
+		if (_req._lock && !_req._lock->_upload_path.empty()) {
+			uploadDir = _req._lock->_upload_path;
+		} else {
+			uploadDir = "./uploads";
+		}
+		
+		std::string content = _req.getContent();
+		
+		if (content.empty()) {
+			_content = "<html><body><h1>Error: Empty content received</h1></body></html>";
+			_status_code = 400;
+			return;
+		}
+		
+		std::string contentType = _req.getContentType();
+		
+		if (contentType.find("multipart/form-data") != std::string::npos) {
+			size_t bpos = contentType.find("boundary=");
+			if (bpos != std::string::npos) {
+				std::string boundary = contentType.substr(bpos + 9);
+				bool ok = Upload::handleMultipartUpload(content, boundary, uploadDir);
+				
+				if (ok) {
+					_content = "<html><body><h1>File uploaded successfully!</h1><a href='/'>Back to home</a></body></html>";
+					_status_code = 200;
+				} else {
+					_content = "<html><body><h1>Upload failed!</h1><a href='/'>Back to home</a></body></html>";
+					_status_code = 500;
+				}
+				_content_type = "text/html";
+				return;
+			}
+		}
+	}
 	
 	if (_req.isTargetRedirect() && _req._lock) {
 		_status_code = _req._lock->_redirect_status;
@@ -443,20 +482,14 @@ const std::string Response::createResponse() {
 		}
 	}
 	response += "HTTP/1.1 " + so.str() + " " + _codeMessage[_status_code] + "\n";
-	const std::string cookieValue = !this->_req.getCookies().empty() ? this->_req.getCookies().substr(this->_req.getCookies().find("id_session=")) : "";
-	if (!cookieValue.empty()) {
-		std::cout << cookieValue << std::endl;
-		std::cout << "Cookie already exist !" << std::endl;
-		response += "Set-Cookie: ";
-		response += cookieValue;
-		response += "; Path=/; HttpOnly\n";
-	} else {
-		std::cout << "new client added !" << std::endl;
-		const std::string newCookie = const_cast<Request&>(this->_req).createClientId();
-		std::cout << newCookie << std::endl;
-		response += "Set-Cookie: id_session=";
-		response += newCookie;
-		response += "; Path=/; HttpOnly\n";
+	const std::string& cookies = this->_req.getCookies();
+	std::cout << cookies << std::endl;
+	if (cookies.find("id_session=") == std::string::npos)
+	{
+	    const std::string newSessionId = const_cast<Request &>(_req).createClientId();
+	    response += "Set-Cookie: id_session=";
+	    response += newSessionId;
+	    response += "; Path=/; HttpOnly; SameSite=Lax\n";
 	}
 	response += "Date: " + _date;
 	response += "Server: " + _server_name + "\n";

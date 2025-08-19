@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/19 13:05:08 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/19 23:04:20 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,44 +15,65 @@
 #include "Config.hpp"
 Request :: Request(std :: string const & request, Config :: ServerConfig const & sc) : _lock(NULL), _error_code(0), _server_config(sc)
 {
-	std :: stringstream ss(request);
-	std :: string line;
-
-	std::getline(ss, line);
-	line = strtrim(line, " \r\t");
+	size_t pos = 0;
+	size_t lineEnd = request.find('\n', pos);
 	
-	std ::cout << line << std :: cout ;
-	_method = line.substr(0, line.find_first_of(" \r\t"));
-	_uri_target = line.substr(_method.length(), line.find_last_of(" \r\t") - _method.length());
-	_http_version = line.substr(_method.length() + _uri_target.length());
+	if (lineEnd == std::string::npos) {
+		_error_code = 400;
+		return;
+	}
+	
+	std::string firstLine = request.substr(pos, lineEnd - pos);
+	firstLine = strtrim(firstLine, " \r\t\n");
+	
+	std::cout << firstLine << std::endl;
+	_method = firstLine.substr(0, firstLine.find_first_of(" \r\t"));
+	_uri_target = firstLine.substr(_method.length(), firstLine.find_last_of(" \r\t") - _method.length());
+	_http_version = firstLine.substr(_method.length() + _uri_target.length());
 	std::transform(_method.begin(), _method.end(), _method.begin(), ::toupper);
 	std::transform(_http_version.begin(), _http_version.end(), _http_version.begin(), ::tolower);
 	_uri_target = strtrim(_uri_target, " \r\t");
 	_http_version = strtrim(_http_version, " \r\t");
 
-	while (std::getline(ss, line) && line != "\r\n")
-	{
+	pos = lineEnd + 1;
+	
+	while (pos < request.length()) {
+		lineEnd = request.find('\n', pos);
+		if (lineEnd == std::string::npos) {
+			lineEnd = request.length();
+		}
+		
+		std::string line = request.substr(pos, lineEnd - pos);
+		line = strtrim(line, " \r\t\n");
+		
+		if (line.empty()) {
+			pos = lineEnd + 1;
+			break;
+		}
+		
 		if (line.find(':') != std::string::npos) {
 			std::string name(line.substr(0, line.find(':')));
 			std::string	content(line.substr(line.find(':')));
 			std::transform(name.begin(), name.end(), name.begin(), ::tolower);
 			_headers[name] = strtrim(content, ": \t");
-		} 
-		else 
-		{
-			break ;
 		}
+		
+		pos = lineEnd + 1;
 	}
 
 	if (_headers.find("content-length") != _headers.end()) {
-		int valread(0);
+		size_t contentLength(0);
 		std::stringstream num_ss(_headers["content-length"]);
-		num_ss >> valread;
+		num_ss >> contentLength;
 
-		while (std::getline(ss, line)) {
-			_content += line;
+		if (pos < request.length() && contentLength > 0) {
+			size_t availableContent = request.length() - pos;
+			size_t actualLength = std::min(contentLength, availableContent);
+			_content = request.substr(pos, actualLength);
+			if (_content.length() < contentLength) {
+				std::cout << "Request: WARNING - Content truncated!" << std::endl;
+			}
 		}
-		_content = _content.substr(0, valread);	
 	}
 	if (_headers.find("cookies") != _headers.end()) 
 	{

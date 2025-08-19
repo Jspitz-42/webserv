@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 12:58:15 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/17 06:38:39 by altheven         ###   ########.fr       */
+/*   Updated: 2025/08/19 22:45:42 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,10 @@ Client & Client :: operator=(const Client & other)
 {
 	if (this != &other)
 	{
-		*this = other;
+		this->_fd = other._fd;
+		this->_keep_alive = other._keep_alive;
+		this->_time_to_die = other._time_to_die;
+		this->_socket = other._socket;
 	}
 	return(*this);
 }
@@ -49,18 +52,68 @@ Socket const & Client :: getSocket(void) const
 
 void Client :: handleRequest(Config :: ServerConfig conf)
 {
-	char			buffer[30000] = {0};
+	char			buffer[8192] = {0};
 	int				valread;
 	std :: string	buf;
 	UINT64_T		ms = timestamp_in_ms();
-
-	do {
-		valread = read(_fd, buffer, 3000);
+	size_t			maxSize = 30 * 1024 * 1024;
+	size_t			expectedContentLength = 0;
+	bool			hasContentLength = false;
+	bool			headersComplete = false;
+	while (buf.size() < maxSize) {
+		valread = read(_fd, buffer, 8192);
 		if (valread <= 0)
-			break ;
-		std :: string tmp(buffer, valread);
+			break;
+		
+		std::string tmp(buffer, valread);
 		buf += tmp;
-	} while (valread == 30000);
+		
+		if (!headersComplete) {
+			size_t headerEnd = buf.find("\r\n\r\n");
+			if (headerEnd == std::string::npos) {
+				headerEnd = buf.find("\n\n");
+			}
+			
+			if (headerEnd != std::string::npos) {
+				headersComplete = true;
+				std::string headers = buf.substr(0, headerEnd);
+				std::transform(headers.begin(), headers.end(), headers.begin(), ::tolower);
+				
+				size_t clPos = headers.find("content-length:");
+				if (clPos != std::string::npos) {
+					size_t lineEnd = headers.find('\n', clPos);
+					if (lineEnd != std::string::npos) {
+						std::string clLine = headers.substr(clPos + 15);
+						size_t lineEndPos = clLine.find('\n');
+						if (lineEndPos != std::string::npos) {
+							clLine = clLine.substr(0, lineEndPos);
+						}
+						std::stringstream ss(clLine);
+						ss >> expectedContentLength;
+						hasContentLength = true;
+					}
+				}
+			}
+		}
+		
+		if (headersComplete && hasContentLength) {
+			size_t headerSize = buf.find("\r\n\r\n");
+			if (headerSize == std::string::npos) {
+				headerSize = buf.find("\n\n") + 2;
+			} else {
+				headerSize += 4;
+			}
+			
+			size_t totalExpected = headerSize + expectedContentLength;
+			if (buf.size() >= totalExpected) {
+				break;
+			}
+		}
+		if (headersComplete && !hasContentLength && valread < 8192) {
+			break;
+		}
+	}
+
 	if (buf.length() > 0)
 	{
 		_time_to_die = ms + TIME_TO_DIE;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:22 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 09:40:38 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/19 09:39:58 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,16 @@ class Request
 		std::string const & 				getQuery( void ) const ;
 		std::string const & 				getMethod( void ) const ;
 		std::string const & 				getUriTarget( void ) const;
+		std::string const & 				getHttpVersion( void ) const;
 		
+		const std::string 					getContentType( void ) const;
 		const std::string 					getIndex( void ) const;
 		const std::string 					getCGIBindPath( void ) const;
 		const std::string 					getCGIFile( void ) const;
-		const std::string 					getContentType( void ) const;
 		const std::string 					getUserAgent( void ) const;
 		const std::string 					getAcceptEncoding( void ) const;
 		const std::string 					getCookies( void ) const;
+		
 		
 		Config::ServerConfig::Location *	_lock;
 	protected:

@@ -87,10 +87,42 @@
 		input[type="file"] {
 			display: none;
 		}
+		.session-id {
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			color: #0ff;
+			font-size: 2rem;
+			background: rgba(0, 0, 0, 0.6);
+			padding: 20px 40px;
+			border-radius: 15px;
+			box-shadow: 0 0 15px #1e90ff;
+		}
 	</style>
+	<script>
+		function getCookie(name) {
+			const value = `; ${document.cookie}`;
+			const parts = value.split(`; ${name}=`);
+			if (parts.length === 2) return parts.pop().split(';').shift();
+			return null;
+		}
+
+		window.onload = () => {
+			const sessionId = getCookie('id_session');
+			console.log(getCookie("id_session"))
+			const sessionSpan = document.getElementById('session-id');
+			if (sessionId) {
+				sessionSpan.textContent = 'ID-Session : ' + sessionId;
+			} else {
+				sessionSpan.textContent = 'ID-Session : Not found';
+			}
+		};
+	</script>
 
 <body>
     <h1>Webserv</h1>
+	<span id="session-id" class="session-id">ID-Session : inconnue</span>
 
 	<p2 id ="demo"></p2>
 	<div class="container">

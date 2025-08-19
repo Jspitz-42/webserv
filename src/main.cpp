@@ -52,7 +52,7 @@ int main(int ac , char **av)
 		set_sig_handler(SIGINT, &sigint_handle_main);
 
 		TCPServer a(path);
-//		a.printConfig();
+		a.printConfig();
 		a.run();
 	} catch (const std::exception & e) {
 		std::cerr << e.what() << std::endl;

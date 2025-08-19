@@ -443,6 +443,21 @@ const std::string Response::createResponse() {
 		}
 	}
 	response += "HTTP/1.1 " + so.str() + " " + _codeMessage[_status_code] + "\n";
+	const std::string cookieValue = !this->_req.getCookies().empty() ? this->_req.getCookies().substr(this->_req.getCookies().find("id_session=")) : "";
+	if (!cookieValue.empty()) {
+		std::cout << cookieValue << std::endl;
+		std::cout << "Cookie already exist !" << std::endl;
+		response += "Set-Cookie: ";
+		response += cookieValue;
+		response += "; Path=/; HttpOnly\n";
+	} else {
+		std::cout << "new client added !" << std::endl;
+		const std::string newCookie = const_cast<Request&>(this->_req).createClientId();
+		std::cout << newCookie << std::endl;
+		response += "Set-Cookie: id_session=";
+		response += newCookie;
+		response += "; Path=/; HttpOnly\n";
+	}
 	response += "Date: " + _date;
 	response += "Server: " + _server_name + "\n";
 	response += "Accept-Charset: utf-8\n";

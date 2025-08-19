@@ -247,3 +247,42 @@ const std::string Request::getCookies( void ) const
 		return ("");
 	}
 }
+
+bool	Request::getClientId(std::string uuid) const {
+	for (int i = 0; i < 2048; i++) {
+		if (const_cast<SessionClient&>(this->_clientList[i]).getUUID() == uuid)
+			return (true);
+	}
+	return (false);
+}
+
+std::string generate_uuid_v4() {
+	std::stringstream ss;
+
+	for (int i = 0; i < 16; ++i) {
+		int byte = std::rand() % 256;
+		if (i == 6) {
+			byte = (byte & 0x0F) | 0x40;
+		}
+		else if (i == 8) {
+			byte = (byte & 0x3F) | 0x80;
+		}
+		ss << std::setw(2) << std::setfill('0') << std::hex << byte;
+		if (i == 3 || i == 5 || i == 7 || i == 9)
+			ss << "-";
+	}
+	return ss.str();
+}
+
+
+
+const std::string Request::createClientId() {
+	std::string uuidV4 = generate_uuid_v4();
+	for (int i = 0; i < 2048; i++) {
+		if (this->_clientList[i].getUUID().empty()) {
+			this->_clientList[i].setUUID(uuidV4);
+			return (uuidV4);
+		}
+	}
+	return ("");
+}

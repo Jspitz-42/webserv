@@ -6,7 +6,7 @@
 /*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/19 09:38:52 by altheven         ###   ########.fr       */
+/*   Updated: 2025/08/19 12:26:15 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,15 +79,15 @@ Request :: Request(std :: string const & request, Config :: ServerConfig const &
 		{
 			_uri_target.erase(pos_frag);
 		}
-		_lock = _server_config.findLocation(_uri_target);
+		_lock = _server_config.findLocation(sc._root_path + _uri_target);
 		if (!_lock)
 		{
 			_error_code = 404;
 			std::cerr << "Wrong target: [" << _uri_target << "] not found" << std::endl;
 		} else 
 		{
-			_final_path = _lock->_root_path + _uri_target.substr(_lock->_target.length());
-			std :: cout << "******* Target = " << _lock->_target << std :: endl;
+			_final_path = _lock->_root_path + _uri_target;
+	
 			std::string tmp("Started: " + _method + " \"" + _uri_target + "\" ");
 			std::cout.width(35);
 			std::cout << std::left << tmp << "=>" << " Target Path [" << _final_path << "]" << std::endl;
@@ -127,14 +127,10 @@ bool Request::isTargetDir( void ) const
 }
 
 bool Request::isTargetCGI( void ) const
-{
-	
-	size_t pos(_uri_target.find('.'));
-	
-	if (_lock && !isTargetDir() && pos != std::string::npos) {
-		std::string ext(_uri_target.substr(pos + 1));
-		if (!(_lock->_cgi_bin.empty()) && (_lock->_cgi_map.find(ext) != _lock->_cgi_map.end()))
-			return true;
+{	
+	if (_lock->_is_cgi) 
+	{
+		return true;
 	}
 	return false;
 }
@@ -187,6 +183,9 @@ const std::string Request::getCGIFile() const
 	if (_lock && isTargetCGI() && !_lock->_cgi_map.empty() && pos != std::string::npos) {
 		std::string ext(_uri_target.substr(pos + 1));
 		std::string file_no_ext(_uri_target.substr(0, pos));
+
+		if (ext == "py")
+			ext = _lock->_root_path;
 		if (_lock->_cgi_map.find(ext) != _lock->_cgi_map.end()) 
 		{
 			std::multimap<std::string,std::string> :: iterator m_it = _lock->_cgi_map.find(ext);
@@ -200,7 +199,6 @@ const std::string Request::getCGIFile() const
 					return (m_str);
 			return (_lock->_cgi_map.find(ext)->second);
 		}
-		
 	}
 	return ("");
 } 

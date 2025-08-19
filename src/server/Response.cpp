@@ -6,7 +6,7 @@
 /*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:30:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/19 09:39:12 by altheven         ###   ########.fr       */
+/*   Updated: 2025/08/19 12:26:02 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,54 +52,7 @@ static const std::map<std::string, std::string> insert_to_mime_map( void )
 
 	mime_map["txt"]		= "text/plain";	
 	mime_map["html"]	= "text/html";
-	mime_map["css"]		= "text/css";
 	mime_map["js"] 		= "text/javascript";
-
-	mime_map["json"] 	= "application/json";
-	mime_map["jsonld"] 	= "application/ld+json";
-	mime_map["xml"] 	= "application/xml";
-	mime_map["pdf"] 	= "application/pdf";
-	mime_map["doc"] 	= "application/msword";
-	mime_map["docx"] 	= "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-	mime_map["ppt"] 	= "application/vnd.ms-powerpoint";
-	mime_map["pptx"] 	= "application/vnd.openxmlformats-officedocument.presentationml.presentation";
-	mime_map["odt"] 	= "application/vnd.oasis.opendocument.text";
-	mime_map["xls"] 	= "application/vnd.ms-excel";
-	mime_map["xlsx"] 	= "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-	mime_map["odp"] 	= "application/vnd.oasis.opendocument.presentation";
-	mime_map["ods"] 	= "application/vnd.oasis.opendocument.spreadsheet";
-
-	mime_map["bz"]		= "application/x-bzip";
-	mime_map["bz2"]		= "application/x-bzip2";
-	mime_map["gz"]		= "application/gzip";
-	mime_map["zip"]		= "application/zip";
-	mime_map["7z"]		= "application/x-7z-compressed";
-	mime_map["tar"]		= "application/x-tar";
-
-	mime_map["jpeg"]	= "image/jpeg";
-	mime_map["jpg"]		= "image/jpeg";
-	mime_map["png"]		= "image/png";
-	mime_map["apng"]	= "image/apng";
-	mime_map["avif"]	= "image/avif";
-	mime_map["gif"]		= "image/gif";
-	mime_map["svg"]		= "image/svg+xml";
-	mime_map["webp"]	= "image/webp";
-	mime_map["bmp"]		= "image/bmp";
-	mime_map["ico"]		= "image/x-icon";
-	mime_map["tif"]		= "image/tiff";
-	mime_map["tiff"]	= "image/tiff";
-	
-	mime_map["mp3"]		= "audio/mpeg";
-	mime_map["aac"]		= "audio/aac";
-	mime_map["wav"]		= "audio/wave";
-	mime_map["flac"]	= "audio/flac";
-
-	mime_map["mpeg"]	= "audio/mpeg";
-	mime_map["webm"]	= "video/webm";
-	mime_map["mp4"]		= "video/mp4";
-	mime_map["avi"]		= "video/x-msvideo";
-	mime_map["3gp"]		= "video/3gpp";
-
 	return (mime_map);
 }
 
@@ -230,10 +183,10 @@ int Response::execCGI()
 	arg.push_back(strdup(_req.getCGIFile().c_str()));
 	arg.push_back(NULL);
 
-	for (int i = 0; arg[i]; i++)
-	{
-		std :: cout << arg[i] << std :: endl;
-	}
+	// for (int i = 0; env[i]; i++)
+	// {
+	// 	std :: cout << env[i] << " --- I VALUE = " <<i << std :: endl;
+	// }
 
 	int restore_input = dup(STDIN_FILENO);
 	int restore_output = dup(STDOUT_FILENO);
@@ -326,7 +279,6 @@ const std::string Response::createAutoindexResponse()
 			if (*de->d_name == 0 || (*de->d_name == '.' && *(de->d_name + 1) == 0))
 				continue ;
 			std::string file_path(_req.getFinalPath() + "/" + de->d_name);
-			std :: cout << _req.getFinalPath() + de->d_name << "  **** FINAL PATH ****" << std :: endl;
 			int fd = open(file_path.c_str(), O_RDONLY);
 			if (fd < 0 || fstat(fd, &st) == -1) {
 				html_content += "<div>Failed to open " + file_path + "</div>";

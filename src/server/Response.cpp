@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:30:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 08:58:42 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/20 09:51:10 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ Response::Response(Request const & request, Config::ServerConfig const & sc):	_k
 		if (content.empty()) {
 			_content = "<html><body><h1>Error: Empty content received</h1></body></html>";
 			_status_code = 400;
+			delete _lock;
 			return;
 		}
 		
@@ -108,6 +109,7 @@ Response::Response(Request const & request, Config::ServerConfig const & sc):	_k
 					_status_code = 500;
 				}
 				_content_type = "text/html";
+				delete _lock;
 				return;
 			}
 		}
@@ -228,8 +230,15 @@ int Response::execCGI() {
         chdir(_req._lock->_cgi_bin.c_str());
         char *argv[2] = { strdup(_req.getCGIFile().c_str()), NULL }; 
         execve(_req.getCGIFile().c_str(), argv, &env[0]);
+		free(argv[0]);
+		for (size_t i = 0; i < env.size(); i++) {
+			free(env[i]);
+		}
         exit(1);
     } else if (pid > 0) {
+		for (size_t i = 0; i < env.size(); i++) {
+			free(env[i]);
+		}
         int status;
         int elapsed = 0;
         while (true) {

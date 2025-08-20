@@ -6,7 +6,7 @@
 /*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 17:01:51 by altheven         ###   ########.fr       */
+/*   Updated: 2025/08/20 19:58:35 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 	}
 	
 	std::string firstLine = request.substr(pos, lineEnd - pos);
-	
+	std::cout << firstLine << std::endl;
 	firstLine = strtrim(firstLine, " \r\t\n");
 		
 	_method = firstLine.substr(0, firstLine.find_first_of(" \r\t"));

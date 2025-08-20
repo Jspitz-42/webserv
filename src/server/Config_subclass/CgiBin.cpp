@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CgiBin.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:09:41 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/19 13:25:25 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/20 11:16:06 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void Config::ServerConfig::CgiBin::setDirective(ServerConfig & serv_conf, int co
 			throw Config::ErrorMessage("ERROR: [CGI-BIN] [DIRECTORY DOES NOT EXIST] : " + _path);
 		}
 		else if (!(s.st_mode & S_IFDIR)) {
-			std::cout << _path << " is not a directory " << std::endl;
 			throw Config::ErrorMessage("ERROR: [CGI-BIN] [IS NOT A DIRECTORY] : " + _path);
 		} else {
 			serv_conf._locations.back()._cgi_bin = _path;

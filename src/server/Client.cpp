@@ -6,7 +6,7 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 12:58:15 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 02:30:02 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/20 11:15:27 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,6 @@ void Client :: handleRequest(Config :: ServerConfig conf)
 		std :: string full_response(res.createResponse());
 		write(_fd, full_response.c_str(), full_response.length());
 		_keep_alive = res.getKeepAlive();
-		std::cout << " Completed " << res.getStatusCode() << " " << Response::_codeMessage[res.getStatusCode()] << " in " << timestamp_in_ms() - ms << "ms " << " at " << get_local_time() << std::endl;
 	} else 
 	{
 		_keep_alive = false;

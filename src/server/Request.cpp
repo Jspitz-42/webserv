@@ -6,7 +6,7 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 09:51:02 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/20 11:15:56 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,7 @@
 	std::string firstLine = request.substr(pos, lineEnd - pos);
 	
 	firstLine = strtrim(firstLine, " \r\t\n");
-	
-	std::cout << firstLine << std::endl;
-	
+		
 	_method = firstLine.substr(0, firstLine.find_first_of(" \r\t"));
 	_uri_target = firstLine.substr(_method.length(), firstLine.find_last_of(" \r\t") - _method.length());
 	_http_version = firstLine.substr(_method.length() + _uri_target.length());
@@ -62,9 +60,7 @@
 	{
 		_uri_target.erase(pos_frag);
 	}
-	std::cout << "sc._root_path + _uri_target : " << sc._root_path << " + " << _uri_target << std::endl;
 	_lock = _server_config.findLocation(sc._root_path + _uri_target);
-	std::cout << "lock->_target = " << _lock->_target << std::endl;
 
 	if (!_lock || !_lock->findMethod(_method))
 		_error_code = 405;
@@ -123,9 +119,6 @@
 		{
 			_final_path = _lock->_root_path + _uri_target;
 	
-			std::string tmp("Started: " + _method + " \"" + _uri_target + "\" ");
-			std::cout.width(35);
-			std::cout << std::left << tmp << "=>" << " Target Path [" << _final_path << "]" << std::endl;
 		}
 		if (_lock && !_lock->findMethod(_method)) 
 		{
@@ -216,8 +209,6 @@ const std::string Request::getCGIFile() const
 	if (_lock && isTargetCGI() && !_lock->_cgi_map.empty() && pos != std::string::npos) {
 		std::string ext(_uri_target.substr(pos + 1));
 		std::string file_no_ext(_uri_target.substr(0, pos));
-
-		std::cout << "ext : " << ext << std::endl;
 
 		std::string extention_path[] = {"py", "js", "php"};
 
@@ -311,7 +302,6 @@ std::string generate_uuid_v4() {
 
 const std::string Request::createClientId() {
 	std::string uuidV4 = generate_uuid_v4();
-	std::cout << "New session ID: " << uuidV4 << std::endl;
 	for (int i = 0; i < 2048; i++) {
 		if (this->_clientList[i].getUUID().empty()) {
 			this->_clientList[i].setUUID(uuidV4);

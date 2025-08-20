@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 10:28:16 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/17 06:27:26 by altheven         ###   ########.fr       */
+/*   Updated: 2025/08/20 11:14:21 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "Request.hpp"
 # include "Response.hpp"
 
-# define TIME_TO_DIE 5000
+# define TIME_TO_DIE 1000
 
 class Socket;
 

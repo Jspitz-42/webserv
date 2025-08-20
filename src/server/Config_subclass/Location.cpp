@@ -6,7 +6,7 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:15:49 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 02:41:34 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/20 11:16:37 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,6 @@ bool Config::ServerConfig::Location::findMethod(const std::string & method) cons
 {
 	std::vector<std::string>::const_iterator it = _methods.begin();
 
-    std::cerr << "DEBUG Location::findMethod this=" << this 
-              << " methods size=" << _methods.size() << std::endl;
 	for (; it != _methods.end() ; it++) {
 		if (!it->empty() && method == *it) return true;
 	}

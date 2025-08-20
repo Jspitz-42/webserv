@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 11:46:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/04 10:57:06 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/20 11:14:25 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@
 # include <unistd.h>
 # include <csignal>
 # include "tcpServer.hpp"
-
-# define TIME_TO_DIE 5000
 
 extern int g_signal;
 

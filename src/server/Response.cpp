@@ -6,7 +6,7 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:30:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 09:51:10 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/20 11:15:25 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ Response::Response(Request const & request, Config::ServerConfig const & sc):	_k
 		} else {
 			uploadDir = "./uploads";
 		}
-		std::cout << "uploadir = " <<uploadDir<<std::endl;
 		
 		std::string content = _req.getContent();
 		
@@ -353,7 +352,6 @@ const std::string Response::createRedirectionResponse() {
 	response_content += "Location: " + _req._lock->_redirect_uri +"\n";
 	response_content += "Connection: close\n";
 	_keep_alive = false;
-	std::cout << "REDIRECTING TO: " << _req._lock->_redirect_uri << std::endl;
 	return (response_content);
 }
 
@@ -455,10 +453,8 @@ const std::string Response::createResponse() {
 	}
 	response += "HTTP/1.1 " + so.str() + " " + _codeMessage[_status_code] + "\n";
 	const std::string& cookies = this->_req.getCookies();
-	std::cout << cookies << std::endl;
 	if (cookies.find("id_session=") == std::string::npos)
 	{
-		std::cout << "Creating new session ID" << std::endl;
 	    const std::string newSessionId = const_cast<Request &>(_req).createClientId();
 		response += "Set-Cookie: id_session=" + newSessionId + "; Path=/;\n";
 	}

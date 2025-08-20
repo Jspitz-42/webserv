@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 19:58:35 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/21 00:05:28 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,10 @@
 		_uri_target.erase(pos_frag);
 	}
 	std::cout << "sc._root_path + _uri_target : " << sc._root_path << " + " << _uri_target << std::endl;
-	_lock = _server_config.findLocation(_uri_target);
-	std::cout << "lock->_target = " << _lock->_target << std::endl;
+	_lock = _server_config.findLocation(sc._root_path + _uri_target);
+	if (!_lock) {
+		_lock = _server_config.findLocation(_uri_target);
+	}
 
 	if (!_lock || !_lock->findMethod(_method))
 		_error_code = 405;

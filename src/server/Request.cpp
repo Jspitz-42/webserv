@@ -6,7 +6,7 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 04:42:33 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/20 08:43:29 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@
 	}
 
 	_lock = _server_config.findLocation(sc._root_path + _uri_target);
-
+	
 	if (!_lock || !_lock->findMethod(_method))
 		_error_code = 405;
 	while (pos < request.length()) {

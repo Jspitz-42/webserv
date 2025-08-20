@@ -6,7 +6,7 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:30:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 06:23:17 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/20 08:54:03 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,13 +75,14 @@ Response::Response(Request const & request, Config::ServerConfig const & sc):	_k
 	_content_type = "text/html";
 	
 	if (_req.getMethod() == "POST" && _req.getUriTarget() == "/upload") {
-		
+		Config::ServerConfig::Location * _lock = _server_config.findLocation(_req.getUriTarget());
 		std::string uploadDir;
-		if (!_req.getFinalPath().empty()) {
-			uploadDir = _req.getFinalPath();
+		if (!_lock->_root_path.empty()) {
+			uploadDir = _lock->_root_path;
 		} else {
 			uploadDir = "./uploads";
 		}
+		std::cout << uploadDir << std::endl;
 		
 		std::string content = _req.getContent();
 		
@@ -207,7 +208,6 @@ int Response::execCGI() {
     std::vector<char*> env;
     std::stringstream ss;
     ss << body_size;
-
     push_back_env(env, "CONTENT_LENGTH", ss.str());
     push_back_env(env, "CONTENT_TYPE", _req.getContentType());
     push_back_env(env, "GATEWAY_INTERFACE", "CGI/1.1");
@@ -226,7 +226,7 @@ int Response::execCGI() {
         dup2(fd_out, STDOUT_FILENO);
         close(fd_in); close(fd_out);
         chdir(_req._lock->_cgi_bin.c_str());
-        char *argv[2] = { strdup(_req.getCGIFile().c_str()), NULL };
+        char *argv[2] = { strdup(_req.getCGIFile().c_str()), NULL }; 
         execve(_req.getCGIFile().c_str(), argv, &env[0]);
         exit(1);
     } else if (pid > 0) {

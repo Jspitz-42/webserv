@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:30:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 09:51:10 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/20 17:12:00 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,26 @@ Response::Response(Request const & request, Config::ServerConfig const & sc):	_k
 			}
 		}
 	}
-	
+	else if(_req.getMethod() == "DELETE")
+	{
+
+		std::string content = _req.getContent();
+		
+		if (content.empty())
+		{
+			_content = "<html><body><h1>Error: Empty content received</h1></body></html>";
+			_status_code = 400;
+			return ;
+		}
+		std :: string dstr = "name=\"deleteFiles\"";
+		std :: string dstr_bis = "--X-INSOMNIA-BOUNDARY--";
+		size_t dpos_bis = content.find_last_of(dstr_bis);
+		size_t dpos = content.find(dstr);
+		content = content.substr(dpos + dstr.size(), dpos_bis - dpos - dstr_bis.size() - dstr.size());
+		content.erase(0,4);
+		content.erase(content.size() -1 ,1);
+		_delete_name = _req._lock->_root_path + "/" + content;
+	}
 	if (_req.isTargetRedirect() && _req._lock) {
 		_status_code = _req._lock->_redirect_status;
 	} else if (_req.getErrorCode() == 0 && _req._lock) {
@@ -391,9 +410,10 @@ const std::string Response::createResponse() {
 		return (CGIResponse());
 	}
 	if (_req.getMethod() == "DELETE" && _status_code == 200) {
-		if(remove(_req.getFinalPath().c_str()) != 0)
-			_status_code = 404;
-		return (deleteResponse());
+		if(remove(_delete_name.c_str()) != 0)
+			_status_code = 400;
+		if (_status_code == 200)
+			return (deleteResponse());
 	}
 	if (_status_code == 200 && _req._lock) {
 		if (_content.length() > 0) {

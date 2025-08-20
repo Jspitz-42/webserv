@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tcpServer.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:39:40 by altheven          #+#    #+#             */
-/*   Updated: 2025/08/20 10:40:43 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/20 17:00:14 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(
 	}
 
 	_epollfd = epoll_create(10);
-
+	g_epoll_fd = _epollfd;
 	if (_epollfd == -1)
 		throw TCPServer :: ErrorMessage(TCPSERVER_ERR_MSG);
 	try {

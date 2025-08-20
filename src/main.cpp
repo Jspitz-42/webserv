@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 09:54:27 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 10:04:39 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/20 16:58:50 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "Error.hpp"
 
 int g_signal = 0;
+int g_epoll_fd = -1;
 
 void sigint_handle_main(int signum)
 {
@@ -55,6 +56,8 @@ int main(int ac , char **av)
 //		a.printConfig();
 		a.run();
 	} catch (const std::exception & e) {
+		if (g_epoll_fd > 0)
+			close(g_epoll_fd);
 		std::cerr << e.what() << std::endl;
 	}
 	

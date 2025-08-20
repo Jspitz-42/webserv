@@ -82,8 +82,6 @@ bool Config::ServerConfig::Location::findMethod(const std::string & method) cons
 {
 	std::vector<std::string>::const_iterator it = _methods.begin();
 
-    std::cerr << "DEBUG Location::findMethod this=" << this 
-              << " methods size=" << _methods.size() << std::endl;
 	for (; it != _methods.end() ; it++) {
 		if (!it->empty() && method == *it) return true;
 	}

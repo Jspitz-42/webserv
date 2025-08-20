@@ -28,8 +28,6 @@
 # include <csignal>
 # include "tcpServer.hpp"
 
-# define TIME_TO_DIE 5000
-
 extern int g_signal;
 
 extern int g_epoll_fd;

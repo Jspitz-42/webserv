@@ -53,8 +53,8 @@ TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(
 		throw TCPServer::ErrorMessage("ERROR: [LOCATION] [STANDARD \"/\"] : not found");
 	}
 
-	_epollfd = epoll_create(10);
-	g_epoll_fd = _epollfd;
+	_epollfd = epoll_create1(0);
+  g_epoll_fd = _epollfd;
 	if (_epollfd == -1)
 		throw TCPServer :: ErrorMessage(TCPSERVER_ERR_MSG);
 	try {
@@ -266,7 +266,7 @@ void	TCPServer :: acceptConnectionAt(int fd) throw (std :: exception)
 		if (conn_sock == -1)
 			throw TCPServer :: ErrorMessage(ACCEPTCONNECTION_ERR_MSG);
 		
-		ev.events = EPOLLIN | EPOLLET;
+		ev.events = EPOLLIN;
 		ev.data.fd = conn_sock;
 		
 		if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, conn_sock, &ev) == -1)
@@ -283,21 +283,21 @@ void	TCPServer :: run()
 {
 	int		n;
 	int		nfds;
-	struct epoll_event	events[MAX_EVENTS];
+	struct epoll_event	events[1024];
 	std :: vector<Client>::iterator cl_it ;
 	
 	
 	timestamp_in_ms();
 	while(1)
 	{
-		nfds = epoll_wait(_epollfd, events, MAX_EVENTS, 2000);
+		nfds = epoll_wait(_epollfd, events, 1024, -1);
 		if (nfds == -1)
 			throw TCPServer :: ErrorMessage(TCPSERVER_RUN_ERR_MSG);
 		for (n = 0; n < nfds; ++n)
 		{
 			if (isSocketFd(events[n].data.fd))
 				acceptConnectionAt(events[n].data.fd);
-			else if (events[n].events == EPOLLIN)
+			else if (events[n].events & EPOLLIN)
 			{
 				for (cl_it = _clients.begin();cl_it != _clients.end(); cl_it++)
 				{
@@ -323,7 +323,6 @@ void TCPServer::cleanEpollAndClientsList()
 	{
 		if (cl_it->timeToDie() < timestamp || !(cl_it->keepAlive()))
 		{
-			epoll_ctl(_epollfd, EPOLL_CTL_DEL, cl_it->getFd(), 0);
 			shutdown(cl_it->getFd(), SHUT_RDWR);
 			close(cl_it->getFd());
 			cl_it = _clients.erase(cl_it);

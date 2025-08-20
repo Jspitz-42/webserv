@@ -18,6 +18,7 @@ SRC = ./src/main.cpp \
 	  ./src/server/Config_subclass/Methods.cpp \
 	  ./src/server/Config_subclass/Redirect.cpp \
 	  ./src/server/Config_subclass/Root.cpp \
+	  ./src/server/Config_subclass/Host.cpp \
 	  ./src/server/Config_subclass/ServConfig.cpp \
 	  ./src/server/Config_subclass/ServerName.cpp \
 	  ./src/server/Config_subclass/Upload.cpp \

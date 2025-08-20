@@ -3,15 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   ServConfig.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:07:24 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 02:38:26 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/20 10:39:45 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Config.hpp"
-Config::ServerConfig::ServerConfig( void ) : _autoindex(false),_max_body_size(0), _ip("127.0.0.1"), _port(80), _root_path("/html_file")
+Config::ServerConfig::ServerConfig( void ) : _autoindex(false),
+											_max_body_size(0),
+											_ip("127.0.0.1"),
+											_port(80),
+											_host_ip("127.0.0.1"),
+											_host_port(80),
+											_root_path("/html_file")
 {
 	return ;
 }

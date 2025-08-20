@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Root.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:18:18 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 09:51:19 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/20 10:41:35 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,11 @@ void Config::ServerConfig::Root::setDirective(ServerConfig & serv_conf, int cont
         if (serv_conf._locations.empty())
             throw Config::ErrorMessage("No locations defined for setting root");
 
-			struct stat sb;
+		struct stat sb;
 		if (stat(_path.c_str(), &sb) != 0)
 			serv_conf._locations.back()._root_found = false;
 		else
 			serv_conf._locations.back()._root_found  = true;	
-		std::cout << "rootpath = " << _path << std::endl;
         serv_conf._locations.back()._root_path = _path;
     }
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Location.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:15:49 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 11:16:37 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/20 09:56:55 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ Config::ServerConfig::Location::Location(std:: string const & content) throw (st
 																								_redirect_status(0),
 																								_autoindex(false),
 																								_listing(false),
-																								_is_cgi(false)
-																								
+																								_root_found(false),
+																								_is_cgi(false)																								
 {
 	if (content.empty() || content[content.length() - 1] != '{') {
 		throw Config::ErrorMessage(LOCATION_WRONG_SYNTAX_1);

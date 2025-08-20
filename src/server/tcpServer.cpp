@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tcpServer.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:39:40 by altheven          #+#    #+#             */
-/*   Updated: 2025/08/20 11:54:34 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/20 17:00:14 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,12 @@ TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(
 			if (!seen.insert(target).second) {
 				throw TCPServer::ErrorMessage(TCPSERVER_DUP_LOC);
 			}
-			if (it_loc->_root_found != true) {
-				throw TCPServer::ErrorMessage("Error: [LOCATION] [INVALID DIRECTIVE] : No root path set");
+			bool isRedir = (it_loc->_target == "/redirect");
+			if (isRedir == true) {
+				continue ;
+			}
+			if (isRedir == false && it_loc->_root_found != true) {
+				throw TCPServer::ErrorMessage("Error: [TCPServer] [LOCATION VECTOR] [" + it_loc->_target + "] [INVALID DIRECTIVE] : No root path set");
 			}
 		}
 	}
@@ -50,7 +54,7 @@ TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(
 	}
 
 	_epollfd = epoll_create1(0);
-
+  g_epoll_fd = _epollfd;
 	if (_epollfd == -1)
 		throw TCPServer :: ErrorMessage(TCPSERVER_ERR_MSG);
 	try {

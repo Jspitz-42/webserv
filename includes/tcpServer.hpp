@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tcpServer.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:37:10 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/17 09:19:22 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/20 14:07:23 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ class TCPServer
 				return msg.c_str();
 			}	
 		};
-
 											TCPServer(std::string const &) throw (std::exception);
 											~TCPServer();
 		void								addSocket(Socket &) throw (std::exception);
@@ -65,6 +64,7 @@ class TCPServer
 		int									getEpollFd() const;
 		void								printConfig( void ) const throw (std::exception);
 		void								run();
+
 
 	private:
 		int									_epollfd;
@@ -85,3 +85,5 @@ bool isUnique(T a, T b)
 }
 
 extern int g_signal;
+extern int g_epoll_fd;
+

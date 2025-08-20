@@ -3,10 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 07:44:24 by jspitz            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/08/20 09:51:01 by jspitz           ###   ########.fr       */
+=======
+<<<<<<< HEAD
+/*   Updated: 2025/08/20 08:21:36 by jspitz           ###   ########.fr       */
+=======
+/*   Updated: 2025/08/20 09:14:07 by tlonghin         ###   ########.fr       */
+>>>>>>> da8254f (Fix all leak with CGI and upload)
+>>>>>>> 972870010226e36b6ce588de7ecfbba1becd5b7d
 /*                                                                            */
 /* ************************************************************************** */
 

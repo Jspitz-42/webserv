@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 08:58:34 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/20 09:51:02 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -311,6 +311,7 @@ std::string generate_uuid_v4() {
 
 const std::string Request::createClientId() {
 	std::string uuidV4 = generate_uuid_v4();
+	std::cout << "New session ID: " << uuidV4 << std::endl;
 	for (int i = 0; i < 2048; i++) {
 		if (this->_clientList[i].getUUID().empty()) {
 			this->_clientList[i].setUUID(uuidV4);

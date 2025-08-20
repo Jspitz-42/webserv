@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 08:43:29 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/20 08:58:34 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,18 @@
 	}
 	
 	std::string firstLine = request.substr(pos, lineEnd - pos);
+	
 	firstLine = strtrim(firstLine, " \r\t\n");
 	
 	std::cout << firstLine << std::endl;
+	
 	_method = firstLine.substr(0, firstLine.find_first_of(" \r\t"));
 	_uri_target = firstLine.substr(_method.length(), firstLine.find_last_of(" \r\t") - _method.length());
 	_http_version = firstLine.substr(_method.length() + _uri_target.length());
+	
 	std::transform(_method.begin(), _method.end(), _method.begin(), ::toupper);
 	std::transform(_http_version.begin(), _http_version.end(), _http_version.begin(), ::tolower);
+	
 	_uri_target = strtrim(_uri_target, " \r\t");
 	_http_version = strtrim(_http_version, " \r\t");
 
@@ -58,9 +62,10 @@
 	{
 		_uri_target.erase(pos_frag);
 	}
-
+	std::cout << "sc._root_path + _uri_target : " << sc._root_path << " + " << _uri_target << std::endl;
 	_lock = _server_config.findLocation(sc._root_path + _uri_target);
-	
+	std::cout << "lock->_target = " << _lock->_target << std::endl;
+
 	if (!_lock || !_lock->findMethod(_method))
 		_error_code = 405;
 	while (pos < request.length()) {

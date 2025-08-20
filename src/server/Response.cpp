@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:30:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 08:54:03 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/20 08:58:42 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ Response::Response(Request const & request, Config::ServerConfig const & sc):	_k
 		} else {
 			uploadDir = "./uploads";
 		}
-		std::cout << uploadDir << std::endl;
+		std::cout << "uploadir = " <<uploadDir<<std::endl;
 		
 		std::string content = _req.getContent();
 		

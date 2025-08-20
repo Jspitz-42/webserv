@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 07:44:24 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/19 12:50:19 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/20 08:21:36 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int main(int ac , char **av)
 		set_sig_handler(SIGINT, &sigint_handle_main);
 
 		TCPServer a(path);
-		a.printConfig();
+//		a.printConfig();
 		a.run();
 	} catch (const std::exception & e) {
 		std::cerr << e.what() << std::endl;

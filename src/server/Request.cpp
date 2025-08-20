@@ -6,7 +6,7 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/19 23:04:20 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/20 02:38:51 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,10 +149,8 @@ bool Request::isTargetDir( void ) const
 
 bool Request::isTargetCGI( void ) const
 {	
-	if (_lock->_is_cgi) 
-	{
+	if (_lock && _lock->_is_cgi) 
 		return true;
-	}
 	return false;
 }
 

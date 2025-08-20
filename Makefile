@@ -34,7 +34,7 @@ OBJS = $(SRCS:.cpp=.o)
 
 CC = c++
 
-CFLAGS = -Wall -Wextra -Werror -I./includes -I/usr/includes -std=c++98
+CFLAGS = -Wall -Wextra -Werror -I./includes -I/usr/includes -std=c++98 -g3
 
 %.o:%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@

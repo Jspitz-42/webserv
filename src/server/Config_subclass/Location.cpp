@@ -6,7 +6,7 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:15:49 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/19 22:56:13 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/20 02:41:34 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,10 @@ Config::ServerConfig::Location::Location(std:: string const & content) throw (st
 																								_target(content),
 																								_max_body_size(0),
 																								_redirect_status(0),
-																								_autoindex(false)
+																								_autoindex(false),
+																								_listing(false),
+																								_is_cgi(false)
+																								
 {
 	if (content.empty() || content[content.length() - 1] != '{') {
 		throw Config::ErrorMessage(LOCATION_WRONG_SYNTAX_1);

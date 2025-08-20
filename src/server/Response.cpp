@@ -6,7 +6,7 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:30:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/19 23:07:55 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/20 02:36:15 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,8 @@ Response::Response(Request const & request, Config::ServerConfig const & sc):	_k
 	if (_req.getMethod() == "POST" && _req.getUriTarget() == "/upload") {
 		
 		std::string uploadDir;
-		if (_req._lock && !_req._lock->_upload_path.empty()) {
-			uploadDir = _req._lock->_upload_path;
+		if (!_req.getFinalPath().empty()) {
+			uploadDir = _req.getFinalPath();
 		} else {
 			uploadDir = "./uploads";
 		}

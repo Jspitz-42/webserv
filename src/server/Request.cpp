@@ -6,14 +6,15 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 02:38:51 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/20 04:39:16 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Request.hpp"
 #include "Socket.hpp"
 #include "Config.hpp"
-Request :: Request(std :: string const & request, Config :: ServerConfig const & sc) : _lock(NULL), _error_code(0), _server_config(sc)
+
+ Request :: Request(std :: string const & request, Config :: ServerConfig const & sc) : _lock(NULL), _error_code(0), _server_config(sc)
 {
 	size_t pos = 0;
 	size_t lineEnd = request.find('\n', pos);
@@ -36,7 +37,16 @@ Request :: Request(std :: string const & request, Config :: ServerConfig const &
 	_http_version = strtrim(_http_version, " \r\t");
 
 	pos = lineEnd + 1;
-	
+
+	if (_method.empty() || _http_version.empty() || (_http_version != "http/1.1" && _http_version != "http/1.0")) {
+    	_error_code = 400;
+    	return;
+	}
+
+	_lock = _server_config.findLocation(sc._root_path + _uri_target);
+
+	if (!_lock || !_lock->findMethod(_method))
+		_error_code = 405;
 	while (pos < request.length()) {
 		lineEnd = request.find('\n', pos);
 		if (lineEnd == std::string::npos) {
@@ -70,8 +80,8 @@ Request :: Request(std :: string const & request, Config :: ServerConfig const &
 			size_t availableContent = request.length() - pos;
 			size_t actualLength = std::min(contentLength, availableContent);
 			_content = request.substr(pos, actualLength);
-			if (_content.length() < contentLength) {
-				std::cout << "Request: WARNING - Content truncated!" << std::endl;
+			if (_lock && !_lock->checkMaxBody(_content.size())) {
+				_error_code = 413;
 			}
 		}
 	}
@@ -83,24 +93,7 @@ Request :: Request(std :: string const & request, Config :: ServerConfig const &
 	if (_uri_target.length() > 1024) 
 	{
 		_error_code = 414;
-	} 
-	else {
-		size_t pos_q = _uri_target.find('?');
-		size_t pos_frag = _uri_target.find('#');
-
-		if (pos_q != std::string::npos)
-		{
-    		size_t qbeg = pos_q + 1;
-    		size_t qlen = (pos_frag == std::string::npos) ? std::string::npos : (pos_frag - qbeg);
-
-			_query = _uri_target.substr(qbeg, qlen);
-    		_uri_target.erase(pos_q);
-		} 
-		else if (pos_frag != std::string::npos) 
-		{
-			_uri_target.erase(pos_frag);
-		}
-		_lock = _server_config.findLocation(sc._root_path + _uri_target);
+	} else {
 		if (!_lock)
 		{
 			_error_code = 404;
@@ -113,7 +106,7 @@ Request :: Request(std :: string const & request, Config :: ServerConfig const &
 			std::cout.width(35);
 			std::cout << std::left << tmp << "=>" << " Target Path [" << _final_path << "]" << std::endl;
 		}
-		if (!_lock->findMethod(_method)) 
+		if (_lock && !_lock->findMethod(_method)) 
 		{
 			_error_code = 405;
 		} else if (_http_version == "http/1.0") 

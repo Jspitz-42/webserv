@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Directive.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:08:04 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 14:17:24 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/20 04:36:33 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static Config::ServerConfig::Directive * NewDirectoryListing(const std::string &
 Config::ServerConfig::Directive * Config::createDirective(std::string const & name, std::string const & content) throw (std::exception)
 {
 	std::string	Dir[] = {"listen", "error_page", "root", "allow_methods", "location", "server_name",
-							"client_max_body_size", "index", "autoindex", "cgi", "cgi-bin", "redirect",
+							"client_max_body_size", "index", "autoindex", "cgi", "cgi-bin", "return",
 							"upload", "directory_listing"};
 
 	Config::ServerConfig::Directive *(*fctptr[])(const std::string &) = {NewListen, NewErrorCodePage, NewRoot, NewMethods, NewLocation,

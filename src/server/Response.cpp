@@ -6,7 +6,7 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:30:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 02:36:15 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/20 04:35:18 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,120 +186,82 @@ void Response::setMimeType(std::string const & file_name)
 	}
 }
 
-int Response::execCGI()
-{
-	std::vector<char *> env;
-	std::vector<char *>::iterator it;
-	std::vector<char *> arg;
-	std::stringstream ss;
+int Response::execCGI() {
+    FILE *tmp_in = tmpfile();
+    if (!tmp_in)
+		return 500;
+    int fd_in = fileno(tmp_in);
+    ssize_t body_size = _req.getContent().size();
+    if (body_size > 0)
+		write(fd_in, _req.getContent().c_str(), body_size);
+    rewind(tmp_in);
 
-	ss << _req.getContent().length();
-	push_back_env(env, "PATH", _req.getCGIFile());
-
-	push_back_env(env, "CONTENT_LENGTH", ss.str());
-	push_back_env(env, "CONTENT_TYPE", "application/x-www-form-urlencoded");
-	push_back_env(env, "DOCUMENT_ROOT", _req._lock->_upload_path);
-	push_back_env(env, "GATEWAY_INTERFACE", "CGI/1.1");
-	push_back_env(env, "HTTP_ACCEPT", "application/x-www-form-urlencoded,text/xml,application/xml,application/xhtml+xml,text/html,text/plain,charset=utf-8;");
-	push_back_env(env, "HTTP_USER_AGENT", _req.getUserAgent());
-	push_back_env(env, "PATH_INFO", _req.getCGIBindPath());
-	push_back_env(env, "PATH_TRANSLATED", _req.getCGIBindPath());
-	push_back_env(env, "QUERY_STRING", _req.getQuery());
-	push_back_env(env, "REQUEST_METHOD", _req.getMethod());
-	push_back_env(env, "REQUEST_URI", _req.getUriTarget());
-	push_back_env(env, "SCRIPT_FILENAME", _req.getCGIFile());
-	push_back_env(env, "SCRIPT_NAME", _req.getCGIFile());
-	push_back_env(env, "SERVER_ADMIN", "jspitz@student42.fr");
-	push_back_env(env, "SERVER_NAME", "WebServ");
-	ss.str(std::string());
-	ss << _server_config.getPort();
-	push_back_env(env, "SERVER_PORT", ss.str());
-	push_back_env(env, "SERVER_PROTOCOL", "HTTP/1.1");
-	push_back_env(env, "SERVER_SOFTWARE", "Webserv42.0 (Linux)");
-	if (!_req.getCookies().empty())
-		push_back_env(env, "HTTP_COOKIE", _req.getCookies());
-	env.push_back(NULL);
-	arg.push_back(strdup(_req.getCGIFile().c_str()));
-	arg.push_back(NULL);
-
-	// for (int i = 0; env[i]; i++)
-	// {
-	// 	std :: cout << env[i] << " --- I VALUE = " <<i << std :: endl;
-	// }
-
-	int restore_input = dup(STDIN_FILENO);
-	int restore_output = dup(STDOUT_FILENO);
-	
-	FILE * tmp_file_in = tmpfile();
-	FILE * tmp_file_out = tmpfile();
-	if (!tmp_file_in || !tmp_file_out || restore_input < 0)
-		return (-1);
-    int tmp_fd_in = fileno(tmp_file_in);
-    int tmp_fd_out = fileno(tmp_file_out);
-	
-	if (tmp_fd_in < 0)
-		return (-1);
-	write(tmp_fd_in, _req.getContent().c_str(), _req.getContent().length());
-	rewind(tmp_file_in);
-	fclose(tmp_file_in);
-	
-	int pid = fork();
-	if (pid < 0)
-		return (-1);
-	if (pid == 0) {
-		dup2(tmp_fd_in, STDIN_FILENO);
-		dup2(tmp_fd_out, STDOUT_FILENO);
-		close(tmp_fd_in);
-		close(tmp_fd_out);
-		if (chdir(_req._lock->_cgi_bin.c_str()) != -1) {
-			execve(_req.getCGIFile().c_str(), &arg[0], &env[0]);
-		}
-		exit(EXIT_FAILURE);
-    }
-
-    for (it = env.begin(); it != env.end(); ++it)
-    	if (*it)
-    		free (*it);
-    for (it = arg.begin(); it != arg.end(); ++it)
-    	if (*it)
-    		free (*it);
-    int child_status;
-	
-	waitpid(pid, &child_status, 0);
-    close(tmp_fd_in);
-    rewind(tmp_file_out);
-    
-	char buff[1024];
-    int valread = -1;
-    while(valread != 0)
+    FILE *tmp_out = tmpfile();
+    if (!tmp_out)
 	{
-    	bzero(buff, 1024);
-		valread = read(tmp_fd_out, buff, 1023);
-		if (valread < 0) {
-			close(tmp_fd_out);
-			fclose(tmp_file_out);
-			return (-1);
-		}
-		_content += buff;
-    }    
-	if (child_status != 0) {
-    	_content = "ERROR!!!";
-    	return (500);
-    }
-   
-	close(tmp_fd_out);
-	fclose(tmp_file_out);
-    
-	dup2(restore_input, STDIN_FILENO);
-    dup2(restore_output, STDOUT_FILENO);
-   
-	close(restore_input);
-    close(restore_output);
-	
-	std::cout << " CGI Child Finished with status: " << child_status;
-    _cgi_response = true;
-	return (200);
+		fclose(tmp_in);
+		return 500;
+	}
+    int fd_out = fileno(tmp_out);
+
+    std::vector<char*> env;
+    std::stringstream ss;
+    ss << body_size;
+
+    push_back_env(env, "CONTENT_LENGTH", ss.str());
+    push_back_env(env, "CONTENT_TYPE", _req.getContentType());
+    push_back_env(env, "GATEWAY_INTERFACE", "CGI/1.1");
+    push_back_env(env, "REQUEST_METHOD", _req.getMethod());
+    push_back_env(env, "SCRIPT_FILENAME", _req.getCGIFile());
+    push_back_env(env, "SCRIPT_NAME", _req.getCGIFile());
+    push_back_env(env, "PATH_INFO", _req.getCGIBindPath());
+    push_back_env(env, "PATH_TRANSLATED", _req.getCGIBindPath());
+    push_back_env(env, "QUERY_STRING", _req.getQuery());
+    push_back_env(env, "SERVER_PROTOCOL", "HTTP/1.1");
+    env.push_back(NULL);
+
+    pid_t pid = fork();
+    if (pid == 0) {
+        dup2(fd_in, STDIN_FILENO);
+        dup2(fd_out, STDOUT_FILENO);
+        close(fd_in); close(fd_out);
+        chdir(_req._lock->_cgi_bin.c_str());
+        char *argv[2] = { strdup(_req.getCGIFile().c_str()), NULL };
+        execve(_req.getCGIFile().c_str(), argv, &env[0]);
+        exit(1);
+    } else if (pid > 0) {
+        int status;
+        int elapsed = 0;
+        while (true) {
+            pid_t r = waitpid(pid, &status, WNOHANG);
+            if (r == pid)
+				break;
+            if (elapsed >= 30) {
+                kill(pid, SIGKILL);
+                waitpid(pid, &status, 0);
+                fclose(tmp_in); fclose(tmp_out);
+                return 504;
+            }
+            usleep(100000);
+            elapsed += 0.1;
+        }
+        rewind(tmp_out);
+        std::stringstream ssout;
+        char buffer[4096];
+        ssize_t n;
+        while ((n = read(fd_out, buffer, sizeof(buffer))) > 0) 
+			ssout.write(buffer, n);
+        _content = ssout.str();
+        _cgi_response = true;
+        fclose(tmp_in); fclose(tmp_out);
+        return 200;
+    } else {
+		fclose(tmp_in);
+		fclose(tmp_out);
+		return 500;
+	}
 }
+
 
 const std::string Response::createAutoindexResponse()
 {

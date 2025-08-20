@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:31 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/19 13:10:24 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/20 16:22:20 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ class Response
 		std::string									_server_name;
 		std::string									_content_type;
 		std::string									_content;
+		std :: string								_delete_name;
 
 		Request	const &								_req;
 		Config::ServerConfig const &				_server_config;

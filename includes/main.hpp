@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 11:46:50 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 11:14:25 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/20 14:01:36 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@
 # include "tcpServer.hpp"
 
 extern int g_signal;
+
+extern int g_epoll_fd;
 
 void sigint_handle_main(int signum);
 

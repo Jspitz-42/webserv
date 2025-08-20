@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:12 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/19 08:44:54 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/20 10:32:13 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,9 @@
 # define INDEX						12
 # define REDIRECT					13
 # define LISTING					14
+# define HOST						15
 
-# define SERVER_CONTEXT_DIRECTIVE	9
+# define SERVER_CONTEXT_DIRECTIVE	10
 # define LOCATION_CONTEXT_DIRECTIVE	10
 # define TOTAL_DIRECTIVE			13
 # define ALL_ERROR_CODES			40
@@ -201,6 +202,20 @@ class Config
 																			Listen( void );
 				};
 
+				class Host : public Directive
+				{
+					public:
+																			Host(const std::string &) throw (std::exception);
+							virtual											~Host( void );
+							virtual void									setDirective(ServerConfig &, int) const;
+							protected:
+							
+					private:
+							int												_port;
+							std::string										_ip;
+							bool											isIpValid( const std::string &);
+							Host( void );
+				};
 				class Location: public Directive
 				{
 					public:
@@ -222,6 +237,7 @@ class Config
 						bool												_root_found;
 						bool												_is_cgi;
 						bool												_cgi_bin_found;
+						bool												_is_redirect;
 						
 						std::string											_cgi_bin;
 						std::string											_upload_path;
@@ -317,6 +333,8 @@ class Config
 				int											_max_body_size;
 				std::string									_ip;
 				int											_port;
+				std::string									_host_ip;
+				int											_host_port;
 				std::string									_root_path;
 				std::vector<Location>						_locations;
 				std::vector<std::string>					_indexes;

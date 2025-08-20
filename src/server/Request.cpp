@@ -6,7 +6,7 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 04:39:16 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/20 04:42:33 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,22 @@
 	if (_method.empty() || _http_version.empty() || (_http_version != "http/1.1" && _http_version != "http/1.0")) {
     	_error_code = 400;
     	return;
+	}
+
+	size_t pos_q = _uri_target.find('?');
+	size_t pos_frag = _uri_target.find('#');
+
+	if (pos_q != std::string::npos)
+	{
+		size_t qbeg = pos_q + 1;
+		size_t qlen = (pos_frag == std::string::npos) ? std::string::npos : (pos_frag - qbeg);
+
+		_query = _uri_target.substr(qbeg, qlen);
+		_uri_target.erase(pos_q);
+	} 
+	else if (pos_frag != std::string::npos) 
+	{
+		_uri_target.erase(pos_frag);
 	}
 
 	_lock = _server_config.findLocation(sc._root_path + _uri_target);

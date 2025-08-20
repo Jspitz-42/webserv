@@ -6,7 +6,7 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:30:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 04:39:58 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/20 06:23:17 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -435,6 +435,7 @@ const std::string Response::createResponse() {
 					readFileStream(file, html_content);
 					_content_type = "text/html";
 				}
+
 				break ;
 			}
 		}
@@ -448,10 +449,9 @@ const std::string Response::createResponse() {
 	std::cout << cookies << std::endl;
 	if (cookies.find("id_session=") == std::string::npos)
 	{
+		std::cout << "Creating new session ID" << std::endl;
 	    const std::string newSessionId = const_cast<Request &>(_req).createClientId();
-	    response += "Set-Cookie: id_session=";
-	    response += newSessionId;
-	    response += "; Path=/; HttpOnly; SameSite=Lax\n";
+		response += "Set-Cookie: id_session=" + newSessionId + "; Path=/;\n";
 	}
 	response += "Date: " + _date;
 	response += "Server: " + _server_name + "\n";

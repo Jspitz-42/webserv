@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:16:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/11 09:16:42 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/20 09:51:48 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ Config::ServerConfig::Redirect::Redirect(const std::string & content) throw (std
 void Config::ServerConfig::Redirect::setDirective(ServerConfig & serv_conf, int context) const
 {
 	if (context == LOCATION_CONTEXT) {
+		std::cout << "Redirect set directive is called" << std::endl;
+		serv_conf._locations.back()._is_redirect = true;
 		serv_conf._locations.back()._redirect_uri = _redirect_uri;
 		serv_conf._locations.back()._redirect_status = _status_code;
 	}

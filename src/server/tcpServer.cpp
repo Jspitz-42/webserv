@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:39:40 by altheven          #+#    #+#             */
-/*   Updated: 2025/08/19 13:27:10 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/20 09:51:32 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(
 			if (!seen.insert(target).second) {
 				throw TCPServer::ErrorMessage(TCPSERVER_DUP_LOC);
 			}
-			if (it_loc->_root_found != true) {
+			if (it_loc->_is_redirect == false && it_loc->_root_found != true) {
 				throw TCPServer::ErrorMessage("Error: [LOCATION] [INVALID DIRECTIVE] : No root path set");
 			}
 		}

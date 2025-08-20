@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:12 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/19 08:44:54 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/20 09:47:46 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,6 +222,7 @@ class Config
 						bool												_root_found;
 						bool												_is_cgi;
 						bool												_cgi_bin_found;
+						bool												_is_redirect;
 						
 						std::string											_cgi_bin;
 						std::string											_upload_path;

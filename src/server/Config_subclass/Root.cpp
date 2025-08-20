@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:18:18 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 08:27:31 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/20 09:21:04 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,13 @@ void Config::ServerConfig::Root::setDirective(ServerConfig & serv_conf, int cont
         if (serv_conf._locations.empty())
             throw Config::ErrorMessage("No locations defined for setting root");
 
-        struct stat sb;
-        if (stat(_path.c_str(), &sb) != 0)
-            throw Config::ErrorMessage("ERROR: [ROOT] : [" + _path + "] does not exist");
-
+			struct stat sb;
+		if (stat(_path.c_str(), &sb) != 0)
+			serv_conf._locations.back()._root_found = false;
+		else
+			serv_conf._locations.back()._root_found  = true;	
 		std::cout << "rootpath = " << _path << std::endl;
         serv_conf._locations.back()._root_path = _path;
-		serv_conf._locations.back()._root_found = true;
     }
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/21 00:22:31 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/22 06:02:03 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,9 @@
 	{
 		_uri_target.erase(pos_frag);
 	}
-	_lock = _server_config.findLocation(sc._root_path + _uri_target);
-	if (!_lock) {
+	if (_method != "DELETE")
+		_lock = _server_config.findLocation(sc._root_path + _uri_target);
+	else if (!_lock || _method == "DELETE") {
 		_lock = _server_config.findLocation(_uri_target);
 	}
 

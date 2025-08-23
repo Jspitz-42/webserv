@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Directive.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:08:04 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 09:13:16 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/23 11:37:10 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,18 @@ static Config::ServerConfig::Directive * NewCgiBin(const std::string & content) 
 static Config::ServerConfig::Directive * NewRedirect(const std::string & content) 			{ return new Config::ServerConfig::Redirect(content) ;}
 static Config::ServerConfig::Directive * NewUpload(const std::string & content)				{ return new Config::ServerConfig::Upload(content) ;}
 static Config::ServerConfig::Directive * NewDirectoryListing(const std::string & content)	{ return new Config::ServerConfig::DirectoryListing(content) ;}
+static Config::ServerConfig::Directive * NewHost(const std::string& content) 				{ return new Config::ServerConfig::Host(content) ;};
 
 Config::ServerConfig::Directive * Config::createDirective(std::string const & name, std::string const & content) throw (std::exception)
 {
 	std::string	Dir[] = {"listen", "error_page", "root", "allow_methods", "location", "server_name",
 							"client_max_body_size", "index", "autoindex", "cgi", "cgi-bin", "return",
-							"upload", "directory_listing"};
+							"upload", "directory_listing", "host"};
 
 	Config::ServerConfig::Directive *(*fctptr[])(const std::string &) = {NewListen, NewErrorCodePage, NewRoot, NewMethods, NewLocation,
 																		 NewServerName, NewClientMaxBodySize, NewIndex, NewAutoIndex,
-																		 NewCgi, NewCgiBin, NewRedirect, NewUpload, NewDirectoryListing};
+																		 NewCgi, NewCgiBin, NewRedirect, NewUpload, NewDirectoryListing
+																		,NewHost};
 	for (int i = 0 ; i < 15 ; i++ ) {
 		if (name == Dir[i]) {
 			return (*fctptr[i])(content);

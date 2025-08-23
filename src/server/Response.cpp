@@ -6,7 +6,7 @@
 /*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:30:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/23 12:17:48 by altheven         ###   ########.fr       */
+/*   Updated: 2025/08/23 13:25:33 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,13 +124,27 @@ Response::Response(Request const & request, Config::ServerConfig const & sc):	_k
 			_status_code = 400;
 			return ;
 		}
+
 		std :: string dstr = "name=\"deleteFiles\"";
-		std :: string dstr_bis = "--X-INSOMNIA-BOUNDARY--";
+		std :: string dstr_bis = _req.getContentType();
+		std::size_t findpos = dstr_bis.find("boundary=");
+		if (findpos== std::string::npos)
+		{
+			_status_code = 400;
+			return ;
+		}
+		dstr_bis = dstr_bis.substr(findpos + 9);
 		size_t dpos_bis = content.find_last_of(dstr_bis);
 		size_t dpos = content.find(dstr);
 		content = content.substr(dpos + dstr.size(), dpos_bis - dpos - dstr_bis.size() - dstr.size());
 		content.erase(0,4);
-		content.erase(content.size() -1 ,1);
+		findpos = content.find("\n");
+		if (findpos== std::string::npos || findpos <= 0)
+		{
+			_status_code = 400;
+			return ;
+		}
+		content = content.substr(0, findpos - 1);
 		_delete_name = _req._lock->_root_path + "/" + content;
 	}
 	if (_req.isTargetRedirect() && _req._lock) {
@@ -180,7 +194,6 @@ Response::Response(Request const & request, Config::ServerConfig const & sc):	_k
 		}
 		file.close();
 	}
-
 }
 
 Response::~Response()

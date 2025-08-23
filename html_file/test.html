@@ -156,13 +156,6 @@
 				<button class="aurora-glow-button" type="submit">php CGI</button>
 			</form>
 		</div>
-			<script>
-			async function redirectFromServer() {
-			  const res = await fetch('/get_redirect_url');
-			  const data = await res.json();
-			  window.location.href = data.redirect;
-			}
-			</script>
 		<div>
 			<form action="/redirect" method="GET">
 		        <button class="aurora-glow-button" type="submit">Redirect</button>
@@ -175,12 +168,42 @@
 				<button class="aurora-glow-button" type="submit">Upload CGI</button>
 			</form>
 		</div>
+		<div>
+  			<form id="delete-form" onsubmit="sendDelete(event)">
+  			  <label for="delete-file">Nom du fichier Ã  supprimer :</label>
+  			  <input type="text" name="deleteFiles" id="delete-file" placeholder="ex: test.py" required />
+  			  <button class="aurora-glow-button" type="submit">Supprimer</button>
+  			</form>
+		</div>
 	</div>
 		<span id="session-id" class="session-id">ID-Session : inconnue</span>
 
 </body>
-</html>
+<script>
+  function sendDelete(event) {
+    event.preventDefault();
 
+    const form = document.getElementById('delete-form');
+    const formData = new FormData(form);
+
+    fetch('/delete', {
+      method: 'DELETE',
+      body: formData
+    })
+    .then(response => {
+      if (response.ok) {
+        alert("Files deleted successfully.");
+      } else {
+        alert("Failed to delete files.");
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("An error occurred while deleting files.");
+    });
+  }
+</script>
+</html>
 <!--
 	1 : 6 boutons : un qui lance l'upload, 1 pour choisir les fichiers, 1 pour getCgi,
 					un pour redir, un pour upload cgi, un pour acceder au directory listing

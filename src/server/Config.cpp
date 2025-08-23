@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 13:27:53 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 10:16:03 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/23 10:47:53 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,20 @@ bool Config::validDirective(const std::string & str, const std::string * list, i
 	return false;
 }
 
+static bool is_empty_or_whitespace(std::ifstream& file)
+{
+    char c;
+    
+	while (file.get(c))
+	{
+        if (!std::isspace(static_cast<unsigned char>(c))) {
+            return false;
+        }
+    }
+
+	return true;
+}
+
 Config::Config(std::string const & file_s) throw(std::exception)
 {
 	std::ifstream	file;
@@ -66,7 +80,15 @@ Config::Config(std::string const & file_s) throw(std::exception)
 
 	file.open(file_s.c_str(), std::ios::in);
 
-	if (!file.is_open()) throw Config::ErrorMessage(CONFIG_INVALID_FILE);
+	if (!file.is_open()) { 
+		throw Config::ErrorMessage(CONFIG_INVALID_FILE);
+	}
+
+	std::ifstream check_if_empty(file_s.c_str());
+	
+	if (is_empty_or_whitespace(check_if_empty)) {
+		throw Config::ErrorMessage("Error: [" + file_s + "] : File is empty");
+	}
 	
 	while (std::getline(file, line))
 	{

@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:12 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 10:32:13 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/23 10:36:14 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@
 # include <fcntl.h>
 # include "Error.hpp"
 # include "utils.hpp"
+# include <algorithm>
 
 class Config
 {

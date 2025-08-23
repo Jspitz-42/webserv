@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:11:05 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/17 09:24:44 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/23 10:45:26 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,14 @@ Config::ServerConfig::Methods::Methods(const std::string & content) throw (std::
 	std::istringstream iss(content);
 	std::string s;
 
-	iss >> s;
-	if (!_validMethod(std::string(s))) {
-		throw Config::ErrorMessage(METHODS_INVALID_DIR_1);
-	}
 
 	while (iss)
 	{
-		_methods.push_back(std::string(s));
 		iss >> s;
+		if (!_validMethod(s)) {
+			throw Config::ErrorMessage(METHODS_INVALID_DIR_1);
+		}
+		_methods.push_back(std::string(s));
 	}
 }
 

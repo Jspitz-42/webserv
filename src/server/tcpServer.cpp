@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tcpServer.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:39:40 by altheven          #+#    #+#             */
-/*   Updated: 2025/08/20 20:00:55 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/23 09:15:03 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(
 			if (isRedir == true) {
 				continue ;
 			}
-			if (isRedir == false && it_loc->_root_found != true) {
+			if (isRedir == false && it_loc->_root_found == false) {
+				std::cout << it_loc->_root_path << std::endl;
 				throw TCPServer::ErrorMessage("Error: [TCPServer] [LOCATION VECTOR] [" + it_loc->_target + "] [INVALID DIRECTIVE] : No root path set");
 			}
 		}

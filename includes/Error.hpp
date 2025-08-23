@@ -6,7 +6,7 @@
 /*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 09:10:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/17 09:19:15 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/23 10:45:40 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@
 
 # define INDEX_WRONG_SYNTAX "ERROR: [Config::ServerConfig::Index::Index] : Wrong syntax"
 
-# define METHODS_INVALID_DIR_1 "ERRROR: [Config::ServerConfig::Methods::Methods] [_validMethod false ] : Invalid Directive"
+# define METHODS_INVALID_DIR_1 "Error: [Methods] ["+ s + "] : Method invalid"
 # define METHODS_INVALID_DIR_2 "ERROR: [Config::ServerConfig::Methods::Methods] [double Methods]: Invalid Directive"
 
 # define LISTEN_WRONG_SYNTAX "ERROR: [Config::ServerConfig::Listen::Listen] : Wrong syntax"

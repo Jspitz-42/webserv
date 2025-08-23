@@ -156,8 +156,17 @@
 				<button class="aurora-glow-button" type="submit">php CGI</button>
 			</form>
 		</div>
+			<script>
+			async function redirectFromServer() {
+			  const res = await fetch('/get_redirect_url');
+			  const data = await res.json();
+			  window.location.href = data.redirect;
+			}
+			</script>
 		<div>
-			<button class="aurora-glow-button"  > redirection </button>
+			<button class="aurora-glow-button" onclick="redirectFromServer()">
+			  Redirection
+			</button>
 		</div>
 		<div>
 			<form action="cgi/upload.py" method="POST" enctype="multipart/form-data">
@@ -165,16 +174,6 @@
 				<input type="file" name="file" id="cgi-file" required />
 				<button class="aurora-glow-button" type="submit">Upload CGI</button>
 			</form>
-		</div>
-		<div>
-			<form action="/delete" method="DELETE" enctype="multipart/form-data">
-				<label for="file" class="upload-btn">Chose a file to delete</label>
-				<input type="file" name="file" id="delete-file" required/>
-				<button class="aurora-glow-button" type="submit">Delete file</button>
-			</form>
-		</div>
-		<div>
-			<button class="aurora-glow-button"> Directory Listing </button>
 		</div>
 	</div>
 		<span id="session-id" class="session-id">ID-Session : inconnue</span>

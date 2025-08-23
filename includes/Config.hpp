@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:12 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/23 14:33:43 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/23 15:03:28 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,6 +212,7 @@ class Config
 							protected:
 							
 					private:
+							std :: string									_host_ip;
 							int												_port;
 							std::string										_ip;
 							bool											isIpValid( const std::string &);
@@ -329,6 +330,7 @@ class Config
 				bool										checkMaxBody( int ) const;
 				std::string const & 						getIp( void ) const;
 
+				std :: string								_full_host;
 				bool										_autoindex;
 				bool										_listing;
 				int											_max_body_size;
@@ -343,7 +345,7 @@ class Config
 				std::map<std::string, std::vector<int> > 	_server_error_maps;
 				static const std::string					_valid_methods_server[4];
 				std::vector<std::string>					_approved_methods;
-
+ 
 			protected:
 
 			private:

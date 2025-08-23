@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:22 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/19 23:04:24 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/23 14:55:31 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # include <iostream>
 # include <map>
 # include <algorithm>
+# include <sstream>
 # include <SessionClient.hpp>
 # include <iomanip>
 # include "utils.hpp"

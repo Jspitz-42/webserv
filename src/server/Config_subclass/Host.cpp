@@ -6,7 +6,7 @@
 /*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:13:38 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/23 14:31:46 by altheven         ###   ########.fr       */
+/*   Updated: 2025/08/23 15:02:59 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ Config::ServerConfig::Host::Host(const std::string & content) throw (std::except
 	}
 	std::string 		tmp;
 	std::stringstream	stoi_converter;
-	std :: cout << content << std :: endl;
+	_host_ip = content;
 	if (content.find(':') != std::string::npos) {
 
 		std::string ip_str = content.substr(0, content.find(':'));
@@ -66,6 +66,7 @@ void Config::ServerConfig::Host::setDirective(ServerConfig & serv_conf, int cont
 
 	serv_conf._host_port = _port;
 	serv_conf._host_ip = _ip;
+	serv_conf._full_host = _host_ip;
 }
 
 

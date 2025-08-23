@@ -6,7 +6,7 @@
 /*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/23 14:36:05 by altheven         ###   ########.fr       */
+/*   Updated: 2025/08/23 15:04:34 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,19 +28,24 @@
 			_error_code = 400;
 			return ;
 	}
-	host = request.substr(hpos);
-	hpos = host.find("/n");
+	host = request.substr(hpos + 6);
+	hpos = host.find("\n");
 	if (hpos == std::string::npos || hpos <= 0)
 	{
 			_error_code = 400;
 			return ;
 	}
-	host = request.substr(0, hpos - 1);
-	
+	host = host.substr(0, hpos - 1);
+	std :: cout << host << " HOST = " << sc._full_host << std :: endl;
+	if (host != sc._full_host)
+	{
+			_error_code = 421;
+			return ;
+	}
 	if (lineEnd == std::string::npos) {
 		_error_code = 400;
 		return;
-	}
+	} 
 	std::string firstLine = request.substr(pos, lineEnd - pos);
 	std::cout << firstLine << std::endl;
 	firstLine = strtrim(firstLine, " \r\t\n");

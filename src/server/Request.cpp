@@ -6,7 +6,7 @@
 /*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/22 06:02:03 by altheven         ###   ########.fr       */
+/*   Updated: 2025/08/23 11:55:12 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@
 	{
 		_uri_target.erase(pos_frag);
 	}
-	if (_method != "DELETE")
+	if (_method != "DELETE" && _uri_target != "/redirect")
 		_lock = _server_config.findLocation(sc._root_path + _uri_target);
 	else if (!_lock || _method == "DELETE") {
 		_lock = _server_config.findLocation(_uri_target);

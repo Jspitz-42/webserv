@@ -164,9 +164,9 @@
 			}
 			</script>
 		<div>
-			<button class="aurora-glow-button" onclick="redirectFromServer()">
-			  Redirection
-			</button>
+			<form action="/redirect" method="GET">
+		        <button class="aurora-glow-button" type="submit">Redirect</button>
+		    </form>
 		</div>
 		<div>
 			<form action="cgi/upload.py" method="POST" enctype="multipart/form-data">

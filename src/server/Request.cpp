@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/23 15:04:34 by altheven         ###   ########.fr       */
+/*   Updated: 2025/08/23 17:52:40 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@
 			return ;
 	}
 	host = host.substr(0, hpos - 1);
-	std :: cout << host << " HOST = " << sc._full_host << std :: endl;
 	if (host != sc._full_host)
 	{
 			_error_code = 421;

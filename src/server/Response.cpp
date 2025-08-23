@@ -6,7 +6,7 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:30:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/23 14:30:19 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/23 15:09:51 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,11 @@ Response::Response(Request const & request, Config::ServerConfig const & sc):	_k
 	if (_req.getErrorCode() == 413) {
 		_status_code = 413;
 		_content = "<html><body><h1>Error 413: Payload Too Large</h1></body></html>";
+		return ;
+	}
+	if (_req.getErrorCode() == 421) {
+		_status_code = 421;
+		_content = "<html><body><h1>Error 421: Misdirected Request</h1></body></html>";
 		return ;
 	}
 	if (_req.getMethod() == "POST" && _req.getUriTarget() == "/upload") {
@@ -443,8 +448,7 @@ const std::string Response::createResponse() {
 		_keep_alive = false;
 		if (_req._lock) {
 			std::map<std::string, std::vector<int> >::iterator l_it;
-			for (l_it = _req._lock->_location_errors_map.begin(); l_it != _req._lock->_location_errors_map.end() && html_content.empty(); ++l_it) {
-				std::vector<int>::iterator e_it;
+			for (l_it = _req._lock->_location_errors_map.begin(); l_it != _req._lock->_location_errors_map.end() && html_content.empty(); ++l_it) {				std::vector<int>::iterator e_it;
 				for (e_it = l_it->second.begin(); e_it != l_it->second.end(); ++e_it) {
 					if (*e_it == _status_code) {
 						break ;
@@ -472,11 +476,9 @@ const std::string Response::createResponse() {
 				}
 			}
 			if (e_it != l_it->second.end()) {
-				std::string error_loc = l_it->first + so.str() + ".html";
-
+				std::string error_loc = l_it->first;
 				file.open(error_loc.c_str(), std::ifstream::binary);
 				if(file.is_open()) {
-
 					readFileStream(file, html_content);
 					_content_type = "text/html";
 				}

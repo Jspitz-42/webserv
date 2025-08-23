@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tcpServer.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:37:10 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 17:11:36 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/23 10:49:57 by jspitz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ class TCPServer
 		void								addSocket(Socket &) throw (std::exception);
 		void								cleanEpollAndClientsList();
 		int									getEpollFd() const;
-		void								printConfig( void ) const throw (std::exception);
 		void								run();
 
 
@@ -74,7 +73,6 @@ class TCPServer
 		void								createSocket(std::string const &, int);
 		void								acceptConnectionAt(int) throw (std::exception); 
 		bool								isSocketFd(int);
-		void								initMsg(void);
 											TCPServer(const TCPServer &);
 };
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 12:58:15 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/23 14:30:42 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/23 14:36:17 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,6 @@ void Client :: handleRequest(Config :: ServerConfig conf)
 			break;
 		}
 	}
-	// std :: cout << buf << std :: endl;
 	if (buf.length() > 0)
 	{
 		_time_to_die = ms + TIME_TO_DIE;

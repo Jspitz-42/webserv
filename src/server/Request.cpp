@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/23 14:30:24 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/23 14:36:05 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,28 @@
 	size_t pos = 0;
 	size_t lineEnd = request.find('\n', pos);
 	
+	std :: string	host;
+	size_t			hpos;
+	
+	hpos = request.find("Host");
+	if (hpos == std::string::npos)
+	{
+			_error_code = 400;
+			return ;
+	}
+	host = request.substr(hpos);
+	hpos = host.find("/n");
+	if (hpos == std::string::npos || hpos <= 0)
+	{
+			_error_code = 400;
+			return ;
+	}
+	host = request.substr(0, hpos - 1);
+	
 	if (lineEnd == std::string::npos) {
 		_error_code = 400;
 		return;
 	}
-	
 	std::string firstLine = request.substr(pos, lineEnd - pos);
 	std::cout << firstLine << std::endl;
 	firstLine = strtrim(firstLine, " \r\t\n");

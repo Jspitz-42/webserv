@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Host.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:13:38 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 10:32:48 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/23 14:31:46 by altheven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ Config::ServerConfig::Host::Host(const std::string & content) throw (std::except
 	}
 	std::string 		tmp;
 	std::stringstream	stoi_converter;
+	std :: cout << content << std :: endl;
 	if (content.find(':') != std::string::npos) {
 
 		std::string ip_str = content.substr(0, content.find(':'));

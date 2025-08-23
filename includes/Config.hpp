@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 07:38:12 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/23 10:36:14 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/23 14:33:43 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # define HOST						15
 
 # define SERVER_CONTEXT_DIRECTIVE	10
-# define LOCATION_CONTEXT_DIRECTIVE	10
+# define LOCATION_CONTEXT_DIRECTIVE	9
 # define TOTAL_DIRECTIVE			13
 # define ALL_ERROR_CODES			40
 # define PORT_MAX					65535

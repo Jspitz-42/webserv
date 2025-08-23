@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:30:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/23 13:25:33 by altheven         ###   ########.fr       */
+/*   Updated: 2025/08/23 14:30:19 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,11 @@ Response::Response(Request const & request, Config::ServerConfig const & sc):	_k
 	_server_name = "Tom_Nook";
 	_content_type = "text/html";
 	
+	if (_req.getErrorCode() == 413) {
+		_status_code = 413;
+		_content = "<html><body><h1>Error 413: Payload Too Large</h1></body></html>";
+		return ;
+	}
 	if (_req.getMethod() == "POST" && _req.getUriTarget() == "/upload") {
 		Config::ServerConfig::Location * _lock = _server_config.findLocation(_req.getUriTarget());
 		std::string uploadDir;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: altheven <altheven@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 12:58:15 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/23 14:36:17 by altheven         ###   ########.fr       */
+/*   Updated: 2025/08/24 13:02:09 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void Client :: handleRequest(Config :: ServerConfig conf)
 		
 		std::string tmp(buffer, valread);
 		buf += tmp;
-		
+		std::cout << buf << std::endl;
 		if (!headersComplete) {
 			size_t headerEnd = buf.find("\r\n\r\n");
 			if (headerEnd == std::string::npos) {

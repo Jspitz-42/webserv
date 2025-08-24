@@ -6,7 +6,7 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:08:34 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/20 23:35:18 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/24 13:13:23 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,15 @@ Socket::Socket(const std::string &ip, int port)
         throw Socket::ErrorMessage(SETSOCKOPT_ERR_MSG);
 
     if (bind(_socket_fd, (struct sockaddr *)&_address, sizeof(_address)) < 0)
+    {
+        close(_socket_fd);
         throw Socket::ErrorMessage(BIND_ERR_MSG);
+    }
 
-    if (listen(_socket_fd, SOMAXCONN) < 0)
+    if (listen(_socket_fd, SOMAXCONN) < 0) {
+        close(_socket_fd);
         throw Socket::ErrorMessage(LISTEN_ERR_MSG);
+    }
 }
 
 Socket::Socket(void)

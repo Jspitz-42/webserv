@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tcpServer.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jspitz <jspitz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:39:40 by altheven          #+#    #+#             */
-/*   Updated: 2025/08/23 09:15:03 by jspitz           ###   ########.fr       */
+/*   Updated: 2025/08/24 13:12:05 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ TCPServer::TCPServer(std::string const & file) throw (std::exception) : _config(
 	} catch (std :: exception & e) {
 		std :: cout << "[FAILED]" << e.what() << std :: endl;
 		std::cout << " Server Configuration contains errors, or an invalid [ip_address:port]. Please review the configuration file" << std::endl;
+		throw ErrorMessage(TCPSERVER_ERR_MSG);
 	}
 }
 

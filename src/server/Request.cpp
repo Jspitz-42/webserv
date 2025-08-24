@@ -6,7 +6,7 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:54:23 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/24 11:40:19 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/24 13:09:00 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,22 @@
 	
 	std :: string	host;
 	size_t			hpos;
-	
+
+	if (request.empty() || request.length() < 4){
+		_error_code = 400;
+		return ;
+	}
 	hpos = request.find("Host");
 	if (hpos == std::string::npos)
 	{
-			_error_code = 400;
+			_error_code = 421;
 			return ;
 	}
 	host = request.substr(hpos + 6);
 	hpos = host.find("\n");
 	if (hpos == std::string::npos || hpos <= 0)
 	{
-			_error_code = 400;
+			_error_code = 421;
 			return ;
 	}
 	host = host.substr(0, hpos - 1);
@@ -122,9 +126,19 @@
 			size_t availableContent = request.length() - pos;
 			size_t actualLength = std::min(contentLength, availableContent);
 			_content = request.substr(pos, actualLength);
+			if (contentLength != _content.size())
+            {
+                _error_code = 400;
+                return;
+            }
 			if (_lock && !_lock->checkMaxBody(_content.size())) {
 				_error_code = 413;
 			}
+		}
+	} else {
+		if (_method == "POST") {
+			_error_code = 411;
+			return ;
 		}
 	}
 	if (_headers.find("cookies") != _headers.end()) 

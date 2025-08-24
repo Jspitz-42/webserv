@@ -6,7 +6,7 @@
 /*   By: tlonghin <tlonghin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:30:17 by jspitz            #+#    #+#             */
-/*   Updated: 2025/08/23 15:09:51 by tlonghin         ###   ########.fr       */
+/*   Updated: 2025/08/24 11:44:36 by tlonghin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,11 @@ Response::Response(Request const & request, Config::ServerConfig const & sc):	_k
 		_content = "<html><body><h1>Error 421: Misdirected Request</h1></body></html>";
 		return ;
 	}
+	if (_req.getErrorCode() != 0) {
+		std::cout << "Error detected in request: " << _req.getErrorCode() << std::endl;
+		_status_code = _req.getErrorCode();
+		return ;
+	}
 	if (_req.getMethod() == "POST" && _req.getUriTarget() == "/upload") {
 		Config::ServerConfig::Location * _lock = _server_config.findLocation(_req.getUriTarget());
 		std::string uploadDir;
@@ -140,6 +145,7 @@ Response::Response(Request const & request, Config::ServerConfig const & sc):	_k
 		std::size_t findpos = dstr_bis.find("boundary=");
 		if (findpos== std::string::npos)
 		{
+			std::cout << "MALFORMED REQUEST" << std::endl;
 			_status_code = 400;
 			return ;
 		}
@@ -423,7 +429,7 @@ const std::string Response::createResponse() {
 	std::ostringstream so;
 	std::ifstream file;
 	
-	if (_req.isTargetRedirect()) {
+	if (_req.isTargetRedirect() && _status_code == 200) {
 		return (createRedirectionResponse());
 	}
 	if (_cgi_response && _status_code == 200) {

@@ -10,10 +10,9 @@ console.log(`<!doctype html><html>
 <head>
 <style> 
 #myDIV {
-  width: 300px;
-  height: 200px;
+  height: 800px;
   border: 1px solid black;
-  background-image: url('smiley.gif');
+  background-image: url('https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZndtNTBrNGloeHFrZmd1NjJxOWVrYWJlemhycWV2dXZwY3MxNTBkMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CUMXiHI4b0z8llC7aA/giphy.gif');
   background-position: top left;
   animation: mymove 5s infinite;
 }
@@ -28,7 +27,7 @@ console.log(`<!doctype html><html>
 <h1>Animation of background-position</h1>
 
 <p>Gradually change the background-position from "top left" to "center", and back to "top left":<p>
-<div id="myDIV"></div>
+<div id="myDIV"><span></span></div>
 
 </body>
 </html>`);
